@@ -11,6 +11,11 @@
       content="Un essai ontologique bref sur la relation entre deux cohérences qui demeurent distinctes, sans fusion, réduction ni vérité commune."
     />
     <meta name="author" content="Vixta" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <link
+      rel="canonical"
+      href="https://vixta-blip.github.io/Le-Point-Noir-Intersystemique/"
+    />
     <meta
       property="og:title"
       content="Le Point Noir Intersystémique — Vixta"
@@ -20,12 +25,32 @@
       content="Aucune synthèse ne s’impose, aucune victoire ne se déclare — et pourtant quelque chose tient."
     />
     <meta property="og:type" content="book" />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:site_name" content="Vixta" />
+    <meta
+      property="og:url"
+      content="https://vixta-blip.github.io/Le-Point-Noir-Intersystemique/"
+    />
     <meta
       property="og:image"
-      content="assets/couverture-le-point-noir-intersystemique.png"
+      content="https://vixta-blip.github.io/Le-Point-Noir-Intersystemique/assets/og-le-point-noir-intersystemique.png"
     />
-    <meta property="og:image:alt" content="Couverture du livre Le Point Noir Intersystémique" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="Le dialogue doit-il nécessairement produire un accord ? Le Point Noir Intersystémique, de Vixta."
+    />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Le Point Noir Intersystémique — Vixta" />
+    <meta
+      name="twitter:description"
+      content="Aucune synthèse ne s’impose, aucune victoire ne se déclare — et pourtant quelque chose tient."
+    />
+    <meta
+      name="twitter:image"
+      content="https://vixta-blip.github.io/Le-Point-Noir-Intersystemique/assets/og-le-point-noir-intersystemique.png"
+    />
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2235%22 fill=%22%23171c22%22/></svg>" />
     <link rel="preload" href="assets/Inter-Regular.ttf" as="font" type="font/ttf" crossorigin />
     <link rel="preload" href="assets/SourceSerif-Italic.ttf" as="font" type="font/ttf" crossorigin />
@@ -35,6 +60,8 @@
       {
         "@context": "https://schema.org",
         "@type": "Book",
+        "@id": "https://vixta-blip.github.io/Le-Point-Noir-Intersystemique/#book",
+        "url": "https://vixta-blip.github.io/Le-Point-Noir-Intersystemique/",
         "name": "Le Point Noir Intersystémique",
         "alternateName": "Le Point Noir Intersystémique — Les configurations du dialogue",
         "author": { "@type": "Person", "name": "Vixta" },
@@ -44,8 +71,16 @@
         "isbn": "9791098270109",
         "numberOfPages": 88,
         "bookFormat": "https://schema.org/Hardcover",
-        "image": "assets/couverture-le-point-noir-intersystemique.png",
+        "image": "https://vixta-blip.github.io/Le-Point-Noir-Intersystemique/assets/couverture-le-point-noir-intersystemique.png",
         "description": "Un essai ontologique bref sur la coexistence de cohérences distinctes sans fusion, réduction ni vérité commune.",
+        "isPartOf": {
+          "@type": "CreativeWorkSeries",
+          "name": "Trilogie du Point Noir"
+        },
+        "sameAs": [
+          "https://nouveautes-editeurs.bnf.fr/accueil?id_declaration=10000001326831&titre_livre=Le_Point_Noir_Intersyst%C3%A9mique",
+          "https://www.amazon.fr/dp/B0GT5YD9NK"
+        ],
         "offers": {
           "@type": "Offer",
           "price": "16.37",
@@ -61,17 +96,37 @@
     <a class="skip-link" href="#contenu">Aller au contenu</a>
 
     <header class="site-header" data-header>
+      <div class="reading-progress" aria-hidden="true">
+        <span data-reading-progress></span>
+      </div>
       <div class="shell header-inner">
         <a class="brand" href="#haut" aria-label="Retour en haut de la page">
           <span class="brand-name">VIXTA</span>
           <span class="brand-context">POINT NOIR · I</span>
         </a>
 
-        <nav class="main-nav" aria-label="Navigation principale">
+        <button
+          class="nav-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="main-navigation"
+          data-nav-toggle
+        >
+          <span class="visually-hidden" data-nav-label>Ouvrir le menu</span>
+          <span class="nav-toggle-lines" aria-hidden="true"><i></i><i></i></span>
+        </button>
+
+        <nav
+          class="main-nav"
+          id="main-navigation"
+          aria-label="Navigation principale"
+          data-nav
+        >
           <a href="#livre">Le livre</a>
           <a href="#extrait">Extrait</a>
-          <a href="#lecture">Pour qui</a>
           <a href="#questions">Questions</a>
+          <a href="#lecture">Pour qui</a>
+          <a href="#objet">Le relié</a>
         </nav>
 
         <a
@@ -79,8 +134,9 @@
           href="https://www.amazon.fr/dp/B0GT5YD9NK?utm_source=site_vixta&utm_medium=referral&utm_campaign=point_noir_intersystemique&utm_content=header"
           target="_blank"
           rel="noopener noreferrer"
+          aria-label="Voir le livre relié sur Amazon.fr, nouvel onglet"
         >
-          Voir le relié
+          Le relié · 16,37&nbsp;€
           <span aria-hidden="true">↗</span>
         </a>
       </div>
@@ -104,8 +160,8 @@
             </p>
 
             <div class="hero-actions">
-              <a class="button button-primary" href="extrait-le-point-noir-intersystemique.pdf" target="_blank">
-                Lire sept pages
+              <a class="button button-primary" href="#extrait">
+                Feuilleter les pages 13 à 19
                 <span aria-hidden="true">↓</span>
               </a>
               <a
@@ -113,6 +169,7 @@
                 href="https://www.amazon.fr/dp/B0GT5YD9NK?utm_source=site_vixta&utm_medium=referral&utm_campaign=point_noir_intersystemique&utm_content=hero"
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="Voir Le Point Noir Intersystémique sur Amazon.fr, nouvel onglet"
               >
                 Voir sur Amazon
                 <span aria-hidden="true">↗</span>
@@ -121,7 +178,7 @@
 
             <ul class="hero-facts" aria-label="Caractéristiques principales du livre">
               <li><strong>88</strong><span>pages</span></li>
-              <li><strong>Relié</strong><span>6 × 9 pouces</span></li>
+              <li><strong>Relié</strong><span>15,24 × 22,86 cm</span></li>
               <li><strong>16,37 €</strong><span>prix public</span></li>
             </ul>
           </div>
@@ -130,20 +187,21 @@
             <div class="book-halo" aria-hidden="true"></div>
             <figure class="book-stage">
               <div class="book-object">
-                <span class="book-spine" aria-hidden="true"></span>
                 <img
                   src="assets/couverture-le-point-noir-intersystemique.png"
                   width="1624"
                   height="2500"
+                  decoding="async"
+                  fetchpriority="high"
                   alt="Couverture rose du livre Le Point Noir Intersystémique de Vixta"
                 />
               </div>
               <figcaption>
-                <span>Le Point Noir Intersystémique</span>
-                <span>Vixta · Sekaï</span>
+                <span>Couverture de l’édition reliée</span>
+                <span>Vixta · 2026</span>
               </figcaption>
             </figure>
-            <p class="vertical-note" aria-hidden="true">ONTOLOGY · PHILOSOPHY</p>
+            <p class="vertical-note" aria-hidden="true">ONTOLOGIE · PHILOSOPHIE</p>
           </div>
         </div>
 
@@ -230,21 +288,58 @@
 
       <section class="excerpt section" id="extrait" aria-labelledby="extrait-titre">
         <div class="shell excerpt-grid">
-          <div class="excerpt-page reveal">
-            <div class="page-shadow" aria-hidden="true"></div>
-            <img
-              src="assets/page-13-extrait.png"
-              width="960"
-              height="1440"
-              loading="lazy"
-              alt="Première page de l’extrait, page 13 du livre"
-            />
-            <span class="excerpt-label">EXTRAIT · P. 13</span>
+          <div
+            class="excerpt-viewer reveal"
+            data-excerpt-viewer
+            tabindex="0"
+            aria-label="Feuilleteur de l’extrait, pages 13 à 19"
+            aria-describedby="excerpt-help"
+          >
+            <div class="excerpt-page">
+              <div class="page-shadow" aria-hidden="true"></div>
+              <img
+                src="assets/extrait-page-13.webp"
+                width="900"
+                height="1350"
+                loading="lazy"
+                decoding="async"
+                alt="Page 13 du livre Le Point Noir Intersystémique"
+                data-excerpt-image
+              />
+              <span class="excerpt-label" data-excerpt-label>EXTRAIT · P. 13</span>
+            </div>
+
+            <div class="excerpt-controls" aria-label="Navigation dans l’extrait">
+              <button type="button" data-excerpt-prev disabled>
+                <span aria-hidden="true">←</span>
+                <span>Précédente</span>
+              </button>
+              <p class="excerpt-status" aria-live="polite">
+                Page <strong data-excerpt-current>13</strong> sur 19
+              </p>
+              <button type="button" data-excerpt-next>
+                <span>Suivante</span>
+                <span aria-hidden="true">→</span>
+              </button>
+            </div>
+
+            <div class="excerpt-pagination" aria-label="Choisir une page de l’extrait">
+              <button type="button" data-excerpt-page="13" aria-current="page" aria-label="Page 13">13</button>
+              <button type="button" data-excerpt-page="14" aria-label="Page 14">14</button>
+              <button type="button" data-excerpt-page="15" aria-label="Page 15">15</button>
+              <button type="button" data-excerpt-page="16" aria-label="Page 16">16</button>
+              <button type="button" data-excerpt-page="17" aria-label="Page 17">17</button>
+              <button type="button" data-excerpt-page="18" aria-label="Page 18">18</button>
+              <button type="button" data-excerpt-page="19" aria-label="Page 19">19</button>
+            </div>
+            <p class="viewer-help" id="excerpt-help">
+              Utilisez les boutons, ou les flèches gauche et droite lorsque le feuilleteur est sélectionné.
+            </p>
           </div>
 
           <div class="excerpt-copy reveal">
             <p class="eyebrow eyebrow-plum">ÉPROUVER LA VOIX</p>
-            <h2 id="extrait-titre">Sept pages, sans inscription.</h2>
+            <h2 id="extrait-titre">Feuilleter sept pages, sans inscription.</h2>
             <blockquote>
               « Le Point Noir désigne une condition relationnelle de suspension
               entre deux cadres de pensée. »
@@ -255,11 +350,27 @@
               permet d’éprouver directement le rythme, la densité et la langue
               du livre avant l’achat.
             </p>
-            <a class="button button-dark" href="extrait-le-point-noir-intersystemique.pdf" target="_blank">
-              Ouvrir l’extrait PDF
-              <span aria-hidden="true">↗</span>
-            </a>
-            <p class="microcopy">PDF · 9 pages · aucune adresse demandée</p>
+            <div class="excerpt-actions">
+              <a
+                class="button button-dark"
+                href="extrait-le-point-noir-intersystemique.pdf"
+                target="_blank"
+                rel="noopener"
+                aria-label="Ouvrir l’extrait PDF dans un nouvel onglet"
+              >
+                Ouvrir le PDF
+                <span aria-hidden="true">↗</span>
+              </a>
+              <a
+                class="text-action"
+                href="extrait-le-point-noir-intersystemique.pdf"
+                download
+              >
+                Télécharger l’extrait
+                <span aria-hidden="true">↓</span>
+              </a>
+            </div>
+            <p class="microcopy">Pages 13 à 19 · aucune adresse demandée</p>
           </div>
         </div>
       </section>
@@ -391,7 +502,7 @@
         </div>
       </section>
 
-      <section class="object-section section section-paper" aria-labelledby="objet-titre">
+      <section class="object-section section section-paper" id="objet" aria-labelledby="objet-titre">
         <div class="shell object-grid">
           <div class="object-cover reveal">
             <img
@@ -399,6 +510,7 @@
               width="1624"
               height="2500"
               loading="lazy"
+              decoding="async"
               alt="Couverture complète du livre relié Le Point Noir Intersystémique"
             />
           </div>
@@ -414,10 +526,16 @@
             </p>
 
             <dl class="spec-list">
-              <div><dt>Format</dt><dd>Relié · 6 × 9 pouces</dd></div>
+              <div><dt>Format</dt><dd>Relié · 15,24 × 22,86 cm</dd></div>
               <div><dt>Intérieur</dt><dd>Noir et blanc · papier crème</dd></div>
               <div><dt>Parution</dt><dd>17 mars 2026</dd></div>
-              <div><dt>ISBN</dt><dd>979-10-982701-0-9</dd></div>
+              <div>
+                <dt>ISBN</dt>
+                <dd class="isbn-value">
+                  <span>979-10-982701-0-9</span>
+                  <button type="button" data-copy-isbn hidden>Copier</button>
+                </dd>
+              </div>
               <div><dt>Prix public</dt><dd>16,37 €</dd></div>
             </dl>
 
@@ -427,12 +545,25 @@
                 href="https://www.amazon.fr/dp/B0GT5YD9NK?utm_source=site_vixta&utm_medium=referral&utm_campaign=point_noir_intersystemique&utm_content=object"
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="Voir le livre relié sur Amazon.fr, nouvel onglet"
               >
                 Voir le livre relié
                 <span aria-hidden="true">↗</span>
               </a>
-              <span class="availability">Disponible sur Amazon.fr</span>
+              <button class="text-action text-action-button" type="button" data-share-page hidden>
+                Partager la page
+                <span aria-hidden="true">↗</span>
+              </button>
             </div>
+            <div class="object-reassurance">
+              <span class="availability">Disponible sur Amazon.fr</span>
+              <a
+                href="https://nouveautes-editeurs.bnf.fr/accueil?id_declaration=10000001326831&amp;titre_livre=Le_Point_Noir_Intersyst%C3%A9mique"
+                target="_blank"
+                rel="noopener noreferrer"
+              >Notice bibliographique BnF <span aria-hidden="true">↗</span></a>
+            </div>
+            <p class="action-status" aria-live="polite" data-action-status></p>
           </div>
         </div>
       </section>
@@ -486,15 +617,16 @@
             <em>sans se résoudre.</em>
           </h2>
           <div class="final-actions">
-            <a class="button button-primary" href="extrait-le-point-noir-intersystemique.pdf" target="_blank">
-              Commencer par l’extrait
-              <span aria-hidden="true">↗</span>
+            <a class="button button-primary" href="#extrait">
+              Feuilleter l’extrait
+              <span aria-hidden="true">↑</span>
             </a>
             <a
               class="button button-outline-light"
               href="https://www.amazon.fr/dp/B0GT5YD9NK?utm_source=site_vixta&utm_medium=referral&utm_campaign=point_noir_intersystemique&utm_content=final"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="Voir le livre relié sur Amazon.fr, nouvel onglet"
             >
               Acheter le relié · 16,37 €
             </a>
@@ -514,7 +646,12 @@
           <p>© Vixta, 2026 · Tous droits réservés.</p>
         </div>
         <div class="footer-links">
-          <a href="extrait-le-point-noir-intersystemique.pdf" target="_blank">Extrait PDF</a>
+          <a href="extrait-le-point-noir-intersystemique.pdf" target="_blank" rel="noopener">Extrait PDF</a>
+          <a
+            href="https://nouveautes-editeurs.bnf.fr/accueil?id_declaration=10000001326831&amp;titre_livre=Le_Point_Noir_Intersyst%C3%A9mique"
+            target="_blank"
+            rel="noopener noreferrer"
+          >Notice BnF</a>
           <a href="#haut">Haut de page ↑</a>
         </div>
       </div>
