@@ -6,10 +6,12 @@ Page éditoriale statique, responsive et sans dépendance externe, publiée avec
 
 - `index.html` : structure, textes publics, métadonnées SEO et données structurées du livre.
 - `styles.css` : direction artistique, responsive et accessibilité visuelle.
-- `script.js` : navigation mobile, progression, feuilleteur des pages 13 à 19, partage et copie de l’ISBN.
-- `assets/` : couverture, sept pages d’extrait, visuel social et polices locales.
+- `script.js` : navigation mobile, progression, feuilleteur mémorisé des pages 13 à 19, lexique interactif, partage et copies bibliographiques.
+- `assets/` : couverture, signatures authentiques Vixta et Sekaï extraites de la couverture, sept pages d’extrait, visuel social et polices locales.
 - `extrait-le-point-noir-intersystemique.pdf` : couverture d’extrait, pages 13 à 19 et page finale d’achat.
 - `robots.txt` et `sitemap.xml` : indexation de la page publique.
+
+Le dossier analytique est volontairement replié à l’arrivée. Il distingue les fonctions du livre, de la thèse et du dictionnaire, puis présente six concepts avec leurs limites d’usage. Il décrit une rigueur documentaire et interne, sans revendiquer de validation empirique ou scientifique.
 
 ## Publication
 

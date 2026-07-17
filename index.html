@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
   <head>
     <meta charset="utf-8" />
@@ -55,7 +55,7 @@
     <link rel="preload" href="assets/Inter-Regular.ttf" as="font" type="font/ttf" crossorigin />
     <link rel="preload" href="assets/SourceSerif-Italic.ttf" as="font" type="font/ttf" crossorigin />
     <script>document.documentElement.classList.add("js");</script>
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles.css?v=20260717-2" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -101,7 +101,13 @@
       </div>
       <div class="shell header-inner">
         <a class="brand" href="#haut" aria-label="Retour en haut de la page">
-          <span class="brand-name">VIXTA</span>
+          <img
+            class="brand-logo"
+            src="assets/logo-vixta.png"
+            width="195"
+            height="151"
+            alt="Vixta"
+          />
           <span class="brand-context">POINT NOIR · I</span>
         </a>
 
@@ -124,7 +130,7 @@
         >
           <a href="#livre">Le livre</a>
           <a href="#extrait">Extrait</a>
-          <a href="#questions">Questions</a>
+          <a href="#approfondir">Approfondir</a>
           <a href="#lecture">Pour qui</a>
           <a href="#objet">Le relié</a>
         </nav>
@@ -198,7 +204,11 @@
               </div>
               <figcaption>
                 <span>Couverture de l’édition reliée</span>
-                <span>Vixta · 2026</span>
+                <span class="cover-signatures" role="img" aria-label="Vixta, système Sekaï">
+                  <img src="assets/logo-vixta.png" width="195" height="151" alt="" />
+                  <i aria-hidden="true"></i>
+                  <img src="assets/logo-sekai.png" width="307" height="204" alt="" />
+                </span>
               </figcaption>
             </figure>
             <p class="vertical-note" aria-hidden="true">ONTOLOGIE · PHILOSOPHIE</p>
@@ -283,6 +293,12 @@
               </p>
             </article>
           </div>
+
+          <a class="depth-link reveal" href="#approfondir">
+            <span>POUR ALLER PLUS LOIN</span>
+            <strong>Examiner la structure conceptuelle et ses garde-fous</strong>
+            <i aria-hidden="true">↓</i>
+          </a>
         </div>
       </section>
 
@@ -309,7 +325,7 @@
               <span class="excerpt-label" data-excerpt-label>EXTRAIT · P. 13</span>
             </div>
 
-            <div class="excerpt-controls" aria-label="Navigation dans l’extrait">
+            <div class="excerpt-controls" role="group" aria-label="Navigation dans l’extrait">
               <button type="button" data-excerpt-prev disabled>
                 <span aria-hidden="true">←</span>
                 <span>Précédente</span>
@@ -323,7 +339,7 @@
               </button>
             </div>
 
-            <div class="excerpt-pagination" aria-label="Choisir une page de l’extrait">
+            <div class="excerpt-pagination" role="group" aria-label="Choisir une page de l’extrait">
               <button type="button" data-excerpt-page="13" aria-current="page" aria-label="Page 13">13</button>
               <button type="button" data-excerpt-page="14" aria-label="Page 14">14</button>
               <button type="button" data-excerpt-page="15" aria-label="Page 15">15</button>
@@ -333,7 +349,7 @@
               <button type="button" data-excerpt-page="19" aria-label="Page 19">19</button>
             </div>
             <p class="viewer-help" id="excerpt-help">
-              Utilisez les boutons, ou les flèches gauche et droite lorsque le feuilleteur est sélectionné.
+              Boutons ou flèches gauche et droite. La page reste mémorisée pendant cette visite.
             </p>
           </div>
 
@@ -480,7 +496,7 @@
           <div class="section-heading reveal">
             <div>
               <p class="eyebrow eyebrow-blue">FRAGMENTS</p>
-              <h2 id="fragments-titre">La preuve reste dans le texte.</h2>
+              <h2 id="fragments-titre">Le texte reste le premier repère.</h2>
             </div>
             <p>Trois phrases réelles, sans reformulation promotionnelle.</p>
           </div>
@@ -502,6 +518,273 @@
         </div>
       </section>
 
+      <section class="analysis section" id="approfondir" aria-labelledby="analyse-titre">
+        <div class="analysis-orbit analysis-orbit-one" aria-hidden="true"></div>
+        <div class="analysis-orbit analysis-orbit-two" aria-hidden="true"></div>
+
+        <div class="shell analysis-shell">
+          <div class="analysis-entry reveal">
+            <div>
+              <p class="eyebrow eyebrow-light">DOSSIER ANALYTIQUE · LECTURE OPTIONNELLE</p>
+              <h2 id="analyse-titre">Examiner la construction derrière le texte.</h2>
+            </div>
+            <p>
+              Cette seconde couche s’adresse au lecteur qui souhaite vérifier la
+              précision du dispositif : hypothèse minimale, vocabulaire stabilisé,
+              domaines de validité et limites internes. Elle n’est pas nécessaire
+              pour découvrir le livre.
+            </p>
+          </div>
+
+          <details class="analysis-disclosure reveal" data-analysis-disclosure>
+            <summary>
+              <span class="analysis-summary-copy">
+                <strong>Ouvrir le dossier de construction</strong>
+                <span>Architecture documentaire, concepts opératifs et garde-fous d’interprétation.</span>
+              </span>
+              <span class="analysis-summary-action">
+                <span>Approfondir</span>
+                <i aria-hidden="true">+</i>
+              </span>
+            </summary>
+
+            <div class="analysis-body">
+              <div class="analysis-metrics" role="list" aria-label="Repères documentaires">
+                <article role="listitem">
+                  <strong>88</strong>
+                  <span>pages continues dans le volume publié</span>
+                </article>
+                <article role="listitem">
+                  <strong>24</strong>
+                  <span>entrées opératives dans le dictionnaire associé</span>
+                </article>
+                <article role="listitem">
+                  <strong>3</strong>
+                  <span>niveaux documentaires aux fonctions distinctes</span>
+                </article>
+                <article role="listitem">
+                  <strong>5</strong>
+                  <span>familles de glissements interprétatifs explicitement bornées</span>
+                </article>
+              </div>
+
+              <section class="analysis-block" aria-labelledby="rigueur-titre">
+                <div class="analysis-block-heading">
+                  <p class="analysis-index">01 · RIGUEUR INTERNE</p>
+                  <h3 id="rigueur-titre">Ce qui est contrôlé — et ce qui ne l’est pas revendiqué.</h3>
+                  <p>
+                    La rigueur exposée ici est une rigueur de construction et de
+                    cohérence interne. Elle ne vaut ni validation empirique, ni
+                    démonstration universelle.
+                  </p>
+                </div>
+
+                <div class="rigor-grid">
+                  <article>
+                    <span>HYPOTHÈSE</span>
+                    <h4>Un noyau minimal explicite</h4>
+                    <p>
+                      Une opacité demeure lorsque la traduction exhaustive échoue
+                      sans que la relation se rompe.
+                    </p>
+                  </article>
+                  <article>
+                    <span>REPÉRAGE</span>
+                    <h4>Des critères structurels</h4>
+                    <p>
+                      Non-imposition, abandon de la traduction intégrale et maintien
+                      d’une tension non résolue.
+                    </p>
+                  </article>
+                  <article>
+                    <span>LEXIQUE</span>
+                    <h4>Des usages stabilisés</h4>
+                    <p>
+                      Chaque terme est borné par une définition, un domaine de
+                      validité, des incompatibilités et des erreurs de projection.
+                    </p>
+                  </article>
+                  <article>
+                    <span>LIMITES</span>
+                    <h4>Une portée volontairement locale</h4>
+                    <p>
+                      Ni méthode, ni norme morale, ni ontologie totale, ni promesse
+                      d’application générale.
+                    </p>
+                  </article>
+                </div>
+              </section>
+
+              <section class="analysis-block concept-lab" aria-labelledby="concepts-titre">
+                <div class="analysis-block-heading">
+                  <p class="analysis-index">02 · LEXIQUE OPÉRATIF</p>
+                  <h3 id="concepts-titre">Six termes, six périmètres précis.</h3>
+                  <p>
+                    Sélectionnez un terme pour distinguer sa fonction dans le régime
+                    de lecture et les interprétations qui lui sont refusées.
+                  </p>
+                </div>
+
+                <div class="concept-workbench">
+                  <div class="concept-tabs" role="tablist" aria-label="Concepts à examiner">
+                    <button id="concept-tab-point-noir" type="button" role="tab" aria-selected="true" aria-controls="concept-panel-point-noir" data-concept-tab="point-noir">Point Noir</button>
+                    <button id="concept-tab-suspension" type="button" role="tab" aria-selected="false" aria-controls="concept-panel-suspension" data-concept-tab="suspension" tabindex="-1">Suspension</button>
+                    <button id="concept-tab-relation" type="button" role="tab" aria-selected="false" aria-controls="concept-panel-relation" data-concept-tab="relation" tabindex="-1">Relation</button>
+                    <button id="concept-tab-tension" type="button" role="tab" aria-selected="false" aria-controls="concept-panel-tension" data-concept-tab="tension" tabindex="-1">Tension</button>
+                    <button id="concept-tab-opacite" type="button" role="tab" aria-selected="false" aria-controls="concept-panel-opacite" data-concept-tab="opacite" tabindex="-1">Opacité</button>
+                    <button id="concept-tab-lisibilite" type="button" role="tab" aria-selected="false" aria-controls="concept-panel-lisibilite" data-concept-tab="lisibilite" tabindex="-1">Lisibilité</button>
+                  </div>
+
+                  <div class="concept-panels">
+                    <article class="concept-panel is-active" id="concept-panel-point-noir" role="tabpanel" aria-labelledby="concept-tab-point-noir" data-concept-panel="point-noir">
+                      <p class="concept-category">CONDITION OPÉRATOIRE</p>
+                      <h4>Le Point Noir</h4>
+                      <p class="concept-definition">
+                        Suspension de l’imposition réciproque entre des cadres de
+                        cohérence, sans dissolution de ces cadres et sans production
+                        d’un contenu commun.
+                      </p>
+                      <div class="concept-boundaries">
+                        <div><span>DANS LE RÉGIME</span><p>Co-tenue locale de cohérences distinctes, sans hiérarchie ni capture.</p></div>
+                        <div><span>À NE PAS PROJETER</span><p>Un lieu, une entité, une expérience intérieure, une méthode ou un idéal d’harmonie.</p></div>
+                      </div>
+                    </article>
+
+                    <article class="concept-panel" id="concept-panel-suspension" role="tabpanel" aria-labelledby="concept-tab-suspension" data-concept-panel="suspension">
+                      <p class="concept-category">OPÉRATION LOCALE</p>
+                      <h4>La Suspension</h4>
+                      <p class="concept-definition">
+                        L’acte d’affirmation cesse d’exercer sa fonction de clôture,
+                        sans être remplacé par une autre opération.
+                      </p>
+                      <div class="concept-boundaries">
+                        <div><span>DANS LE RÉGIME</span><p>La fixation se désactive tandis que les cohérences continuent de se tenir.</p></div>
+                        <div><span>À NE PAS PROJETER</span><p>Une pause mentale, un choix, une discipline, un renoncement ou une pratique méditative.</p></div>
+                      </div>
+                    </article>
+
+                    <article class="concept-panel" id="concept-panel-relation" role="tabpanel" aria-labelledby="concept-tab-relation" data-concept-panel="relation">
+                      <p class="concept-category">CHAMP DE CO-TENUE</p>
+                      <h4>La Relation</h4>
+                      <p class="concept-definition">
+                        Des cohérences distinctes demeurent compatibles sans se
+                        réduire ni fusionner ; la circulation reste possible sans
+                        appropriation.
+                      </p>
+                      <div class="concept-boundaries">
+                        <div><span>DANS LE RÉGIME</span><p>Présence réciproque sans accord, convergence ni traduction forcée.</p></div>
+                        <div><span>À NE PAS PROJETER</span><p>Une communication, une harmonie, une compréhension mutuelle ou une réconciliation.</p></div>
+                      </div>
+                    </article>
+
+                    <article class="concept-panel" id="concept-panel-tension" role="tabpanel" aria-labelledby="concept-tab-tension" data-concept-panel="tension">
+                      <p class="concept-category">CONDITION DYNAMIQUE</p>
+                      <h4>La Tension</h4>
+                      <p class="concept-definition">
+                        La différence demeure active dans la relation sans se résoudre,
+                        se neutraliser ou se stabiliser en forme close.
+                      </p>
+                      <div class="concept-boundaries">
+                        <div><span>DANS LE RÉGIME</span><p>Maintien de la différence lorsque ni coïncidence ni séparation ne sont imposées.</p></div>
+                        <div><span>À NE PAS PROJETER</span><p>Un conflit, une lutte, une contradiction logique ou un moteur de transformation.</p></div>
+                      </div>
+                    </article>
+
+                    <article class="concept-panel" id="concept-panel-opacite" role="tabpanel" aria-labelledby="concept-tab-opacite" data-concept-panel="opacite">
+                      <p class="concept-category">LIMITE STRUCTURELLE</p>
+                      <h4>L’Opacité</h4>
+                      <p class="concept-definition">
+                        Une cohérence demeure irréductible : ni intégralement
+                        traduisible, ni transparentable, ni appropriable par l’autre.
+                      </p>
+                      <div class="concept-boundaries">
+                        <div><span>DANS LE RÉGIME</span><p>La réduction échoue sans rupture et la relation se maintient malgré cette limite.</p></div>
+                        <div><span>À NE PAS PROJETER</span><p>Un mystère, une obscurité, un déficit d’information ou une limite à dépasser.</p></div>
+                      </div>
+                    </article>
+
+                    <article class="concept-panel" id="concept-panel-lisibilite" role="tabpanel" aria-labelledby="concept-tab-lisibilite" data-concept-panel="lisibilite">
+                      <p class="concept-category">EFFET OPÉRATOIRE</p>
+                      <h4>La Lisibilité</h4>
+                      <p class="concept-definition">
+                        Une cohérence devient perceptible dans sa tenue sans être
+                        saisie, interprétée ou convertie en contenu stabilisé.
+                      </p>
+                      <div class="concept-boundaries">
+                        <div><span>DANS LE RÉGIME</span><p>Apparition fonctionnelle sans capture, lorsque la fixation demeure suspendue.</p></div>
+                        <div><span>À NE PAS PROJETER</span><p>Une compréhension achevée, une explication, une évidence ou un accès direct au sens.</p></div>
+                      </div>
+                    </article>
+                  </div>
+                </div>
+              </section>
+
+              <section class="analysis-block" aria-labelledby="architecture-titre">
+                <div class="analysis-block-heading">
+                  <p class="analysis-index">03 · ARCHITECTURE DOCUMENTAIRE</p>
+                  <h3 id="architecture-titre">Trois fonctions qui ne se remplacent pas.</h3>
+                  <p>
+                    Le livre porte l’expérience de lecture ; les deux documents
+                    associés rendent sa construction contrôlable sans en fournir une
+                    prétendue « clé ».
+                  </p>
+                </div>
+
+                <div class="document-map">
+                  <article>
+                    <span>01</span>
+                    <p class="document-type">LE LIVRE · 88 PAGES</p>
+                    <h4>Faire tenir le mouvement</h4>
+                    <p>Un texte continu, sans chapitres, construit par reprises et déplacements.</p>
+                  </article>
+                  <article>
+                    <span>02</span>
+                    <p class="document-type">LA THÈSE · 3 PAGES</p>
+                    <h4>Formuler le noyau minimal</h4>
+                    <p>Orientation, hypothèse, définition opératoire, critères de repérage, portée et limites.</p>
+                  </article>
+                  <article>
+                    <span>03</span>
+                    <p class="document-type">LE DICTIONNAIRE · 70 PAGES</p>
+                    <h4>Stabiliser les usages</h4>
+                    <p>24 entrées avec validité locale, incompatibilités, projections erronées et conditions de révision.</p>
+                  </article>
+                </div>
+              </section>
+
+              <aside class="analysis-caveat">
+                <div>
+                  <p class="analysis-index">GARDE-FOU</p>
+                  <h3>Ne pas transformer la précision en surpromesse.</h3>
+                </div>
+                <p>
+                  Cet appareil atteste un travail de définition, de limitation et de
+                  cohérence interne. Il ne prouve pas que le Point Noir serait une loi
+                  générale du réel, une découverte scientifique ou une méthode à
+                  appliquer. Cette retenue fait partie de la rigueur du projet.
+                </p>
+              </aside>
+
+              <div class="analysis-reference">
+                <div>
+                  <span>RÉFÉRENCE DU VOLUME</span>
+                  <p>Vixta, <cite>Le Point Noir Intersystémique — Les configurations du dialogue</cite>, 2026, 88 p., ISBN 979-10-982701-0-9.</p>
+                </div>
+                <div class="analysis-reference-actions">
+                  <button type="button" data-copy-reference hidden>Copier la référence</button>
+                  <a href="#extrait">Revenir au texte <span aria-hidden="true">↑</span></a>
+                </div>
+                <p class="analysis-status" aria-live="polite" data-analysis-status></p>
+              </div>
+
+              <button class="analysis-close" type="button" data-analysis-close hidden>
+                Refermer le dossier <span aria-hidden="true">↑</span>
+              </button>
+            </div>
+          </details>
+        </div>
+      </section>
+
       <section class="object-section section section-paper" id="objet" aria-labelledby="objet-titre">
         <div class="shell object-grid">
           <div class="object-cover reveal">
@@ -511,7 +794,7 @@
               height="2500"
               loading="lazy"
               decoding="async"
-              alt="Couverture complète du livre relié Le Point Noir Intersystémique"
+              alt="Couverture de l’édition reliée du livre Le Point Noir Intersystémique"
             />
           </div>
 
@@ -524,6 +807,17 @@
               du Point Noir. Vixta est le nom d’auteur ; le travail s’inscrit
               dans le développement du système Sekaï.
             </p>
+
+            <div class="identity-pair" role="group" aria-label="Identités portées sur la couverture">
+              <div>
+                <img src="assets/logo-vixta.png" width="195" height="151" alt="Signature Vixta" />
+                <span>Nom d’auteur</span>
+              </div>
+              <div>
+                <img src="assets/logo-sekai.png" width="307" height="204" alt="Signature Sekaï" />
+                <span>Système de recherche</span>
+              </div>
+            </div>
 
             <dl class="spec-list">
               <div><dt>Format</dt><dd>Relié · 15,24 × 22,86 cm</dd></div>
@@ -602,7 +896,11 @@
             </details>
             <details class="reveal">
               <summary>À quoi servent la thèse et le dictionnaire&nbsp;?<span aria-hidden="true">+</span></summary>
-              <p>À l’étude et à la stabilisation des termes après ou autour de la lecture. Ils ne remplacent pas le livre.</p>
+              <p>
+                À isoler l’hypothèse minimale et à stabiliser les usages après ou
+                autour de la lecture. Ils ne remplacent pas le livre.
+                <a class="inline-link" href="#approfondir">Examiner le dossier analytique</a>.
+              </p>
             </details>
           </div>
         </div>
@@ -638,7 +936,11 @@
     <footer class="site-footer">
       <div class="shell footer-grid">
         <div>
-          <p class="footer-brand">VIXTA</p>
+          <div class="footer-identities" role="group" aria-label="Vixta et système Sekaï">
+            <img src="assets/logo-vixta.png" width="195" height="151" alt="Vixta" />
+            <i aria-hidden="true"></i>
+            <img src="assets/logo-sekai.png" width="307" height="204" alt="Sekaï" />
+          </div>
           <p>Travail inscrit dans le développement du système Sekaï.</p>
         </div>
         <div>
@@ -657,6 +959,6 @@
       </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script src="script.js?v=20260717-2"></script>
   </body>
 </html>

@@ -109,6 +109,14 @@
   const excerptPages = Array.from({ length: 7 }, (_, index) => index + 13);
   let currentPageIndex = 0;
 
+  const readSavedExcerptPage = () => {
+    try {
+      return Number(window.sessionStorage.getItem("point-noir-excerpt-page"));
+    } catch {
+      return 0;
+    }
+  };
+
   const preloadExcerptPage = (page) => {
     if (!excerptPages.includes(page)) return;
     const image = new Image();
@@ -135,6 +143,12 @@
       else button.removeAttribute("aria-current");
     });
 
+    try {
+      window.sessionStorage.setItem("point-noir-excerpt-page", String(page));
+    } catch {
+      // Le feuilleteur reste pleinement utilisable si le stockage est indisponible.
+    }
+
     preloadExcerptPage(excerptPages[boundedIndex - 1]);
     preloadExcerptPage(excerptPages[boundedIndex + 1]);
   };
@@ -157,7 +171,11 @@
       showExcerptPage(currentPageIndex + 1);
     }
   });
-  if (viewer) showExcerptPage(0);
+  if (viewer) {
+    const savedPage = readSavedExcerptPage();
+    const savedIndex = excerptPages.indexOf(savedPage);
+    showExcerptPage(savedIndex >= 0 ? savedIndex : 0);
+  }
 
   const status = document.querySelector("[data-action-status]");
   let statusTimer = null;
@@ -226,6 +244,87 @@
         } catch {
           setStatus("Le partage n’a pas pu être ouvert.");
         }
+      }
+    });
+  }
+
+  const conceptTabs = [...document.querySelectorAll("[data-concept-tab]")];
+  const conceptPanels = [...document.querySelectorAll("[data-concept-panel]")];
+
+  const activateConcept = (key, moveFocus = false) => {
+    const nextTab = conceptTabs.find((tab) => tab.dataset.conceptTab === key);
+    const nextPanel = conceptPanels.find((panel) => panel.dataset.conceptPanel === key);
+    if (!nextTab || !nextPanel) return;
+
+    conceptTabs.forEach((tab) => {
+      const active = tab === nextTab;
+      tab.setAttribute("aria-selected", String(active));
+      tab.tabIndex = active ? 0 : -1;
+    });
+
+    conceptPanels.forEach((panel) => {
+      panel.classList.toggle("is-active", panel === nextPanel);
+    });
+
+    if (moveFocus) nextTab.focus();
+  };
+
+  conceptTabs.forEach((tab, index) => {
+    tab.addEventListener("click", () => activateConcept(tab.dataset.conceptTab));
+    tab.addEventListener("keydown", (event) => {
+      let nextIndex = null;
+      if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+        nextIndex = (index + 1) % conceptTabs.length;
+      }
+      if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+        nextIndex = (index - 1 + conceptTabs.length) % conceptTabs.length;
+      }
+      if (event.key === "Home") nextIndex = 0;
+      if (event.key === "End") nextIndex = conceptTabs.length - 1;
+      if (nextIndex === null) return;
+      event.preventDefault();
+      activateConcept(conceptTabs[nextIndex].dataset.conceptTab, true);
+    });
+  });
+
+  if (conceptTabs.length) activateConcept(conceptTabs[0].dataset.conceptTab);
+
+  const analysisDisclosure = document.querySelector("[data-analysis-disclosure]");
+  const analysisSummary = analysisDisclosure?.querySelector("summary");
+  const analysisClose = document.querySelector("[data-analysis-close]");
+  const analysisStatus = document.querySelector("[data-analysis-status]");
+  const copyReferenceButton = document.querySelector("[data-copy-reference]");
+  let analysisStatusTimer = null;
+
+  const setAnalysisStatus = (message) => {
+    if (!analysisStatus) return;
+    analysisStatus.textContent = message;
+    window.clearTimeout(analysisStatusTimer);
+    analysisStatusTimer = window.setTimeout(() => {
+      analysisStatus.textContent = "";
+    }, 4500);
+  };
+
+  if (analysisClose) {
+    analysisClose.hidden = false;
+    analysisClose.addEventListener("click", () => {
+      if (!analysisDisclosure) return;
+      analysisDisclosure.open = false;
+      analysisSummary?.focus({ preventScroll: true });
+      analysisDisclosure.scrollIntoView?.({ behavior: "smooth", block: "center" });
+    });
+  }
+
+  if (copyReferenceButton) {
+    copyReferenceButton.hidden = false;
+    copyReferenceButton.addEventListener("click", async () => {
+      const reference =
+        "Vixta, Le Point Noir Intersystémique — Les configurations du dialogue, 2026, 88 p., ISBN 979-10-982701-0-9.";
+      try {
+        await copyText(reference);
+        setAnalysisStatus("Référence bibliographique copiée.");
+      } catch {
+        setAnalysisStatus("Impossible de copier automatiquement la référence.");
       }
     });
   }
