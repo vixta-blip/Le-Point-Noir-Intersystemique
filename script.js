@@ -1,4 +1,6 @@
 (() => {
+  document.documentElement.classList.add("js-ready");
+
   const header = document.querySelector("[data-header]");
   const progress = document.querySelector("[data-reading-progress]");
   const navToggle = document.querySelector("[data-nav-toggle]");
@@ -99,6 +101,104 @@
     revealItems.forEach((item) => revealObserver.observe(item));
   }
 
+  document.querySelectorAll("[data-accordion]").forEach((accordion) => {
+    const items = [...accordion.querySelectorAll(":scope > details")];
+    items.forEach((details) => {
+      details.addEventListener("toggle", () => {
+        if (!details.open) return;
+        items.forEach((other) => {
+          if (other !== details) other.open = false;
+        });
+      });
+    });
+  });
+
+  const mockup = document.querySelector("[data-book-mockup]");
+  const mockupButtons = [...document.querySelectorAll("[data-mockup-view]")];
+  const mockupStatus = document.querySelector("[data-mockup-status]");
+  const mockupLabels = {
+    front: "Première de couverture",
+    spine: "Vue de la tranche du relié",
+    back: "Quatrième de couverture",
+  };
+  const mockupAssets = {
+    front: {
+      src: "assets/couverture-le-point-noir-intersystemique.png",
+      width: 1624,
+      height: 2500,
+      alt: "Première de couverture du livre Le Point Noir Intersystémique",
+    },
+    spine: {
+      src: "assets/couverture-tranche.webp",
+      width: 120,
+      height: 2500,
+      alt: "Tranche du livre relié Le Point Noir Intersystémique",
+    },
+    back: {
+      src: "assets/couverture-dos.webp",
+      width: 1624,
+      height: 2500,
+      alt: "Quatrième de couverture du livre Le Point Noir Intersystémique",
+    },
+  };
+
+  const setMockupView = (view, moveFocus = false) => {
+    if (!mockup || !mockupLabels[view]) return;
+    mockup.dataset.view = view;
+    mockupButtons.forEach((button) => {
+      const active = button.dataset.mockupView === view;
+      button.setAttribute("aria-pressed", String(active));
+      if (active && moveFocus) button.focus();
+    });
+    if (mockupStatus) mockupStatus.textContent = mockupLabels[view];
+  };
+
+  mockupButtons.forEach((button, index) => {
+    button.addEventListener("click", () => setMockupView(button.dataset.mockupView));
+    button.addEventListener("keydown", (event) => {
+      if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+      event.preventDefault();
+      const direction = event.key === "ArrowRight" ? 1 : -1;
+      const nextIndex = (index + direction + mockupButtons.length) % mockupButtons.length;
+      setMockupView(mockupButtons[nextIndex].dataset.mockupView, true);
+    });
+  });
+
+  const coverDialog = document.querySelector("[data-cover-dialog]");
+  const coverDialogImage = document.querySelector("[data-cover-dialog-image]");
+  const coverDialogCaption = document.querySelector("[data-cover-dialog-caption]");
+  const openCoverDialog = document.querySelector("[data-open-cover-dialog]");
+  const closeCoverDialog = document.querySelector("[data-close-cover-dialog]");
+
+  const closeExpandedCover = () => {
+    if (!coverDialog) return;
+    if (typeof coverDialog.close === "function") coverDialog.close();
+    else coverDialog.removeAttribute("open");
+  };
+
+  if (openCoverDialog) {
+    openCoverDialog.hidden = false;
+    openCoverDialog.addEventListener("click", () => {
+      if (!coverDialog || !mockup) return;
+      const view = mockup.dataset.view || "front";
+      const asset = mockupAssets[view];
+      if (coverDialogImage && asset) {
+        coverDialogImage.src = asset.src;
+        coverDialogImage.width = asset.width;
+        coverDialogImage.height = asset.height;
+        coverDialogImage.alt = asset.alt;
+      }
+      if (coverDialogCaption) coverDialogCaption.textContent = mockupLabels[view];
+      if (typeof coverDialog.showModal === "function") coverDialog.showModal();
+      else coverDialog.setAttribute("open", "");
+    });
+  }
+
+  closeCoverDialog?.addEventListener("click", closeExpandedCover);
+  coverDialog?.addEventListener("click", (event) => {
+    if (event.target === coverDialog) closeExpandedCover();
+  });
+
   const viewer = document.querySelector("[data-excerpt-viewer]");
   const excerptImage = document.querySelector("[data-excerpt-image]");
   const excerptLabel = document.querySelector("[data-excerpt-label]");
@@ -146,7 +246,7 @@
     try {
       window.sessionStorage.setItem("point-noir-excerpt-page", String(page));
     } catch {
-      // Le feuilleteur reste pleinement utilisable si le stockage est indisponible.
+      // Le feuilleteur reste utilisable si le stockage de session est indisponible.
     }
 
     preloadExcerptPage(excerptPages[boundedIndex - 1]);
@@ -177,17 +277,6 @@
     showExcerptPage(savedIndex >= 0 ? savedIndex : 0);
   }
 
-  const status = document.querySelector("[data-action-status]");
-  let statusTimer = null;
-  const setStatus = (message) => {
-    if (!status) return;
-    status.textContent = message;
-    window.clearTimeout(statusTimer);
-    statusTimer = window.setTimeout(() => {
-      status.textContent = "";
-    }, 4500);
-  };
-
   const copyText = async (value) => {
     if (navigator.clipboard?.writeText) {
       await navigator.clipboard.writeText(value);
@@ -203,6 +292,17 @@
     field.select();
     document.execCommand("copy");
     field.remove();
+  };
+
+  const status = document.querySelector("[data-action-status]");
+  let statusTimer = null;
+  const setStatus = (message) => {
+    if (!status) return;
+    status.textContent = message;
+    window.clearTimeout(statusTimer);
+    statusTimer = window.setTimeout(() => {
+      status.textContent = "";
+    }, 4500);
   };
 
   const copyIsbnButton = document.querySelector("[data-copy-isbn]");
@@ -248,49 +348,8 @@
     });
   }
 
-  const conceptTabs = [...document.querySelectorAll("[data-concept-tab]")];
-  const conceptPanels = [...document.querySelectorAll("[data-concept-panel]")];
-
-  const activateConcept = (key, moveFocus = false) => {
-    const nextTab = conceptTabs.find((tab) => tab.dataset.conceptTab === key);
-    const nextPanel = conceptPanels.find((panel) => panel.dataset.conceptPanel === key);
-    if (!nextTab || !nextPanel) return;
-
-    conceptTabs.forEach((tab) => {
-      const active = tab === nextTab;
-      tab.setAttribute("aria-selected", String(active));
-      tab.tabIndex = active ? 0 : -1;
-    });
-
-    conceptPanels.forEach((panel) => {
-      panel.classList.toggle("is-active", panel === nextPanel);
-    });
-
-    if (moveFocus) nextTab.focus();
-  };
-
-  conceptTabs.forEach((tab, index) => {
-    tab.addEventListener("click", () => activateConcept(tab.dataset.conceptTab));
-    tab.addEventListener("keydown", (event) => {
-      let nextIndex = null;
-      if (event.key === "ArrowRight" || event.key === "ArrowDown") {
-        nextIndex = (index + 1) % conceptTabs.length;
-      }
-      if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
-        nextIndex = (index - 1 + conceptTabs.length) % conceptTabs.length;
-      }
-      if (event.key === "Home") nextIndex = 0;
-      if (event.key === "End") nextIndex = conceptTabs.length - 1;
-      if (nextIndex === null) return;
-      event.preventDefault();
-      activateConcept(conceptTabs[nextIndex].dataset.conceptTab, true);
-    });
-  });
-
-  if (conceptTabs.length) activateConcept(conceptTabs[0].dataset.conceptTab);
-
   const analysisDisclosure = document.querySelector("[data-analysis-disclosure]");
-  const analysisSummary = analysisDisclosure?.querySelector("summary");
+  const analysisSummary = analysisDisclosure?.querySelector(":scope > summary");
   const analysisClose = document.querySelector("[data-analysis-close]");
   const analysisStatus = document.querySelector("[data-analysis-status]");
   const copyReferenceButton = document.querySelector("[data-copy-reference]");
@@ -329,12 +388,65 @@
     });
   }
 
-  document.querySelectorAll(".faq-list details").forEach((details) => {
-    details.addEventListener("toggle", () => {
-      if (!details.open) return;
-      document.querySelectorAll(".faq-list details[open]").forEach((other) => {
-        if (other !== details) other.open = false;
-      });
+  const shelf = document.querySelector("[data-library-shelf]");
+  const shelfStatus = document.querySelector("[data-library-status]");
+  const catalogue = window.VIXTA_CATALOGUE;
+
+  const selectShelfBook = (bookElement, book) => {
+    if (!shelf) return;
+    shelf.querySelectorAll(".shelf-book").forEach((item) => {
+      item.classList.toggle("is-selected", item === bookElement);
     });
-  });
+    if (shelfStatus) shelfStatus.textContent = `${book.title} est sélectionné.`;
+  };
+
+  if (shelf && catalogue?.books?.length) {
+    const visibleBooks = catalogue.books
+      .filter((book) => book.published || book.slug === catalogue.activeBook)
+      .sort((a, b) => Number(b.slug === catalogue.activeBook) - Number(a.slug === catalogue.activeBook));
+
+    shelf.replaceChildren();
+    visibleBooks.forEach((book, index) => {
+      const link = document.createElement("a");
+      const active = book.slug === catalogue.activeBook;
+      const lean = visibleBooks.length === 1 ? 0 : (index - (visibleBooks.length - 1) / 2) * 15;
+      link.className = `shelf-book${active ? " is-current is-selected" : ""}`;
+      link.href = book.pageUrl;
+      link.style.setProperty("--shelf-lean", `${lean}deg`);
+      link.setAttribute("aria-label", `${book.title}${active ? ", campagne actuelle" : ""}`);
+      if (active) link.setAttribute("aria-current", "page");
+
+      const object = document.createElement("span");
+      object.className = "shelf-book-object";
+      const image = document.createElement("img");
+      image.src = book.cover;
+      image.width = book.coverWidth;
+      image.height = book.coverHeight;
+      image.loading = "lazy";
+      image.alt = `Couverture de ${book.title}`;
+      const spine = document.createElement("i");
+      spine.setAttribute("aria-hidden", "true");
+      object.append(image, spine);
+
+      const label = document.createElement("span");
+      label.className = "shelf-book-label";
+      label.textContent = book.campaignLabel || book.shortTitle;
+      link.append(object, label);
+
+      link.addEventListener("click", (event) => {
+        event.preventDefault();
+        selectShelfBook(link, book);
+        const reducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+        window.setTimeout(() => {
+          if (book.pageUrl.startsWith("#")) {
+            document.querySelector(book.pageUrl)?.scrollIntoView({ behavior: "smooth" });
+          } else {
+            window.location.assign(book.pageUrl);
+          }
+        }, reducedMotion ? 0 : 480);
+      });
+
+      shelf.append(link);
+    });
+  }
 })();
