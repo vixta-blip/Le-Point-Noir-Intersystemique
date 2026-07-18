@@ -7,7 +7,7 @@ Page éditoriale statique, responsive et sans dépendance externe, publiée avec
 - `index.html` : structure, textes publics, métadonnées SEO et données structurées du livre.
 - `styles.css`, `photo-theme.css` et les feuilles `photo-perspective-*.css` : structure visuelle, direction photographique mauve, perspective éditoriale, responsive et accessibilité.
 - `collection.js` : catalogue éditorial extensible, livre mis en avant et signature sonore propre à chaque volume.
-- `script.js` : navigation mobile, progression, étagère interactive, motif sonore facultatif du livre, feuilleteur mémorisé, volets de définition et partage.
+- `script.js` : navigation mobile, progression, étagère interactive, micro-interactions sonores, feuilleteur mémorisé, volets de définition et partage.
 - `assets/` : couvertures sources, rendu photographique transparent du volume, signatures authentiques Vixta et Sekaï, sept pages d’extrait, visuel social et polices locales compressées.
 - `extrait-le-point-noir-intersystemique.pdf` : couverture d’extrait, pages 13 à 19 et page finale d’achat.
 - `extrait-accessible.html` : transcription HTML des sept pages proposées dans le feuilleteur.
@@ -18,7 +18,7 @@ La page applique trois niveaux de lecture : repères placés dès l’entrée, t
 
 Le livre du premier écran est présenté comme une photographie de produit détourée, sans cadre rapporté. Sa géométrie provient des photographies du véritable exemplaire : volume fin de 88 pages, dos blanc plat et mors de reliure discrets. La première de couverture et le graphisme du dos ont été reprojetés depuis le PDF de couverture, sans régénération typographique. L’angle ne tourne jamais. Au survol ou au focus clavier, le volume se soulève légèrement ; les volumes voisins s’écartent discrètement lorsque la collection en contient plusieurs.
 
-Le motif sonore du livre est désactivé par défaut. Le lecteur peut l’activer au pied de l’étagère ; son choix est mémorisé dans le navigateur. Le son est synthétisé localement, bref, faible et sans lecture automatique. Chaque livre peut recevoir son propre motif de trois notes dans `collection.js`. Les autres commandes de la page restent silencieuses.
+Le site ne contient ni musique de fond ni interrupteur sonore. Après le premier geste du visiteur — conformément aux règles des navigateurs — des micro-sons synthétisés localement accompagnent les survols, activations, ouvertures, fermetures, navigations et changements de page. Ils restent brefs, doux mais audibles, et aucune information ne dépend du son. Chaque livre peut recevoir son propre motif de trois notes dans `collection.js`.
 
 Pour ajouter un livre, compléter le tableau `books` de `collection.js` avec son identifiant, son titre, son sous-titre, ses liens, ses fichiers de première de couverture, tranche et quatrième de couverture, leurs dimensions et son `soundProfile`. Un rendu photographique détouré peut être fourni dans `render`, avec `renderWidth` et `renderHeight`; sinon la construction à partir des trois faces reste disponible. Définir `featuredBook` sur l’identifiant du volume à mettre en avant. Seuls les éléments dont `published` n’est pas `false` sont affichés.
 

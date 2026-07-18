@@ -54,6 +54,7 @@
   document.addEventListener("keydown", (event) => {
     if (event.key !== "Escape" || !header?.classList.contains("nav-open")) return;
     setMenuOpen(false);
+    playInterfaceSound("close");
     navToggle?.focus();
   });
 
@@ -116,38 +117,21 @@
 
   const reducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
 
-  /* Optional book motif: opt-in, short and deliberately quiet. */
+  /* Short interface cues. Nothing plays before the visitor's first gesture. */
 
-  const soundToggle = document.querySelector("[data-sound-toggle]");
-  const soundLabel = document.querySelector("[data-sound-label]");
-  const soundStorageKey = "point-noir-book-sound";
   const AudioEngine = window.AudioContext || window.webkitAudioContext;
-  let soundEnabled = false;
   let audioContext = null;
   let masterGain = null;
-  let lastBookSoundAt = 0;
+  let audioReady = null;
+  let audioUnlocked = false;
+  let noiseBuffer = null;
+  let inputMode = "pointer";
+  const lastSoundAt = new Map();
 
-  try {
-    soundEnabled = window.localStorage.getItem(soundStorageKey) === "on";
-  } catch {
-    soundEnabled = false;
-  }
-
-  if (!AudioEngine) {
-    soundEnabled = false;
-    if (soundToggle) soundToggle.hidden = true;
-  }
-
-  const updateSoundControl = () => {
-    if (!soundToggle) return;
-    soundToggle.setAttribute("aria-pressed", String(soundEnabled));
-    soundToggle.setAttribute(
-      "aria-label",
-      soundEnabled
-        ? "Désactiver le son discret associé au livre"
-        : "Activer le son discret associé au livre",
-    );
-    if (soundLabel) soundLabel.textContent = soundEnabled ? "Son du livre actif" : "Son du livre";
+  const setAudioParam = (param, method, value, time) => {
+    if (!param) return;
+    if (typeof param[method] === "function") param[method](value, time);
+    else param.value = value;
   };
 
   const ensureAudioContext = async () => {
@@ -156,8 +140,20 @@
     if (!audioContext) {
       audioContext = new AudioEngine();
       masterGain = audioContext.createGain();
-      masterGain.gain.value = 0.032;
-      masterGain.connect(audioContext.destination);
+      masterGain.gain.value = 0.18;
+
+      if (typeof audioContext.createDynamicsCompressor === "function") {
+        const limiter = audioContext.createDynamicsCompressor();
+        setAudioParam(limiter.threshold, "setValueAtTime", -24, audioContext.currentTime);
+        setAudioParam(limiter.knee, "setValueAtTime", 12, audioContext.currentTime);
+        setAudioParam(limiter.ratio, "setValueAtTime", 4, audioContext.currentTime);
+        setAudioParam(limiter.attack, "setValueAtTime", 0.006, audioContext.currentTime);
+        setAudioParam(limiter.release, "setValueAtTime", 0.14, audioContext.currentTime);
+        masterGain.connect(limiter);
+        limiter.connect(audioContext.destination);
+      } else {
+        masterGain.connect(audioContext.destination);
+      }
     }
 
     if (audioContext.state === "suspended") {
@@ -166,75 +162,275 @@
     return audioContext.state === "running";
   };
 
-  const scheduleTone = (frequency, offset, duration, level = 0.17, type = "sine") => {
+  const getAudioReady = () => {
+    if (!audioUnlocked || !AudioEngine) return Promise.resolve(false);
+    if (!audioReady || audioContext?.state !== "running") {
+      audioReady = ensureAudioContext().catch(() => false);
+    }
+    return audioReady;
+  };
+
+  const unlockAudio = () => {
+    audioUnlocked = true;
+    void getAudioReady();
+  };
+
+  const scheduleTone = ({
+    frequency,
+    endFrequency = frequency,
+    offset = 0,
+    duration = 0.1,
+    level = 0.14,
+    type = "sine",
+    filterFrequency = 2600,
+  }) => {
     if (!audioContext || !masterGain || audioContext.state !== "running") return;
-    const startsAt = audioContext.currentTime + 0.012 + offset;
+    const startsAt = audioContext.currentTime + 0.008 + offset;
     const oscillator = audioContext.createOscillator();
     const envelope = audioContext.createGain();
     oscillator.type = type;
-    oscillator.frequency.setValueAtTime(frequency, startsAt);
-    envelope.gain.setValueAtTime(0.0001, startsAt);
-    envelope.gain.exponentialRampToValueAtTime(level, startsAt + Math.min(0.018, duration / 3));
-    envelope.gain.exponentialRampToValueAtTime(0.0001, startsAt + duration);
-    oscillator.connect(envelope);
+    setAudioParam(oscillator.frequency, "setValueAtTime", Math.max(frequency, 1), startsAt);
+    setAudioParam(
+      oscillator.frequency,
+      "exponentialRampToValueAtTime",
+      Math.max(endFrequency, 1),
+      startsAt + duration,
+    );
+    setAudioParam(envelope.gain, "setValueAtTime", 0.0001, startsAt);
+    setAudioParam(
+      envelope.gain,
+      "exponentialRampToValueAtTime",
+      level,
+      startsAt + Math.min(0.012, duration / 3),
+    );
+    setAudioParam(
+      envelope.gain,
+      "exponentialRampToValueAtTime",
+      0.0001,
+      startsAt + duration,
+    );
+
+    if (typeof audioContext.createBiquadFilter === "function") {
+      const filter = audioContext.createBiquadFilter();
+      filter.type = "lowpass";
+      setAudioParam(filter.frequency, "setValueAtTime", filterFrequency, startsAt);
+      oscillator.connect(filter);
+      filter.connect(envelope);
+    } else {
+      oscillator.connect(envelope);
+    }
     envelope.connect(masterGain);
     oscillator.start(startsAt);
-    oscillator.stop(startsAt + duration + 0.025);
+    oscillator.stop(startsAt + duration + 0.02);
   };
 
-  const playInterfaceSound = (kind, options = {}) => {
-    if (!soundEnabled || !audioContext || audioContext.state !== "running") return;
+  const getNoiseBuffer = () => {
+    if (noiseBuffer || !audioContext || typeof audioContext.createBuffer !== "function") {
+      return noiseBuffer;
+    }
+    const sampleRate = audioContext.sampleRate || 48000;
+    const length = Math.max(1, Math.round(sampleRate * 0.16));
+    noiseBuffer = audioContext.createBuffer(1, length, sampleRate);
+    const samples = noiseBuffer.getChannelData(0);
+    let seed = 173;
+    for (let index = 0; index < samples.length; index += 1) {
+      seed = (seed * 16807) % 2147483647;
+      const fade = 1 - index / samples.length;
+      samples[index] = ((seed / 2147483647) * 2 - 1) * fade;
+    }
+    return noiseBuffer;
+  };
 
-    if (kind === "book") {
-      const now = Date.now();
-      if (now - lastBookSoundAt < 460) return;
-      lastBookSoundAt = now;
-      const notes = Array.isArray(options.notes) && options.notes.length
-        ? options.notes
-        : [392, 493.88, 587.33];
-      notes.slice(0, 3).forEach((note, index) => {
-        scheduleTone(Number(note), index * 0.085, 0.17, 0.15 - index * 0.018, "sine");
-      });
+  const scheduleNoise = ({ offset = 0, duration = 0.11, level = 0.075 } = {}) => {
+    if (
+      !audioContext ||
+      !masterGain ||
+      audioContext.state !== "running" ||
+      typeof audioContext.createBufferSource !== "function"
+    ) return;
+    const buffer = getNoiseBuffer();
+    if (!buffer) return;
+    const startsAt = audioContext.currentTime + 0.008 + offset;
+    const source = audioContext.createBufferSource();
+    const envelope = audioContext.createGain();
+    source.buffer = buffer;
+    setAudioParam(envelope.gain, "setValueAtTime", 0.0001, startsAt);
+    setAudioParam(envelope.gain, "linearRampToValueAtTime", level, startsAt + 0.008);
+    setAudioParam(
+      envelope.gain,
+      "exponentialRampToValueAtTime",
+      0.0001,
+      startsAt + duration,
+    );
+
+    if (typeof audioContext.createBiquadFilter === "function") {
+      const filter = audioContext.createBiquadFilter();
+      filter.type = "bandpass";
+      setAudioParam(filter.frequency, "setValueAtTime", 1450, startsAt);
+      setAudioParam(filter.frequency, "exponentialRampToValueAtTime", 760, startsAt + duration);
+      setAudioParam(filter.Q, "setValueAtTime", 0.72, startsAt);
+      source.connect(filter);
+      filter.connect(envelope);
+    } else {
+      source.connect(envelope);
+    }
+    envelope.connect(masterGain);
+    source.start(startsAt);
+    source.stop(startsAt + duration + 0.015);
+  };
+
+  const renderInterfaceSound = (kind, options = {}) => {
+    if (kind === "hover") {
+      scheduleTone({ frequency: 610, endFrequency: 690, duration: 0.052, level: 0.105, type: "triangle" });
+      return;
+    }
+
+    if (kind === "press") {
+      scheduleNoise({ duration: 0.055, level: 0.055 });
+      scheduleTone({ frequency: 246.94, endFrequency: 196, duration: 0.075, level: 0.14, type: "triangle", filterFrequency: 1800 });
+      return;
+    }
+
+    if (kind === "open") {
+      scheduleTone({ frequency: 293.66, endFrequency: 349.23, duration: 0.105, level: 0.135, type: "sine" });
+      scheduleTone({ frequency: 440, endFrequency: 466.16, offset: 0.042, duration: 0.13, level: 0.105, type: "sine" });
+      return;
+    }
+
+    if (kind === "close") {
+      scheduleTone({ frequency: 392, endFrequency: 293.66, duration: 0.115, level: 0.13, type: "sine" });
+      scheduleNoise({ offset: 0.025, duration: 0.07, level: 0.04 });
+      return;
+    }
+
+    if (kind === "navigate") {
+      scheduleTone({ frequency: 329.63, endFrequency: 392, duration: 0.08, level: 0.125, type: "triangle" });
+      scheduleTone({ frequency: 493.88, endFrequency: 523.25, offset: 0.055, duration: 0.12, level: 0.095, type: "sine" });
+      return;
+    }
+
+    if (kind === "page") {
+      scheduleNoise({ duration: 0.13, level: 0.085 });
+      scheduleTone({ frequency: 220, endFrequency: 277.18, offset: 0.018, duration: 0.105, level: 0.085, type: "triangle", filterFrequency: 1500 });
       return;
     }
 
     if (kind === "confirm") {
-      scheduleTone(440, 0, 0.09, 0.12, "sine");
-      scheduleTone(659.25, 0.07, 0.14, 0.09, "sine");
+      scheduleTone({ frequency: 440, endFrequency: 466.16, duration: 0.085, level: 0.13, type: "sine" });
+      scheduleTone({ frequency: 659.25, endFrequency: 698.46, offset: 0.062, duration: 0.14, level: 0.105, type: "sine" });
+      return;
+    }
+
+    if (kind === "book") {
+      const notes = Array.isArray(options.notes) && options.notes.length
+        ? options.notes
+        : [392, 493.88, 587.33];
+      notes.slice(0, 3).forEach((note, index) => {
+        scheduleTone({
+          frequency: Number(note),
+          endFrequency: Number(note) * 1.012,
+          offset: index * 0.072,
+          duration: 0.145,
+          level: 0.145 - index * 0.018,
+          type: index === 1 ? "triangle" : "sine",
+        });
+      });
     }
   };
 
-  const setSoundEnabled = async (enabled) => {
-    soundEnabled = Boolean(enabled);
-    if (soundEnabled) {
-      try {
-        const ready = await ensureAudioContext();
-        if (!ready) soundEnabled = false;
-      } catch {
-        soundEnabled = false;
-      }
-    }
-
-    try {
-      window.localStorage.setItem(soundStorageKey, soundEnabled ? "on" : "off");
-    } catch {
-      // The control remains usable when local storage is unavailable.
-    }
-
-    updateSoundControl();
-    if (soundEnabled) playInterfaceSound("confirm");
+  const soundCooldowns = {
+    hover: 78,
+    press: 52,
+    open: 90,
+    close: 90,
+    navigate: 100,
+    page: 110,
+    confirm: 160,
+    book: 430,
   };
 
-  soundToggle?.addEventListener("click", () => {
-    void setSoundEnabled(!soundEnabled);
+  const playInterfaceSound = (kind, options = {}) => {
+    if (!audioUnlocked || !AudioEngine) return;
+    const now = window.performance?.now?.() ?? Date.now();
+    const lastPlayed = lastSoundAt.get(kind) ?? -Infinity;
+    if (!options.force && now - lastPlayed < (soundCooldowns[kind] ?? 60)) return;
+    lastSoundAt.set(kind, now);
+    void getAudioReady().then((ready) => {
+      if (ready) renderInterfaceSound(kind, options);
+    });
+  };
+
+  const interactiveSelector = [
+    "a[href]",
+    "button:not(:disabled)",
+    "summary",
+    "[data-excerpt-viewer]",
+    "[role='button']",
+  ].join(",");
+
+  const closestInteractive = (target) => target?.closest?.(interactiveSelector) || null;
+
+  const activationSoundFor = (control) => {
+    if (!control || control.matches("[data-book-select]")) return null;
+    if (control.matches("[data-excerpt-prev], [data-excerpt-next], [data-excerpt-page]")) {
+      return "page";
+    }
+    if (control.matches("[data-analysis-close]")) return "close";
+    if (control.matches("[data-nav-toggle]")) {
+      return control.getAttribute("aria-expanded") === "true" ? "close" : "open";
+    }
+    if (control.matches("summary")) {
+      return control.parentElement?.open ? "close" : "open";
+    }
+    if (control.matches("[data-share-page]")) return "press";
+    if (control.matches("a[download]")) return "page";
+    if (control.matches("a[href]")) return "navigate";
+    return "press";
+  };
+
+  document.addEventListener(
+    "pointerdown",
+    () => {
+      inputMode = "pointer";
+      unlockAudio();
+    },
+    { capture: true },
+  );
+
+  document.addEventListener(
+    "keydown",
+    () => {
+      inputMode = "keyboard";
+      unlockAudio();
+    },
+    { capture: true },
+  );
+
+  document.addEventListener(
+    "click",
+    (event) => {
+      unlockAudio();
+      const control = closestInteractive(event.target);
+      const kind = activationSoundFor(control);
+      if (kind) playInterfaceSound(kind);
+    },
+    { capture: true },
+  );
+
+  document.addEventListener("pointerover", (event) => {
+    if (!audioUnlocked || event.pointerType === "touch") return;
+    const control = closestInteractive(event.target);
+    if (!control || control.matches("[data-book-select]")) return;
+    if (event.relatedTarget && control.contains(event.relatedTarget)) return;
+    playInterfaceSound("hover");
   });
 
-  const primeSavedSound = () => {
-    if (soundEnabled) void ensureAudioContext();
-  };
-  document.addEventListener("pointerdown", primeSavedSound, { capture: true, once: true });
-  document.addEventListener("keydown", primeSavedSound, { capture: true, once: true });
-  updateSoundControl();
+  document.addEventListener("focusin", (event) => {
+    if (!audioUnlocked || inputMode !== "keyboard") return;
+    const control = closestInteractive(event.target);
+    if (!control || control.matches("[data-book-select]")) return;
+    playInterfaceSound("hover");
+  });
 
   /* Collection shelf: one source of truth for this volume and those to come. */
 
@@ -459,10 +655,12 @@
     if (event.target !== viewer) return;
     if (event.key === "ArrowLeft") {
       event.preventDefault();
+      playInterfaceSound("page");
       showExcerptPage(currentPageIndex - 1);
     }
     if (event.key === "ArrowRight") {
       event.preventDefault();
+      playInterfaceSound("page");
       showExcerptPage(currentPageIndex + 1);
     }
   });
@@ -518,15 +716,18 @@
         if (navigator.share) {
           await navigator.share(shareData);
           setStatus("Page partagée.");
+          playInterfaceSound("confirm");
         } else {
           await copyText(shareData.url);
           setStatus("Lien de la page copié.");
+          playInterfaceSound("confirm");
         }
       } catch (error) {
         if (error?.name === "AbortError") return;
         try {
           await copyText(shareData.url);
           setStatus("Le partage n’a pas pu s’ouvrir ; le lien a été copié.");
+          playInterfaceSound("confirm");
         } catch {
           setStatus("Le partage n’a pas pu être ouvert.");
         }

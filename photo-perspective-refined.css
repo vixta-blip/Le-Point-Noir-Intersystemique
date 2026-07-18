@@ -110,16 +110,6 @@
   letter-spacing: 0.045em;
 }
 
-.sound-toggle {
-  min-width: 106px;
-  min-height: 36px;
-  padding: 0.45rem 0.66rem;
-  color: #604d57;
-  background: rgba(255, 250, 248, 0.52);
-  border-color: rgba(65, 47, 55, 0.2);
-  box-shadow: 0 4px 12px rgba(45, 30, 36, 0.04);
-}
-
 @media (max-width: 940px) {
   .book-stage {
     --photo-width: clamp(315px, 54vw, 365px);
