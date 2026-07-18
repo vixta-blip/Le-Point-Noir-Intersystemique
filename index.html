@@ -55,7 +55,7 @@
     <link rel="icon" href="assets/v2/favicon.svg" type="image/svg+xml" />
     <link rel="preload" href="assets/Inter-SemiBold.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="assets/SourceSerif-Regular.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="stylesheet" href="styles.css?v=20260718-7" />
+    <link rel="stylesheet" href="styles.css?v=20260718-9" />
     <link rel="stylesheet" href="photo-theme.css?v=20260718-2" />
     <link rel="stylesheet" href="photo-perspective-template.css?v=20260718-1" />
     <link rel="stylesheet" href="photo-perspective-refined.css?v=20260718-3" />
@@ -285,87 +285,114 @@
       </section>
 
       <section class="excerpt section" id="extrait" aria-labelledby="extrait-titre">
-        <div class="shell excerpt-grid">
-          <div
-            class="excerpt-viewer reveal"
-            data-excerpt-viewer
-            aria-label="Feuilleteur de l’extrait, pages 13 à 19"
-          >
-            <div class="excerpt-page">
-              <img
-                src="assets/extrait-page-13.webp"
-                width="900"
-                height="1350"
-                loading="lazy"
-                decoding="async"
-                alt="Page 13 du livre Le Point Noir Intersystémique"
-                data-excerpt-image
-              />
-              <span class="excerpt-label" data-excerpt-label>EXTRAIT · P. 13</span>
+        <div class="shell excerpt-shell">
+          <div class="excerpt-intro reveal">
+            <div>
+              <p class="eyebrow eyebrow-plum">PAGES 13 À 19</p>
+              <h2 id="extrait-titre">Sept pages, terme par terme.</h2>
             </div>
-
-            <div class="excerpt-controls" role="group" aria-label="Navigation dans l’extrait">
-              <button type="button" data-excerpt-prev disabled aria-label="Afficher la page précédente de l’extrait">
-                <span aria-hidden="true">←</span>
-                <span>Précédente</span>
-              </button>
-              <p class="excerpt-status" aria-live="polite">
-                Page <strong data-excerpt-current>13</strong> du livre
-                <span aria-hidden="true">·</span>
-                <span data-excerpt-position>1 / 7</span>
+            <div class="excerpt-intro-copy">
+              <blockquote>
+                «&nbsp;Le Point Noir désigne une condition relationnelle de suspension
+                entre deux cadres de pensée.&nbsp;»
+                <cite>Le Point Noir Intersystémique, p. 13</cite>
+              </blockquote>
+              <p>
+                Sept pages continues sont reproduites ici. Les termes repérés donnent
+                accès, au même endroit, aux contraintes d’usage fixées par le dictionnaire opératif.
               </p>
-              <button type="button" data-excerpt-next aria-label="Afficher la page suivante de l’extrait">
-                <span>Suivante</span>
-                <span aria-hidden="true">→</span>
-              </button>
+              <div class="excerpt-actions">
+                <a
+                  class="button button-dark"
+                  href="extrait-le-point-noir-intersystemique.pdf"
+                  target="_blank"
+                  rel="noopener"
+                  aria-label="Ouvrir l’extrait PDF dans un nouvel onglet"
+                >
+                  Ouvrir le PDF
+                  <span aria-hidden="true">↗</span>
+                </a>
+                <a class="text-action" href="extrait-le-point-noir-intersystemique.pdf" download>
+                  Télécharger
+                  <span aria-hidden="true">↓</span>
+                </a>
+                <a class="text-action" href="extrait-accessible.html">
+                  Transcription
+                  <span aria-hidden="true">→</span>
+                </a>
+              </div>
             </div>
+          </div>
 
-            <div class="excerpt-pagination" role="group" aria-label="Choisir une page de l’extrait">
-              <button type="button" data-excerpt-page="13" aria-current="page" aria-label="Page 13">13</button>
-              <button type="button" data-excerpt-page="14" aria-label="Page 14">14</button>
-              <button type="button" data-excerpt-page="15" aria-label="Page 15">15</button>
-              <button type="button" data-excerpt-page="16" aria-label="Page 16">16</button>
-              <button type="button" data-excerpt-page="17" aria-label="Page 17">17</button>
-              <button type="button" data-excerpt-page="18" aria-label="Page 18">18</button>
-              <button type="button" data-excerpt-page="19" aria-label="Page 19">19</button>
-            </div>
-            <p class="viewer-help" id="excerpt-help">
-              Utilisez les boutons ou les flèches gauche et droite. La dernière page consultée reste mémorisée pendant cette visite.
+          <div class="operative-notice reveal" role="note">
+            <span aria-hidden="true">↳</span>
+            <p>
+              Le panneau ne donne pas une clé d’interprétation du texte. Il met en regard
+              l’occurrence, l’entrée stabilisée et ses limites, sans remplacer la lecture de la page.
             </p>
           </div>
 
-          <div class="excerpt-copy reveal">
-            <p class="eyebrow eyebrow-plum">PAGES 13 À 19</p>
-            <h2 id="extrait-titre">Lire sept pages du livre.</h2>
-            <blockquote>
-              «&nbsp;Le Point Noir désigne une condition relationnelle de suspension
-              entre deux cadres de pensée.&nbsp;»
-              <cite>Le Point Noir Intersystémique, p. 13</cite>
-            </blockquote>
-            <p>
-              Ces sept pages continues donnent directement accès au rythme, aux
-              reprises et à la densité de l’écriture.
-            </p>
-            <div class="excerpt-actions">
-              <a
-                class="button button-dark"
-                href="extrait-le-point-noir-intersystemique.pdf"
-                target="_blank"
-                rel="noopener"
-                aria-label="Ouvrir l’extrait PDF dans un nouvel onglet"
-              >
-                Ouvrir le PDF
+          <div class="excerpt-workbench reveal" data-excerpt-workbench>
+            <svg class="term-connector" data-term-connector aria-hidden="true">
+              <path data-term-connector-path></path>
+              <circle r="3" data-term-connector-start></circle>
+              <circle r="4" data-term-connector-end></circle>
+            </svg>
+
+            <div
+              class="excerpt-viewer"
+              data-excerpt-viewer
+              aria-label="Feuilleteur de l’extrait, pages 13 à 19"
+            >
+              <div class="excerpt-page" data-excerpt-page-surface>
+                <img
+                  src="assets/extrait-page-13.webp"
+                  width="900"
+                  height="1350"
+                  loading="lazy"
+                  decoding="async"
+                  alt="Page 13 du livre Le Point Noir Intersystémique"
+                  data-excerpt-image
+                />
+                <div class="term-hotspots" data-term-hotspots aria-label="Termes repérés sur la page"></div>
+                <span class="excerpt-label" data-excerpt-label>EXTRAIT · P. 13</span>
+              </div>
+
+              <div class="excerpt-controls" role="group" aria-label="Navigation dans l’extrait">
+                <button type="button" data-excerpt-prev disabled aria-label="Afficher la page précédente de l’extrait">
+                  <span aria-hidden="true">←</span>
+                  <span>Précédente</span>
+                </button>
+                <p class="excerpt-status" aria-live="polite">
+                  Page <strong data-excerpt-current>13</strong> du livre
+                  <span aria-hidden="true">·</span>
+                  <span data-excerpt-position>1 / 7</span>
+                </p>
+                <button type="button" data-excerpt-next aria-label="Afficher la page suivante de l’extrait">
+                  <span>Suivante</span>
+                  <span aria-hidden="true">→</span>
+                </button>
+              </div>
+
+              <div class="excerpt-pagination" role="group" aria-label="Choisir une page de l’extrait">
+                <button type="button" data-excerpt-page="13" aria-current="page" aria-label="Page 13">13</button>
+                <button type="button" data-excerpt-page="14" aria-label="Page 14">14</button>
+                <button type="button" data-excerpt-page="15" aria-label="Page 15">15</button>
+                <button type="button" data-excerpt-page="16" aria-label="Page 16">16</button>
+                <button type="button" data-excerpt-page="17" aria-label="Page 17">17</button>
+                <button type="button" data-excerpt-page="18" aria-label="Page 18">18</button>
+                <button type="button" data-excerpt-page="19" aria-label="Page 19">19</button>
+              </div>
+              <p class="viewer-help" id="excerpt-help">
+                Survolez un terme coloré ou choisissez-le dans le panneau. Les flèches gauche et droite changent de page.
+              </p>
+              <button class="study-open" type="button" data-study-open>
+                <span>Étudier les termes de cette page</span>
                 <span aria-hidden="true">↗</span>
-              </a>
-              <a class="text-action" href="extrait-le-point-noir-intersystemique.pdf" download>
-                Télécharger l’extrait
-                <span aria-hidden="true">↓</span>
-              </a>
-              <a class="text-action" href="extrait-accessible.html">
-                Lire la transcription
-                <span aria-hidden="true">→</span>
-              </a>
+              </button>
             </div>
+
+            <aside class="operative-panel" data-operative-panel aria-label="Application du dictionnaire opératif"></aside>
           </div>
         </div>
       </section>
@@ -747,6 +774,40 @@
       </section>
     </main>
 
+    <dialog class="study-dialog" data-study-dialog aria-labelledby="study-dialog-title">
+      <div class="study-dialog-inner">
+        <header class="study-dialog-header">
+          <div>
+            <p>LECTURE OPÉRATIVE</p>
+            <h2 id="study-dialog-title">Page <span data-study-page-number>13</span></h2>
+          </div>
+          <div class="study-dialog-nav" role="group" aria-label="Changer de page dans le mode d’étude">
+            <button type="button" data-study-prev aria-label="Page précédente">←</button>
+            <button type="button" data-study-next aria-label="Page suivante">→</button>
+          </div>
+          <button class="study-dialog-close" type="button" data-study-close>
+            <span>Fermer</span>
+            <span aria-hidden="true">×</span>
+          </button>
+        </header>
+        <div class="study-dialog-body">
+          <div class="study-page-scroll" tabindex="0" aria-label="Page agrandie, faites défiler horizontalement si nécessaire">
+            <div class="study-page" data-study-page-surface>
+              <img
+                src="assets/extrait-page-13.webp"
+                width="900"
+                height="1350"
+                alt="Page 13 du livre Le Point Noir Intersystémique, mode d’étude"
+                data-study-image
+              />
+              <div class="term-hotspots term-hotspots--study" data-study-hotspots aria-label="Termes repérés sur la page agrandie"></div>
+            </div>
+          </div>
+          <aside class="operative-panel operative-panel--dialog" data-operative-panel aria-label="Application du dictionnaire opératif"></aside>
+        </div>
+      </div>
+    </dialog>
+
     <footer class="site-footer">
       <div class="shell footer-main">
         <div class="footer-author">
@@ -774,6 +835,7 @@
     </footer>
 
     <script src="collection.js?v=20260718-8"></script>
-    <script src="script.js?v=20260718-8"></script>
+    <script src="excerpt-study-data.js?v=20260718-1"></script>
+    <script src="script.js?v=20260718-10"></script>
   </body>
 </html>
