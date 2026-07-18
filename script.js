@@ -52,7 +52,9 @@
   });
 
   document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") setMenuOpen(false);
+    if (event.key !== "Escape" || !header?.classList.contains("nav-open")) return;
+    setMenuOpen(false);
+    navToggle?.focus();
   });
 
   window.addEventListener("resize", () => {
@@ -112,194 +114,274 @@
     });
   });
 
-  const viewport = document.querySelector("[data-book-viewport]");
-  const book = document.querySelector("[data-book-object]");
-  const spinButton = document.querySelector("[data-book-spin]");
-  const spinLabel = document.querySelector("[data-book-spin-label]");
-  const resetButton = document.querySelector("[data-book-reset]");
-  const bookStatus = document.querySelector("[data-book-status]");
   const reducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
 
-  if (viewport && book) {
-    const initialRotation = { x: -4, y: -18 };
-    let rotationX = initialRotation.x;
-    let rotationY = initialRotation.y;
-    let pointerId = null;
-    let previousPointerX = 0;
-    let previousPointerY = 0;
-    let previousPointerTime = 0;
-    let velocityX = 0;
-    let velocityY = 0;
-    let motionFrame = null;
-    let motionMode = "idle";
-    let previousFrameTime = 0;
+  /* Optional book motif: opt-in, short and deliberately quiet. */
 
-    const clampTilt = (value) => Math.max(-34, Math.min(34, value));
+  const soundToggle = document.querySelector("[data-sound-toggle]");
+  const soundLabel = document.querySelector("[data-sound-label]");
+  const soundStorageKey = "point-noir-book-sound";
+  const AudioEngine = window.AudioContext || window.webkitAudioContext;
+  let soundEnabled = false;
+  let audioContext = null;
+  let masterGain = null;
+  let lastBookSoundAt = 0;
 
-    const renderBook = () => {
-      book.style.transform = `rotateX(${rotationX.toFixed(2)}deg) rotateY(${rotationY.toFixed(2)}deg)`;
-    };
-
-    const announceBook = (message) => {
-      if (bookStatus) bookStatus.textContent = message;
-    };
-
-    const setSpinButton = (spinning) => {
-      if (!spinButton) return;
-      spinButton.setAttribute("aria-pressed", String(spinning));
-      if (spinLabel) spinLabel.textContent = spinning ? "Arrêter" : "Faire tourner";
-    };
-
-    const stopMotion = () => {
-      if (motionFrame !== null) window.cancelAnimationFrame(motionFrame);
-      motionFrame = null;
-      motionMode = "idle";
-      previousFrameTime = 0;
-      book.classList.remove("is-spinning");
-      setSpinButton(false);
-    };
-
-    const startAutomaticRotation = () => {
-      stopMotion();
-      if (reducedMotion) {
-        announceBook("La rotation automatique est désactivée lorsque les animations sont réduites.");
-        return;
-      }
-
-      motionMode = "automatic";
-      book.classList.add("is-spinning");
-      setSpinButton(true);
-      announceBook("Rotation automatique en cours.");
-
-      const rotate = (time) => {
-        if (motionMode !== "automatic") return;
-        if (previousFrameTime === 0) previousFrameTime = time;
-        const elapsed = Math.min(time - previousFrameTime, 34);
-        previousFrameTime = time;
-        rotationY += elapsed * 0.025;
-        renderBook();
-        motionFrame = window.requestAnimationFrame(rotate);
-      };
-
-      motionFrame = window.requestAnimationFrame(rotate);
-    };
-
-    const startInertia = () => {
-      if (reducedMotion || Math.hypot(velocityX, velocityY) < 0.025) return;
-      stopMotion();
-      motionMode = "inertia";
-      book.classList.add("is-spinning");
-
-      const glide = (time) => {
-        if (motionMode !== "inertia") return;
-        if (previousFrameTime === 0) previousFrameTime = time;
-        const elapsed = Math.min(time - previousFrameTime, 34);
-        previousFrameTime = time;
-        rotationY += velocityX * elapsed;
-        rotationX = clampTilt(rotationX + velocityY * elapsed);
-        const damping = Math.pow(0.91, elapsed / 16.67);
-        velocityX *= damping;
-        velocityY *= damping;
-        renderBook();
-
-        if (Math.hypot(velocityX, velocityY) < 0.005) {
-          stopMotion();
-          return;
-        }
-        motionFrame = window.requestAnimationFrame(glide);
-      };
-
-      motionFrame = window.requestAnimationFrame(glide);
-    };
-
-    const resetBook = (announce = true) => {
-      stopMotion();
-      rotationX = initialRotation.x;
-      rotationY = initialRotation.y;
-      renderBook();
-      if (announce) announceBook("Livre recentré sur la première de couverture.");
-    };
-
-    viewport.addEventListener("pointerdown", (event) => {
-      if (event.button !== 0 || pointerId !== null) return;
-      stopMotion();
-      pointerId = event.pointerId;
-      previousPointerX = event.clientX;
-      previousPointerY = event.clientY;
-      previousPointerTime = event.timeStamp;
-      velocityX = 0;
-      velocityY = 0;
-      viewport.setPointerCapture?.(event.pointerId);
-      viewport.classList.add("is-dragging");
-    });
-
-    viewport.addEventListener("pointermove", (event) => {
-      if (event.pointerId !== pointerId) return;
-      const elapsed = Math.max(event.timeStamp - previousPointerTime, 8);
-      const deltaX = event.clientX - previousPointerX;
-      const deltaY = event.clientY - previousPointerY;
-      const rotationDeltaX = deltaX * 0.42;
-      const rotationDeltaY = -deltaY * 0.28;
-
-      rotationY += rotationDeltaX;
-      rotationX = clampTilt(rotationX + rotationDeltaY);
-      velocityX = rotationDeltaX / elapsed;
-      velocityY = rotationDeltaY / elapsed;
-      previousPointerX = event.clientX;
-      previousPointerY = event.clientY;
-      previousPointerTime = event.timeStamp;
-      renderBook();
-    });
-
-    const releasePointer = (event) => {
-      if (event.pointerId !== pointerId) return;
-      viewport.releasePointerCapture?.(event.pointerId);
-      pointerId = null;
-      viewport.classList.remove("is-dragging");
-      startInertia();
-    };
-
-    viewport.addEventListener("pointerup", releasePointer);
-    viewport.addEventListener("pointercancel", releasePointer);
-
-    viewport.addEventListener("keydown", (event) => {
-      const step = event.shiftKey ? 24 : 12;
-      let handled = true;
-      stopMotion();
-
-      if (event.key === "ArrowLeft") rotationY -= step;
-      else if (event.key === "ArrowRight") rotationY += step;
-      else if (event.key === "ArrowUp") rotationX = clampTilt(rotationX - step);
-      else if (event.key === "ArrowDown") rotationX = clampTilt(rotationX + step);
-      else if (event.key === "Home") resetBook(false);
-      else if (event.key === " " && !reducedMotion) startAutomaticRotation();
-      else handled = false;
-
-      if (!handled) return;
-      event.preventDefault();
-      renderBook();
-      announceBook(`Orientation du livre : inclinaison ${Math.round(rotationX)} degrés, rotation ${Math.round(rotationY)} degrés.`);
-    });
-
-    spinButton?.addEventListener("click", () => {
-      if (motionMode === "automatic") {
-        stopMotion();
-        announceBook("Rotation arrêtée.");
-      } else {
-        startAutomaticRotation();
-      }
-    });
-
-    resetButton?.addEventListener("click", () => resetBook());
-
-    if (reducedMotion && spinButton) spinButton.hidden = true;
-    renderBook();
+  try {
+    soundEnabled = window.localStorage.getItem(soundStorageKey) === "on";
+  } catch {
+    soundEnabled = false;
   }
+
+  if (!AudioEngine) {
+    soundEnabled = false;
+    if (soundToggle) soundToggle.hidden = true;
+  }
+
+  const updateSoundControl = () => {
+    if (!soundToggle) return;
+    soundToggle.setAttribute("aria-pressed", String(soundEnabled));
+    soundToggle.setAttribute(
+      "aria-label",
+      soundEnabled
+        ? "Désactiver le son discret associé au livre"
+        : "Activer le son discret associé au livre",
+    );
+    if (soundLabel) soundLabel.textContent = soundEnabled ? "Son du livre actif" : "Son du livre";
+  };
+
+  const ensureAudioContext = async () => {
+    if (!AudioEngine) return false;
+
+    if (!audioContext) {
+      audioContext = new AudioEngine();
+      masterGain = audioContext.createGain();
+      masterGain.gain.value = 0.032;
+      masterGain.connect(audioContext.destination);
+    }
+
+    if (audioContext.state === "suspended") {
+      await audioContext.resume();
+    }
+    return audioContext.state === "running";
+  };
+
+  const scheduleTone = (frequency, offset, duration, level = 0.17, type = "sine") => {
+    if (!audioContext || !masterGain || audioContext.state !== "running") return;
+    const startsAt = audioContext.currentTime + 0.012 + offset;
+    const oscillator = audioContext.createOscillator();
+    const envelope = audioContext.createGain();
+    oscillator.type = type;
+    oscillator.frequency.setValueAtTime(frequency, startsAt);
+    envelope.gain.setValueAtTime(0.0001, startsAt);
+    envelope.gain.exponentialRampToValueAtTime(level, startsAt + Math.min(0.018, duration / 3));
+    envelope.gain.exponentialRampToValueAtTime(0.0001, startsAt + duration);
+    oscillator.connect(envelope);
+    envelope.connect(masterGain);
+    oscillator.start(startsAt);
+    oscillator.stop(startsAt + duration + 0.025);
+  };
+
+  const playInterfaceSound = (kind, options = {}) => {
+    if (!soundEnabled || !audioContext || audioContext.state !== "running") return;
+
+    if (kind === "book") {
+      const now = Date.now();
+      if (now - lastBookSoundAt < 460) return;
+      lastBookSoundAt = now;
+      const notes = Array.isArray(options.notes) && options.notes.length
+        ? options.notes
+        : [392, 493.88, 587.33];
+      notes.slice(0, 3).forEach((note, index) => {
+        scheduleTone(Number(note), index * 0.085, 0.17, 0.15 - index * 0.018, "sine");
+      });
+      return;
+    }
+
+    if (kind === "confirm") {
+      scheduleTone(440, 0, 0.09, 0.12, "sine");
+      scheduleTone(659.25, 0.07, 0.14, 0.09, "sine");
+    }
+  };
+
+  const setSoundEnabled = async (enabled) => {
+    soundEnabled = Boolean(enabled);
+    if (soundEnabled) {
+      try {
+        const ready = await ensureAudioContext();
+        if (!ready) soundEnabled = false;
+      } catch {
+        soundEnabled = false;
+      }
+    }
+
+    try {
+      window.localStorage.setItem(soundStorageKey, soundEnabled ? "on" : "off");
+    } catch {
+      // The control remains usable when local storage is unavailable.
+    }
+
+    updateSoundControl();
+    if (soundEnabled) playInterfaceSound("confirm");
+  };
+
+  soundToggle?.addEventListener("click", () => {
+    void setSoundEnabled(!soundEnabled);
+  });
+
+  const primeSavedSound = () => {
+    if (soundEnabled) void ensureAudioContext();
+  };
+  document.addEventListener("pointerdown", primeSavedSound, { capture: true, once: true });
+  document.addEventListener("keydown", primeSavedSound, { capture: true, once: true });
+  updateSoundControl();
+
+  /* Collection shelf: one source of truth for this volume and those to come. */
+
+  const collection = window.VIXTA_COLLECTION || {};
+  const shelfRow = document.querySelector("[data-book-row]");
+  const shelfCaption = document.querySelector("[data-shelf-caption]");
+  const bookStatus = document.querySelector("[data-book-status]");
+  const publishedBooks = Array.isArray(collection.books)
+    ? collection.books.filter((item) => item && item.published !== false)
+    : [];
+
+  const createImageSurface = (className, source, width, height) => {
+    const surface = document.createElement("span");
+    surface.className = `volume-surface ${className}`;
+    const image = document.createElement("img");
+    image.src = source;
+    image.width = width;
+    image.height = height;
+    image.alt = "";
+    image.decoding = "async";
+    image.draggable = false;
+    surface.append(image);
+    return surface;
+  };
+
+  const createVolume = (item) => {
+    const volume = document.createElement("li");
+    volume.className = "shelf-volume";
+    if (item.id === collection.featuredBook) volume.classList.add("is-featured");
+    volume.dataset.bookId = item.id;
+    volume.dataset.bookTitle = item.title;
+    volume.dataset.bookNotes = (item.soundProfile || []).join(",");
+
+    const wallShadow = document.createElement("span");
+    wallShadow.className = "volume-wall-shadow";
+    wallShadow.setAttribute("aria-hidden", "true");
+    const contactShadow = document.createElement("span");
+    contactShadow.className = "volume-contact-shadow";
+    contactShadow.setAttribute("aria-hidden", "true");
+
+    const link = document.createElement("a");
+    link.className = "volume-select";
+    link.href = item.href || "#edition";
+    link.dataset.bookSelect = "";
+    link.setAttribute("aria-label", `Voir l’édition du livre ${item.title}`);
+
+    const object = document.createElement("span");
+    object.className = "volume-object";
+    object.dataset.bookObject = "";
+    const front = createImageSurface(
+      "volume-front",
+      item.front,
+      item.frontWidth || 1624,
+      item.frontHeight || 2500,
+    );
+    if (item.id === collection.featuredBook) {
+      front.querySelector("img")?.setAttribute("fetchpriority", "high");
+    }
+    object.append(
+      front,
+      createImageSurface(
+        "volume-back",
+        item.back,
+        item.frontWidth || 1624,
+        item.frontHeight || 2500,
+      ),
+      createImageSurface(
+        "volume-spine",
+        item.spine,
+        item.spineWidth || 120,
+        item.frontHeight || 2500,
+      ),
+    );
+    ["volume-fore-edge", "volume-top-edge", "volume-bottom-edge"].forEach((className) => {
+      const edge = document.createElement("span");
+      edge.className = `volume-surface ${className}`;
+      edge.setAttribute("aria-hidden", "true");
+      object.append(edge);
+    });
+    link.append(object);
+    volume.append(wallShadow, contactShadow, link);
+    return volume;
+  };
+
+  if (shelfRow && publishedBooks.length) {
+    const fragment = document.createDocumentFragment();
+    publishedBooks.forEach((item) => fragment.append(createVolume(item)));
+    shelfRow.replaceChildren(fragment);
+  }
+
+  const shelfVolumes = shelfRow ? [...shelfRow.querySelectorAll("[data-book-id]")] : [];
+  if (shelfRow) shelfRow.dataset.bookCount = String(Math.max(shelfVolumes.length, 1));
+
+  const featuredVolume = shelfVolumes.find(
+    (volume) => volume.dataset.bookId === collection.featuredBook,
+  ) || shelfVolumes[0];
+  const featuredTitle = featuredVolume?.dataset.bookTitle || "Le Point Noir Intersystémique";
+
+  const clearVolumePreview = () => {
+    shelfVolumes.forEach((volume) => {
+      volume.classList.remove("is-previewed", "is-neighbor-left", "is-neighbor-right");
+    });
+    if (shelfCaption) shelfCaption.textContent = featuredTitle;
+  };
+
+  const previewVolume = (volume, { announce = false, withSound = false } = {}) => {
+    const index = shelfVolumes.indexOf(volume);
+    if (index < 0) return;
+    clearVolumePreview();
+    volume.classList.add("is-previewed");
+    shelfVolumes[index - 1]?.classList.add("is-neighbor-left");
+    shelfVolumes[index + 1]?.classList.add("is-neighbor-right");
+    const title = volume.dataset.bookTitle || featuredTitle;
+    if (shelfCaption) shelfCaption.textContent = title;
+    if (announce && bookStatus) bookStatus.textContent = `${title}, volume sélectionné.`;
+    if (withSound) {
+      const notes = (volume.dataset.bookNotes || "")
+        .split(",")
+        .map(Number)
+        .filter(Number.isFinite);
+      playInterfaceSound("book", { notes });
+    }
+  };
+
+  shelfVolumes.forEach((volume) => {
+    volume.addEventListener("pointerenter", (event) => {
+      previewVolume(volume, { withSound: event.pointerType !== "touch" });
+    });
+    volume.addEventListener("pointerleave", () => {
+      if (!volume.contains(document.activeElement)) clearVolumePreview();
+    });
+    volume.addEventListener("focusin", () => {
+      previewVolume(volume, { announce: true, withSound: true });
+    });
+    volume.addEventListener("focusout", (event) => {
+      if (!volume.contains(event.relatedTarget)) clearVolumePreview();
+    });
+    volume.querySelector("[data-book-select]")?.addEventListener("click", () => {
+      previewVolume(volume, { announce: true, withSound: true });
+    });
+  });
 
   const viewer = document.querySelector("[data-excerpt-viewer]");
   const excerptImage = document.querySelector("[data-excerpt-image]");
   const excerptLabel = document.querySelector("[data-excerpt-label]");
   const excerptCurrent = document.querySelector("[data-excerpt-current]");
+  const excerptPosition = document.querySelector("[data-excerpt-position]");
   const previousButton = document.querySelector("[data-excerpt-prev]");
   const nextButton = document.querySelector("[data-excerpt-next]");
   const pageButtons = [...document.querySelectorAll("[data-excerpt-page]")];
@@ -331,6 +413,7 @@
     }
     if (excerptLabel) excerptLabel.textContent = `EXTRAIT · P. ${page}`;
     if (excerptCurrent) excerptCurrent.textContent = String(page);
+    if (excerptPosition) excerptPosition.textContent = `${boundedIndex + 1} / ${excerptPages.length}`;
     if (previousButton) previousButton.disabled = boundedIndex === 0;
     if (nextButton) nextButton.disabled = boundedIndex === excerptPages.length - 1;
 
@@ -371,6 +454,8 @@
   });
 
   if (viewer) {
+    viewer.tabIndex = 0;
+    viewer.setAttribute("aria-describedby", "excerpt-help");
     const savedPage = readSavedExcerptPage();
     const savedIndex = excerptPages.indexOf(savedPage);
     showExcerptPage(savedIndex >= 0 ? savedIndex : 0);
@@ -408,10 +493,11 @@
   if (shareButton) {
     shareButton.hidden = false;
     shareButton.addEventListener("click", async () => {
+      const canonicalUrl = document.querySelector('link[rel="canonical"]')?.href;
       const shareData = {
         title: "Le Point Noir Intersystémique — Vixta",
         text: "Le dialogue doit-il nécessairement produire un accord ?",
-        url: window.location.href.split("#")[0],
+        url: canonicalUrl || window.location.href.split("#")[0],
       };
 
       try {
