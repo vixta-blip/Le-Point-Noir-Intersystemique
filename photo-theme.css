@@ -1,124 +1,471 @@
-<!DOCTYPE html>
-<html lang="fr">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="color-scheme" content="light" />
-    <meta name="theme-color" content="#171c22" />
-    <title>Transcription de l’extrait — Le Point Noir Intersystémique</title>
-    <meta
-      name="description"
-      content="Transcription accessible des pages 13 à 19 du livre Le Point Noir Intersystémique, de Vixta."
-    />
-    <meta name="robots" content="noindex, follow" />
-    <link rel="canonical" href="https://vixta-blip.github.io/Le-Point-Noir-Intersystemique/" />
-    <link rel="stylesheet" href="styles.css?v=20260718-6" />
-  </head>
-  <body class="transcript-page">
-    <a class="skip-link" href="#contenu">Aller au texte</a>
+:root {
+  --ink: #2d1e24;
+  --ink-soft: #4f3b45;
+  --paper: #f7f1f3;
+  --paper-raised: #fffaf8;
+  --paper-cool: #eee2e7;
+  --white: #fffaf8;
+  --rose: #d8bccb;
+  --rose-soft: #ead9e0;
+  --rose-pale: #f4e9ed;
+  --plum: #6c5260;
+  --plum-dark: #412f37;
+  --blue: #764d62;
+  --slate: #6f5964;
+  --slate-light: #e2ccd3;
+  --line: rgba(45, 30, 36, 0.17);
+  --line-light: rgba(255, 250, 248, 0.22);
+  --shadow: 0 30px 82px rgba(65, 47, 55, 0.18);
+  --shadow-soft: 0 18px 50px rgba(65, 47, 55, 0.11);
+}
 
-    <header class="transcript-header">
-      <div class="shell transcript-header-inner">
-        <a href="index.html#extrait" class="brand" aria-label="Retour à la page du livre">
-          <img src="assets/logo-vixta.png" width="195" height="151" alt="Vixta" />
-        </a>
-        <a class="text-action" href="index.html#extrait">← Retour au livre</a>
-      </div>
-    </header>
+html {
+  background: #24181e;
+}
 
-    <main id="contenu" class="shell transcript-shell">
-      <header class="transcript-intro">
-        <p class="eyebrow eyebrow-plum">TRANSCRIPTION ACCESSIBLE · PAGES 13 À 19</p>
-        <h1>Le Point Noir Intersystémique</h1>
-        <p>
-          Le texte ci-dessous reprend intégralement les sept pages proposées dans
-          le feuilleteur et dans le PDF public.
-        </p>
-      </header>
+body {
+  background: var(--paper);
+}
 
-      <article class="transcript-text" aria-label="Transcription des pages 13 à 19">
-        <section id="page-13" aria-labelledby="page-13-titre">
-          <h2 id="page-13-titre">Page 13</h2>
-          <p>Le Point Noir désigne une condition relationnelle de suspension entre deux cadres de pensée, lorsque cesse l’imposition réciproque de leurs catégories. Cette suspension correspond au retrait de l’acte d’affirmation par lequel un système cherche à ordonner le réel selon ses propres mesures.</p>
-          <p>Lorsque des structures mentales, culturelles ou symboliques entrent en contact, chacune tend à produire une organisation du réel conforme à sa configuration interne. Tant que cette dynamique d’imposition se maintient, la relation engendre friction, réduction ou traduction forcée.</p>
-          <p>Lorsque cette dynamique cesse — non par renoncement, mais par atteinte de ses limites propres — un espace relationnel se rend lisible.</p>
-          <p>C’est cet espace que désigne le Point Noir.</p>
-          <p>Il marque la suspension des hiérarchies interprétatives et l’absence temporaire de toute prétention à mesurer le réel à partir d’un ordre singulier. L’égalité qui s’y établit ne procède pas d’une similitude des systèmes, mais de la neutralisation momentanée de leur pouvoir de mesure.</p>
-        </section>
+:focus-visible {
+  outline-color: #764d62;
+  box-shadow: 0 0 0 3px rgba(255, 250, 248, 0.92);
+}
 
-        <section id="page-14" aria-labelledby="page-14-titre">
-          <h2 id="page-14-titre">Page 14</h2>
-          <p>Lorsque l’esprit suspend son mouvement d’affirmation, une relation devient possible sans exigence d’imposition.</p>
-          <p>Cette suspension n’est ni un recul ni un silence vide, mais l’interruption temporaire par laquelle une position cesse de chercher à s’établir comme mesure.</p>
-          <p>Le Point Noir ne produit aucun sens et ne génère aucun contenu.</p>
-          <p>Il se tient comme retrait fonctionnel, au sein duquel la circulation du sens demeure possible sans fixation ni assignation à une position déterminée.</p>
-          <p>Ce retrait se tient comme espace relationnel entre des cohérences déjà constituées.</p>
-          <p>Il ne sépare pas : il rend réversible ce qui était tenu comme interne et neutralise l’exigence d’appropriation.</p>
-          <p>Le Point Noir désigne ainsi la tenue d’un espace où le sens demeure mobile sans être capturé.</p>
-        </section>
+.manifesto :focus-visible,
+.analysis :focus-visible,
+.contact :focus-visible,
+.site-footer :focus-visible {
+  outline-color: #f3dce5;
+  box-shadow: 0 0 0 3px rgba(45, 30, 36, 0.95);
+}
 
-        <section id="page-15" aria-labelledby="page-15-titre">
-          <h2 id="page-15-titre">Page 15</h2>
-          <p>Par la réversibilité qui s’y rend perceptible, chaque cadre découvre son bord comme condition de relation.</p>
-          <p>Ce bord n’est pas une limite d’exclusion, mais le point à partir duquel l’altérité devient opérante et se laisse reconnaître comme condition du contact entre configurations distinctes.</p>
-          <p>Le silence propre au Point Noir n’est pas un vide, mais un intervalle relationnel.</p>
-          <p>Dans cet intervalle, le sens circule sans se fixer à une position déterminée, et la rencontre se tient sans se résoudre en fusion.</p>
-          <p>La relation ne repose pas sur l’abolition de la différence, mais sur la tenue d’une tension minimale.</p>
-          <p>Cette tension suffit à préserver l’altérité tout en permettant la co-présence de régimes distincts.</p>
-          <p>Le Point Noir se laisse lire ainsi comme une compatibilité de fonctionnement sans subordination ni effacement.</p>
-        </section>
+::selection {
+  color: var(--ink);
+  background: #dec4d0;
+}
 
-        <section id="page-16" aria-labelledby="page-16-titre">
-          <h2 id="page-16-titre">Page 16</h2>
-          <p>Le contact qui se tient dans le champ du Point Noir ne relève pas d’un échange communicatif.</p>
-          <p>Il n’a ni pour fonction la transmission ni la recherche d’un accord, mais la tenue d’une ouverture relationnelle où aucun sens ne se fixe.</p>
-          <p>Dans cette relation, chaque système conserve sa cohérence tout en se rendant lisible dans sa précarité constitutive.</p>
-          <p>Cette précarité se tient comme une opacité maintenue, perceptible dans la rencontre sans être dissoute ni appropriée.</p>
-          <p>Dans ce régime, la relation se tient sans appropriation ni clôture.</p>
-          <p>La pensée se tient face à ce qui résiste, tant que le passage ouvert par le Point Noir ne se referme pas.</p>
-        </section>
+.site-header {
+  background: rgba(247, 241, 243, 0.9);
+  box-shadow: 0 10px 38px rgba(65, 47, 55, 0.035);
+}
 
-        <section id="page-17" aria-labelledby="page-17-titre">
-          <h2 id="page-17-titre">Page 17</h2>
-          <p>Lorsque la pensée tend à s’affirmer ou à conclure, une suspension active devient nécessaire.</p>
-          <p>Il ne s’agit pas d’un arrêt, mais d’un maintien ouvert entre dire et écouter, expansion et retrait.</p>
-          <p>Dans cet intervalle, le sens cesse de se fixer sans être dévoilé.</p>
-          <p>Le silence qui se rend lisible alors n’est pas absence de sens, mais condition de sa circulation.</p>
-          <p>Les systèmes s’y tiennent sans se dissoudre ni s’imposer, dans une retenue qui ne se transforme pas en position.</p>
-          <p>Dans ce régime, le monde ne se présente plus comme un ensemble de places à occuper, mais comme un champ de relations ouvertes, se tenant sans saturation ni clôture.</p>
-        </section>
+.reading-progress span {
+  background: linear-gradient(90deg, #6c5260, #c5abbb);
+}
 
-        <section id="page-18" aria-labelledby="page-18-titre">
-          <h2 id="page-18-titre">Page 18</h2>
-          <p>Le vide perceptible autour du Point Noir ne s’oppose pas au plein.</p>
-          <p>Il désigne un intervalle de tenue où les forces de clôture cessent d’agir, sans que la structure soit annulée.</p>
-          <p>Lorsque deux systèmes interrompent leur opposition, une écoute réciproque devient possible : un tel intervalle se tient comme une tension où le lien persiste sans se fixer.</p>
-          <p>Le Point Noir ne formule aucune vérité commune.</p>
-          <p>Il désigne un régime dans lequel la vérité demeure opérante sans capture, aussi longtemps que l’acte de clôture n’est pas réintroduit.</p>
-          <p>Le silence qui s’y tient n’est pas produit ; il est maintenu par abstention de fermeture.</p>
-          <p>Le Point Noir n’est pas une structure durable, mais un régime précaire.</p>
-          <p>Il se tient dans l’acte même de suspendre, par lequel la relation reste ouverte sans se dissoudre.</p>
-        </section>
+.main-nav a::after {
+  background: var(--plum);
+}
 
-        <section id="page-19" aria-labelledby="page-19-titre">
-          <h2 id="page-19-titre">Page 19</h2>
-          <p>Cela se rend possible lorsque deux régimes cessent de s’opposer et se tiennent ensemble.</p>
-          <p>Autour du Point Noir, cette tenue conjointe constitue un régime relationnel : suspendre consiste à cesser d’intervenir sans interrompre la circulation.</p>
-          <p>Lorsque le silence n’est plus refermé, la pensée se tient dans une oscillation qui soutient la relation.</p>
-          <p>Cet entre-deux suspend le dire avant toute fixation ; rien n’y est formulé, et le sens demeure disponible sans être requis.</p>
-        </section>
-      </article>
+.button-primary {
+  color: var(--white);
+  background: var(--plum-dark);
+  box-shadow: 0 14px 32px rgba(65, 47, 55, 0.22);
+}
 
-      <aside class="transcript-actions" aria-label="Poursuivre">
-        <a class="button button-dark" href="index.html#edition">Voir l’édition publiée <span aria-hidden="true">→</span></a>
-        <a class="text-action" href="extrait-le-point-noir-intersystemique.pdf" target="_blank" rel="noopener">Ouvrir le PDF <span aria-hidden="true">↗</span></a>
-      </aside>
-    </main>
+.button-primary:hover {
+  color: var(--white);
+  background: #583f4b;
+  box-shadow: 0 18px 38px rgba(65, 47, 55, 0.29);
+}
 
-    <footer class="transcript-footer">
-      <div class="shell">
-        <p>© Vixta, 2026 · Extrait de <cite>Le Point Noir Intersystémique</cite>.</p>
-      </div>
-    </footer>
-  </body>
-</html>
+.button-dark {
+  background: var(--plum-dark);
+}
+
+.button-dark:hover {
+  background: #6c5260;
+}
+
+.button-ghost:hover {
+  background: rgba(255, 250, 248, 0.76);
+}
+
+.hero {
+  position: relative;
+  min-height: 800px;
+  padding-bottom: clamp(8.5rem, 12vw, 11rem);
+  background:
+    radial-gradient(circle at 86% 11%, rgba(255, 250, 248, 0.88), transparent 19rem),
+    radial-gradient(circle at 7% 82%, rgba(108, 82, 96, 0.12), transparent 26rem),
+    linear-gradient(128deg, #f4e9ed 0%, #e7d5dc 52%, #c8acbb 100%);
+}
+
+.hero::after {
+  position: absolute;
+  z-index: 1;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: clamp(104px, 12vw, 170px);
+  background: url("assets/v2/hero-wave.svg") center bottom / 100% 100% no-repeat;
+  pointer-events: none;
+  content: "";
+}
+
+.hero-grid {
+  position: relative;
+  z-index: 2;
+  grid-template-columns: minmax(0, 1.08fr) minmax(390px, 0.78fr);
+  grid-template-rows: auto auto;
+  gap: clamp(2.6rem, 6vw, 7rem);
+  row-gap: 0;
+}
+
+.hero-copy {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.book-stage {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+}
+
+.hero-facts {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.book-kicker,
+.book-identity strong,
+.eyebrow-plum {
+  color: var(--plum-dark);
+}
+
+.hero h1 {
+  color: #26191f;
+}
+
+.hero h1 em {
+  color: var(--plum);
+}
+
+.hero-lead {
+  color: #4b3741;
+}
+
+.hero-facts {
+  border-color: rgba(65, 47, 55, 0.24);
+}
+
+.hero-facts li {
+  border-color: rgba(65, 47, 55, 0.2);
+}
+
+.book-stage {
+  position: relative;
+  z-index: 3;
+}
+
+.shelf-scene {
+  --volume-width: clamp(300px, 23.5vw, 340px);
+  --volume-height: calc(var(--volume-width) * 1393 / 789);
+  min-height: 610px;
+  overflow: visible;
+  perspective: none;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  isolation: isolate;
+}
+
+.shelf-scene::before {
+  position: absolute;
+  z-index: 0;
+  top: 50%;
+  left: 50%;
+  width: min(90%, 450px);
+  aspect-ratio: 1;
+  background:
+    radial-gradient(circle at 34% 25%, rgba(150, 119, 137, 0.78), transparent 23%),
+    linear-gradient(145deg, #856878, #412f37 74%);
+  border-radius: 50%;
+  box-shadow: inset 18px 14px 46px rgba(255, 250, 248, 0.08), 0 34px 80px rgba(65, 47, 55, 0.18);
+  transform: translate(-50%, -49%);
+  mix-blend-mode: multiply;
+  opacity: 0.9;
+  pointer-events: none;
+  content: "";
+}
+
+.shelf-light {
+  z-index: 1;
+  top: -4%;
+  left: 67%;
+  width: 62%;
+  background: radial-gradient(circle, rgba(255, 250, 248, 0.7), transparent 66%);
+  filter: blur(16px);
+}
+
+.book-shelf-row {
+  z-index: 3;
+  top: 0;
+  right: 0;
+  bottom: auto;
+  left: 0;
+  min-height: var(--volume-height);
+}
+
+.shelf-volume {
+  height: var(--volume-height);
+}
+
+.volume-select {
+  transition: transform 520ms cubic-bezier(0.16, 1, 0.3, 1), filter 520ms ease;
+}
+
+.shelf-volume:hover .volume-select,
+.shelf-volume:focus-within .volume-select,
+.shelf-volume.is-previewed .volume-select {
+  transform: translate3d(0, -13px, 0);
+}
+
+.volume-object--render {
+  width: 100%;
+  height: 100%;
+  transform: none;
+}
+
+.volume-render {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter:
+    drop-shadow(15px 25px 18px rgba(45, 30, 36, 0.24))
+    drop-shadow(3px 7px 5px rgba(45, 30, 36, 0.16));
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.volume-wall-shadow {
+  inset: 13% 3% 9% 13%;
+  background: rgba(45, 30, 36, 0.25);
+  border-radius: 46%;
+  transform: translate3d(28px, 20px, 0);
+  filter: blur(34px);
+  opacity: 0.48;
+}
+
+.volume-contact-shadow {
+  right: 9%;
+  bottom: 3.7%;
+  left: 11%;
+  height: 24px;
+  background: radial-gradient(ellipse, rgba(45, 30, 36, 0.46), transparent 70%);
+  transform: translateX(10px) scaleX(0.83);
+  filter: blur(8px);
+  opacity: 0.54;
+}
+
+.shelf-volume:hover .volume-wall-shadow,
+.shelf-volume:focus-within .volume-wall-shadow,
+.shelf-volume.is-previewed .volume-wall-shadow {
+  opacity: 0.34;
+  transform: translate3d(31px, 28px, 0) scale(1.02);
+  filter: blur(38px);
+}
+
+.shelf-volume:hover .volume-contact-shadow,
+.shelf-volume:focus-within .volume-contact-shadow,
+.shelf-volume.is-previewed .volume-contact-shadow {
+  opacity: 0.32;
+  transform: translateX(12px) scaleX(1.02);
+}
+
+.shelf-board {
+  display: none;
+}
+
+.shelf-caption {
+  max-width: 500px;
+  margin-top: 0;
+  border-color: rgba(65, 47, 55, 0.22);
+}
+
+.material-note {
+  background: rgba(255, 250, 248, 0.5);
+  border-color: rgba(65, 47, 55, 0.2);
+}
+
+.reading-notes {
+  background: var(--paper-raised);
+  border-top: 0;
+}
+
+.reading-note,
+.discovery-card,
+.glossary-list,
+.excerpt-viewer {
+  box-shadow: 0 18px 55px rgba(65, 47, 55, 0.075);
+}
+
+.excerpt {
+  background:
+    radial-gradient(circle at 84% 13%, rgba(197, 171, 187, 0.34), transparent 25rem),
+    linear-gradient(180deg, #f8f1f3, #ead9e0);
+}
+
+.excerpt-viewer {
+  background: rgba(255, 250, 248, 0.72);
+}
+
+.excerpt-label,
+.excerpt-pagination button:hover,
+.excerpt-pagination button[aria-current="page"] {
+  background: var(--plum-dark);
+}
+
+.manifesto,
+.analysis,
+.contact {
+  background:
+    radial-gradient(circle at 84% 9%, rgba(150, 119, 137, 0.42), transparent 28rem),
+    radial-gradient(circle at 6% 91%, rgba(197, 171, 187, 0.13), transparent 26rem),
+    #2d1e24;
+}
+
+.manifesto-line,
+.document-type,
+.analysis-index,
+.analysis-close,
+.contact-card small {
+  color: #e2c7d2;
+}
+
+.divider-shadow {
+  fill: #c5abbb;
+}
+
+.divider-paper {
+  fill: var(--paper);
+}
+
+.section-paper {
+  background:
+    radial-gradient(circle at 10% 10%, rgba(197, 171, 187, 0.25), transparent 22rem),
+    var(--paper-cool);
+}
+
+.discovery-card,
+.glossary-list,
+.term-answer p {
+  background-color: rgba(255, 250, 248, 0.74);
+}
+
+.analysis-disclosure[open] > summary i,
+.method-card[open] summary i,
+.qr-notice > span {
+  background: #d8bccb;
+  border-color: #d8bccb;
+}
+
+.document-map li {
+  background: rgba(45, 30, 36, 0.98);
+}
+
+.edition {
+  background:
+    radial-gradient(circle at 91% 18%, rgba(108, 82, 96, 0.17), transparent 18rem),
+    linear-gradient(112deg, #d8bccb, #f4e9ed 59%, #fffaf8);
+}
+
+.contact-card:hover {
+  background: #d8bccb;
+  border-color: #d8bccb;
+}
+
+.site-footer {
+  color: var(--slate-light);
+  background: #21161b;
+}
+
+@media (max-width: 940px) {
+  .hero {
+    padding-bottom: 9rem;
+  }
+
+  .hero-grid {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto auto;
+    gap: 2.5rem;
+  }
+
+  .hero-copy {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .book-stage {
+    grid-column: 1;
+    grid-row: 2;
+    width: min(100%, 560px);
+    margin-inline: auto;
+  }
+
+  .hero-facts {
+    grid-column: 1;
+    grid-row: 3;
+    width: 100%;
+    margin-top: 0;
+  }
+
+  .shelf-scene {
+    --volume-width: clamp(300px, 48vw, 340px);
+    min-height: 620px;
+  }
+}
+
+@media (max-width: 680px) {
+  .hero {
+    padding-top: 7.3rem;
+    padding-bottom: 7.7rem;
+    background:
+      radial-gradient(circle at 96% 12%, rgba(255, 250, 248, 0.78), transparent 14rem),
+      linear-gradient(146deg, #f4e9ed 0%, #dec8d2 65%, #c5abbb 100%);
+  }
+
+  .hero::after {
+    height: 92px;
+  }
+
+  .shelf-scene {
+    --volume-width: min(88vw, 320px);
+    min-height: 575px;
+  }
+
+  .shelf-scene::before {
+    width: min(86vw, 390px);
+  }
+
+  .shelf-caption {
+    margin-top: 0.25rem;
+  }
+}
+
+@media (max-width: 390px) {
+  .hero h1 {
+    font-size: clamp(2.05rem, 10.8vw, 2.55rem);
+    letter-spacing: -0.055em;
+    line-height: 1.01;
+  }
+
+  .shelf-scene {
+    --volume-width: min(88vw, 304px);
+    min-height: 550px;
+  }
+
+  .shelf-caption {
+    align-items: flex-start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .volume-select,
+  .volume-wall-shadow,
+  .volume-contact-shadow {
+    transition: none;
+  }
+}
