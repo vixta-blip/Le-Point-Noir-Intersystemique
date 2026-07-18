@@ -1,0 +1,525 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#171c22" />
+    <title>Le Point Noir Intersystémique — essai de Vixta</title>
+    <meta
+      name="description"
+      content="Un essai ontologique bref sur la relation entre deux cohérences qui demeurent distinctes, sans fusion, réduction ni vérité commune."
+    />
+    <meta name="author" content="Vixta" />
+    <meta
+      property="og:title"
+      content="Le Point Noir Intersystémique — Vixta"
+    />
+    <meta
+      property="og:description"
+      content="Aucune synthèse ne s’impose, aucune victoire ne se déclare — et pourtant quelque chose tient."
+    />
+    <meta property="og:type" content="book" />
+    <meta
+      property="og:image"
+      content="assets/couverture-le-point-noir-intersystemique.png"
+    />
+    <meta property="og:image:alt" content="Couverture du livre Le Point Noir Intersystémique" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2235%22 fill=%22%23171c22%22/></svg>" />
+    <link rel="preload" href="assets/Inter-Regular.ttf" as="font" type="font/ttf" crossorigin />
+    <link rel="preload" href="assets/SourceSerif-Italic.ttf" as="font" type="font/ttf" crossorigin />
+    <script>document.documentElement.classList.add("js");</script>
+    <link rel="stylesheet" href="styles.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Book",
+        "name": "Le Point Noir Intersystémique",
+        "alternateName": "Le Point Noir Intersystémique — Les configurations du dialogue",
+        "author": { "@type": "Person", "name": "Vixta" },
+        "publisher": { "@type": "Organization", "name": "Vixta" },
+        "datePublished": "2026-03-17",
+        "inLanguage": "fr",
+        "isbn": "9791098270109",
+        "numberOfPages": 88,
+        "bookFormat": "https://schema.org/Hardcover",
+        "image": "assets/couverture-le-point-noir-intersystemique.png",
+        "description": "Un essai ontologique bref sur la coexistence de cohérences distinctes sans fusion, réduction ni vérité commune.",
+        "offers": {
+          "@type": "Offer",
+          "price": "16.37",
+          "priceCurrency": "EUR",
+          "availability": "https://schema.org/InStock",
+          "url": "https://www.amazon.fr/dp/B0GT5YD9NK"
+        }
+      }
+    </script>
+  </head>
+
+  <body>
+    <a class="skip-link" href="#contenu">Aller au contenu</a>
+
+    <header class="site-header" data-header>
+      <div class="shell header-inner">
+        <a class="brand" href="#haut" aria-label="Retour en haut de la page">
+          <span class="brand-name">VIXTA</span>
+          <span class="brand-context">POINT NOIR · I</span>
+        </a>
+
+        <nav class="main-nav" aria-label="Navigation principale">
+          <a href="#livre">Le livre</a>
+          <a href="#extrait">Extrait</a>
+          <a href="#lecture">Pour qui</a>
+          <a href="#questions">Questions</a>
+        </nav>
+
+        <a
+          class="button button-small button-dark"
+          href="https://www.amazon.fr/dp/B0GT5YD9NK?utm_source=site_vixta&utm_medium=referral&utm_campaign=point_noir_intersystemique&utm_content=header"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Voir le relié
+          <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </header>
+
+    <main id="contenu">
+      <section class="hero" id="haut" aria-labelledby="titre-principal">
+        <div class="hero-orbit orbit-one" aria-hidden="true"></div>
+        <div class="hero-orbit orbit-two" aria-hidden="true"></div>
+
+        <div class="shell hero-grid">
+          <div class="hero-copy reveal">
+            <p class="eyebrow">TRILOGIE DU POINT NOIR · VOLUME I</p>
+            <h1 id="titre-principal">
+              Le dialogue doit-il nécessairement produire un
+              <em>accord&nbsp;?</em>
+            </h1>
+            <p class="hero-lead">
+              Un essai ontologique bref sur la coexistence de cohérences
+              distinctes, sans fusion, réduction ni vérité commune.
+            </p>
+
+            <div class="hero-actions">
+              <a class="button button-primary" href="extrait-le-point-noir-intersystemique.pdf" target="_blank">
+                Lire sept pages
+                <span aria-hidden="true">↓</span>
+              </a>
+              <a
+                class="button button-ghost"
+                href="https://www.amazon.fr/dp/B0GT5YD9NK?utm_source=site_vixta&utm_medium=referral&utm_campaign=point_noir_intersystemique&utm_content=hero"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Voir sur Amazon
+                <span aria-hidden="true">↗</span>
+              </a>
+            </div>
+
+            <ul class="hero-facts" aria-label="Caractéristiques principales du livre">
+              <li><strong>88</strong><span>pages</span></li>
+              <li><strong>Relié</strong><span>6 × 9 pouces</span></li>
+              <li><strong>16,37 €</strong><span>prix public</span></li>
+            </ul>
+          </div>
+
+          <div class="hero-visual reveal reveal-late">
+            <div class="book-halo" aria-hidden="true"></div>
+            <figure class="book-stage">
+              <div class="book-object">
+                <span class="book-spine" aria-hidden="true"></span>
+                <img
+                  src="assets/couverture-le-point-noir-intersystemique.png"
+                  width="1624"
+                  height="2500"
+                  alt="Couverture rose du livre Le Point Noir Intersystémique de Vixta"
+                />
+              </div>
+              <figcaption>
+                <span>Le Point Noir Intersystémique</span>
+                <span>Vixta · Sekaï</span>
+              </figcaption>
+            </figure>
+            <p class="vertical-note" aria-hidden="true">ONTOLOGY · PHILOSOPHY</p>
+          </div>
+        </div>
+
+        <div class="hero-footer shell" aria-hidden="true">
+          <span>RELATION</span>
+          <span class="hero-footer-line"></span>
+          <span>OPACITÉ</span>
+          <span class="hero-footer-line"></span>
+          <span>COEXISTENCE</span>
+        </div>
+      </section>
+
+      <section class="manifesto section-dark" aria-labelledby="manifesto-titre">
+        <div class="shell manifesto-grid">
+          <div class="section-index reveal">
+            <span>01</span>
+            <p>LE POINT DE DÉPART</p>
+          </div>
+          <div class="manifesto-copy reveal">
+            <h2 id="manifesto-titre">
+              Aucune synthèse ne s’impose.<br />
+              Aucune victoire ne se déclare.
+            </h2>
+            <p class="manifesto-line">Et pourtant, quelque chose tient.</p>
+            <p class="manifesto-note">
+              Deux pensées se rencontrent sans jamais se confondre. Le livre
+              observe la condition minimale à partir de laquelle leur relation
+              devient lisible sans que l’une absorbe l’autre.
+            </p>
+          </div>
+        </div>
+        <svg class="manifesto-wave" viewBox="0 0 1440 160" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M-40 112C170 20 260 22 390 96s230 40 330-7 172-35 250 6 160 52 250 10 166-34 270 0" />
+        </svg>
+      </section>
+
+      <section class="book-intro section" id="livre" aria-labelledby="livre-titre">
+        <div class="shell">
+          <div class="section-heading reveal">
+            <div>
+              <p class="eyebrow eyebrow-blue">LE LIVRE</p>
+              <h2 id="livre-titre">Un objet court qui demande du temps.</h2>
+            </div>
+            <p>
+              Le texte avance d’un seul mouvement, sans chapitres, par reprises
+              et déplacements. Il ne cherche ni à convaincre ni à conclure.
+            </p>
+          </div>
+
+          <div class="definition-grid">
+            <article class="definition-card definition-card-main reveal">
+              <p class="card-number">01 / 03</p>
+              <h3>Ce que le livre observe</h3>
+              <p>
+                Le moment où deux cadres de pensée cessent de s’imposer leurs
+                propres catégories, tandis que leur différence et leur relation
+                demeurent toutes deux lisibles.
+              </p>
+              <div class="concept-line" aria-hidden="true">
+                <span></span><i></i><span></span>
+              </div>
+            </article>
+
+            <article class="definition-card reveal">
+              <p class="card-number">02 / 03</p>
+              <h3>Sa forme</h3>
+              <p>
+                88 pages continues. Une lecture lente, dense, autonome et sans
+                prérequis philosophique.
+              </p>
+            </article>
+
+            <article class="definition-card definition-card-accent reveal">
+              <p class="card-number">03 / 03</p>
+              <h3>Sa limite</h3>
+              <p>
+                Ni méthode, ni doctrine, ni protocole de dialogue, ni sagesse
+                du silence.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="excerpt section" id="extrait" aria-labelledby="extrait-titre">
+        <div class="shell excerpt-grid">
+          <div class="excerpt-page reveal">
+            <div class="page-shadow" aria-hidden="true"></div>
+            <img
+              src="assets/page-13-extrait.png"
+              width="960"
+              height="1440"
+              loading="lazy"
+              alt="Première page de l’extrait, page 13 du livre"
+            />
+            <span class="excerpt-label">EXTRAIT · P. 13</span>
+          </div>
+
+          <div class="excerpt-copy reveal">
+            <p class="eyebrow eyebrow-plum">ÉPROUVER LA VOIX</p>
+            <h2 id="extrait-titre">Sept pages, sans inscription.</h2>
+            <blockquote>
+              « Le Point Noir désigne une condition relationnelle de suspension
+              entre deux cadres de pensée. »
+              <cite>— Le livre, p. 13</cite>
+            </blockquote>
+            <p>
+              L’extrait réunit les pages 13 à 19 du mouvement principal. Il
+              permet d’éprouver directement le rythme, la densité et la langue
+              du livre avant l’achat.
+            </p>
+            <a class="button button-dark" href="extrait-le-point-noir-intersystemique.pdf" target="_blank">
+              Ouvrir l’extrait PDF
+              <span aria-hidden="true">↗</span>
+            </a>
+            <p class="microcopy">PDF · 9 pages · aucune adresse demandée</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="recognition section section-paper" id="questions" aria-labelledby="questions-titre">
+        <div class="shell">
+          <div class="section-heading reveal">
+            <div>
+              <p class="eyebrow eyebrow-blue">LES QUESTIONS MAL POSÉES</p>
+              <h2 id="questions-titre">Et si l’alternative était trop pauvre&nbsp;?</h2>
+            </div>
+            <p>
+              Chaque question ouvre une situation sans la convertir en méthode
+              ni en promesse de résolution.
+            </p>
+          </div>
+
+          <div class="questions-grid">
+            <article class="question-card reveal">
+              <span>01</span>
+              <h3>Faut-il comprendre entièrement l’autre pour rester en relation&nbsp;?</h3>
+            </article>
+            <article class="question-card reveal">
+              <span>02</span>
+              <h3>Une tension non résolue est-elle nécessairement un échec&nbsp;?</h3>
+            </article>
+            <article class="question-card reveal">
+              <span>03</span>
+              <h3>Ne pas conclure, est-ce manquer de rigueur&nbsp;?</h3>
+            </article>
+            <article class="question-card reveal">
+              <span>04</span>
+              <h3>Peut-on demeurer distinct sans devenir séparé&nbsp;?</h3>
+            </article>
+            <article class="question-card reveal">
+              <span>05</span>
+              <h3>Une relation peut-elle exister sans échange de contenus&nbsp;?</h3>
+            </article>
+            <article class="question-card question-card-dark reveal">
+              <span>06</span>
+              <h3>La vérité doit-elle devenir commune&nbsp;?</h3>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="reader section" id="lecture" aria-labelledby="lecture-titre">
+        <div class="shell reader-grid">
+          <div class="reader-copy reveal">
+            <p class="eyebrow eyebrow-plum">CONTRAT DE LECTURE</p>
+            <h2 id="lecture-titre">Pour les lecteurs qui acceptent qu’une pensée ne se referme pas trop vite.</h2>
+            <p>
+              Aucun parcours universitaire n’est requis. Le livre s’adresse en
+              revanche à une attention disponible pour la lenteur, les reprises
+              et les distinctions précises.
+            </p>
+          </div>
+
+          <div class="reader-list">
+            <article class="reader-item reveal">
+              <span class="reader-index">A</span>
+              <div>
+                <h3>Philosophie de la relation</h3>
+                <p>Altérité, opacité, coexistence, traduction et limites du consensus.</p>
+              </div>
+            </article>
+            <article class="reader-item reveal">
+              <span class="reader-index">B</span>
+              <div>
+                <h3>Regards interdisciplinaires</h3>
+                <p>Systèmes, cadres hétérogènes, épistémologie et passage entre régimes.</p>
+              </div>
+            </article>
+            <article class="reader-item reveal">
+              <span class="reader-index">C</span>
+              <div>
+                <h3>Essais courts et singuliers</h3>
+                <p>Un objet relié bref, autonome, conçu pour la lecture lente et la relecture.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="limits section-dark" aria-labelledby="limites-titre">
+        <div class="shell limits-grid">
+          <div class="limits-copy reveal">
+            <p class="eyebrow eyebrow-light">CE QUE CE N’EST PAS</p>
+            <h2 id="limites-titre">Le livre ne promet aucun résultat à atteindre.</h2>
+            <p>
+              Il décrit une configuration relationnelle. Il ne fournit ni
+              étapes, ni règles de conduite, ni bénéfice garanti.
+            </p>
+          </div>
+          <ul class="limits-list reveal">
+            <li><span>01</span>Une méthode de communication</li>
+            <li><span>02</span>Un manuel de résolution des conflits</li>
+            <li><span>03</span>Une sagesse spirituelle du silence</li>
+            <li><span>04</span>Une réconciliation des opposés</li>
+            <li><span>05</span>Une doctrine à appliquer</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="fragments section" aria-labelledby="fragments-titre">
+        <div class="shell">
+          <div class="section-heading reveal">
+            <div>
+              <p class="eyebrow eyebrow-blue">FRAGMENTS</p>
+              <h2 id="fragments-titre">La preuve reste dans le texte.</h2>
+            </div>
+            <p>Trois phrases réelles, sans reformulation promotionnelle.</p>
+          </div>
+
+          <div class="fragments-grid">
+            <blockquote class="fragment-card reveal">
+              <span class="fragment-page">P. 15</span>
+              <p>« Le silence propre au Point Noir n’est pas un vide, mais un intervalle relationnel. »</p>
+            </blockquote>
+            <blockquote class="fragment-card fragment-card-tall reveal">
+              <span class="fragment-page">P. 16</span>
+              <p>« Le contact qui se tient dans le champ du Point Noir ne relève pas d’un échange communicatif. »</p>
+            </blockquote>
+            <blockquote class="fragment-card fragment-card-accent reveal">
+              <span class="fragment-page">P. 18</span>
+              <p>« Le Point Noir ne formule aucune vérité commune. »</p>
+            </blockquote>
+          </div>
+        </div>
+      </section>
+
+      <section class="object-section section section-paper" aria-labelledby="objet-titre">
+        <div class="shell object-grid">
+          <div class="object-cover reveal">
+            <img
+              src="assets/couverture-le-point-noir-intersystemique.png"
+              width="1624"
+              height="2500"
+              loading="lazy"
+              alt="Couverture complète du livre relié Le Point Noir Intersystémique"
+            />
+          </div>
+
+          <div class="object-copy reveal">
+            <p class="eyebrow eyebrow-plum">L’OBJET RELIÉ</p>
+            <h2 id="objet-titre">Le Point Noir Intersystémique</h2>
+            <p class="object-subtitle">Les configurations du dialogue</p>
+            <p class="object-description">
+              Un mouvement continu de 88 pages, autonome au sein de la Trilogie
+              du Point Noir. Vixta est le nom d’auteur ; le travail s’inscrit
+              dans le développement du système Sekaï.
+            </p>
+
+            <dl class="spec-list">
+              <div><dt>Format</dt><dd>Relié · 6 × 9 pouces</dd></div>
+              <div><dt>Intérieur</dt><dd>Noir et blanc · papier crème</dd></div>
+              <div><dt>Parution</dt><dd>17 mars 2026</dd></div>
+              <div><dt>ISBN</dt><dd>979-10-982701-0-9</dd></div>
+              <div><dt>Prix public</dt><dd>16,37 €</dd></div>
+            </dl>
+
+            <div class="object-actions">
+              <a
+                class="button button-primary"
+                href="https://www.amazon.fr/dp/B0GT5YD9NK?utm_source=site_vixta&utm_medium=referral&utm_campaign=point_noir_intersystemique&utm_content=object"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Voir le livre relié
+                <span aria-hidden="true">↗</span>
+              </a>
+              <span class="availability">Disponible sur Amazon.fr</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="faq section" aria-labelledby="faq-titre">
+        <div class="shell faq-grid">
+          <div class="faq-intro reveal">
+            <p class="eyebrow eyebrow-blue">AVANT DE COMMENCER</p>
+            <h2 id="faq-titre">Questions de lecture</h2>
+            <p>
+              Des réponses courtes pour savoir ce que le livre demande — et ce
+              qu’il ne demande pas.
+            </p>
+          </div>
+
+          <div class="faq-list">
+            <details class="reveal">
+              <summary>Est-ce une méthode de dialogue&nbsp;?<span aria-hidden="true">+</span></summary>
+              <p>Non. Le livre décrit un régime relationnel ; il ne fournit ni étapes, ni règles, ni résultat à atteindre.</p>
+            </details>
+            <details class="reveal">
+              <summary>Faut-il connaître la philosophie&nbsp;?<span aria-hidden="true">+</span></summary>
+              <p>Non. Aucun prérequis n’est demandé, mais le texte est dense et gagne à être lu lentement.</p>
+            </details>
+            <details class="reveal">
+              <summary>Est-ce un livre spirituel&nbsp;?<span aria-hidden="true">+</span></summary>
+              <p>Non. Le silence et l’opacité n’y désignent ni état intérieur, ni expérience sacrée.</p>
+            </details>
+            <details class="reveal">
+              <summary>Peut-on lire ce volume seul&nbsp;?<span aria-hidden="true">+</span></summary>
+              <p>Oui. Il appartient à une trilogie, mais ce premier volume constitue une lecture autonome.</p>
+            </details>
+            <details class="reveal">
+              <summary>Pourquoi le texte avance-t-il par reprises&nbsp;?<span aria-hidden="true">+</span></summary>
+              <p>Il progresse par modulations d’un même régime plutôt que par chapitres ou démonstration cumulative.</p>
+            </details>
+            <details class="reveal">
+              <summary>À quoi servent la thèse et le dictionnaire&nbsp;?<span aria-hidden="true">+</span></summary>
+              <p>À l’étude et à la stabilisation des termes après ou autour de la lecture. Ils ne remplacent pas le livre.</p>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <section class="final-cta" aria-labelledby="final-titre">
+        <div class="final-point" aria-hidden="true"></div>
+        <div class="shell final-inner reveal">
+          <p class="eyebrow eyebrow-light">LE POINT NOIR INTERSYSTÉMIQUE</p>
+          <h2 id="final-titre">
+            Lire ce qui demeure<br />
+            <em>sans se résoudre.</em>
+          </h2>
+          <div class="final-actions">
+            <a class="button button-primary" href="extrait-le-point-noir-intersystemique.pdf" target="_blank">
+              Commencer par l’extrait
+              <span aria-hidden="true">↗</span>
+            </a>
+            <a
+              class="button button-outline-light"
+              href="https://www.amazon.fr/dp/B0GT5YD9NK?utm_source=site_vixta&utm_medium=referral&utm_campaign=point_noir_intersystemique&utm_content=final"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Acheter le relié · 16,37 €
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="shell footer-grid">
+        <div>
+          <p class="footer-brand">VIXTA</p>
+          <p>Travail inscrit dans le développement du système Sekaï.</p>
+        </div>
+        <div>
+          <p>Le Point Noir Intersystémique</p>
+          <p>© Vixta, 2026 · Tous droits réservés.</p>
+        </div>
+        <div class="footer-links">
+          <a href="extrait-le-point-noir-intersystemique.pdf" target="_blank">Extrait PDF</a>
+          <a href="#haut">Haut de page ↑</a>
+        </div>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>

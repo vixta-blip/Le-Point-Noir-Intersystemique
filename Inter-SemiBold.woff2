@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 170" preserveAspectRatio="none">
+  <path
+    d="M0 63C173 20 310 23 447 69C594 118 731 134 882 92C1060 43 1193 25 1440 82V170H0Z"
+    fill="#c5abbb"
+    fill-opacity=".42"
+  />
+  <path
+    d="M0 105C181 68 325 60 474 101C628 143 769 155 925 121C1090 85 1240 67 1440 111V170H0Z"
+    fill="#fffaf8"
+  />
+</svg>

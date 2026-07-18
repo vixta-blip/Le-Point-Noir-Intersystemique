@@ -1,124 +1,33 @@
-<!DOCTYPE html>
-<html lang="fr">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="color-scheme" content="light" />
-    <meta name="theme-color" content="#171c22" />
-    <title>Transcription de l’extrait — Le Point Noir Intersystémique</title>
-    <meta
-      name="description"
-      content="Transcription accessible des pages 13 à 19 du livre Le Point Noir Intersystémique, de Vixta."
-    />
-    <meta name="robots" content="noindex, follow" />
-    <link rel="canonical" href="https://vixta-blip.github.io/Le-Point-Noir-Intersystemique/" />
-    <link rel="stylesheet" href="styles.css?v=20260718-6" />
-  </head>
-  <body class="transcript-page">
-    <a class="skip-link" href="#contenu">Aller au texte</a>
+(() => {
+  const header = document.querySelector("[data-header]");
 
-    <header class="transcript-header">
-      <div class="shell transcript-header-inner">
-        <a href="index.html#extrait" class="brand" aria-label="Retour à la page du livre">
-          <img src="assets/logo-vixta.png" width="195" height="151" alt="Vixta" />
-        </a>
-        <a class="text-action" href="index.html#extrait">← Retour au livre</a>
-      </div>
-    </header>
+  const updateHeader = () => {
+    header?.classList.toggle("is-scrolled", window.scrollY > 24);
+  };
 
-    <main id="contenu" class="shell transcript-shell">
-      <header class="transcript-intro">
-        <p class="eyebrow eyebrow-plum">TRANSCRIPTION ACCESSIBLE · PAGES 13 À 19</p>
-        <h1>Le Point Noir Intersystémique</h1>
-        <p>
-          Le texte ci-dessous reprend intégralement les sept pages proposées dans
-          le feuilleteur et dans le PDF public.
-        </p>
-      </header>
+  updateHeader();
+  window.addEventListener("scroll", updateHeader, { passive: true });
 
-      <article class="transcript-text" aria-label="Transcription des pages 13 à 19">
-        <section id="page-13" aria-labelledby="page-13-titre">
-          <h2 id="page-13-titre">Page 13</h2>
-          <p>Le Point Noir désigne une condition relationnelle de suspension entre deux cadres de pensée, lorsque cesse l’imposition réciproque de leurs catégories. Cette suspension correspond au retrait de l’acte d’affirmation par lequel un système cherche à ordonner le réel selon ses propres mesures.</p>
-          <p>Lorsque des structures mentales, culturelles ou symboliques entrent en contact, chacune tend à produire une organisation du réel conforme à sa configuration interne. Tant que cette dynamique d’imposition se maintient, la relation engendre friction, réduction ou traduction forcée.</p>
-          <p>Lorsque cette dynamique cesse — non par renoncement, mais par atteinte de ses limites propres — un espace relationnel se rend lisible.</p>
-          <p>C’est cet espace que désigne le Point Noir.</p>
-          <p>Il marque la suspension des hiérarchies interprétatives et l’absence temporaire de toute prétention à mesurer le réel à partir d’un ordre singulier. L’égalité qui s’y établit ne procède pas d’une similitude des systèmes, mais de la neutralisation momentanée de leur pouvoir de mesure.</p>
-        </section>
+  const revealItems = [...document.querySelectorAll(".reveal")];
 
-        <section id="page-14" aria-labelledby="page-14-titre">
-          <h2 id="page-14-titre">Page 14</h2>
-          <p>Lorsque l’esprit suspend son mouvement d’affirmation, une relation devient possible sans exigence d’imposition.</p>
-          <p>Cette suspension n’est ni un recul ni un silence vide, mais l’interruption temporaire par laquelle une position cesse de chercher à s’établir comme mesure.</p>
-          <p>Le Point Noir ne produit aucun sens et ne génère aucun contenu.</p>
-          <p>Il se tient comme retrait fonctionnel, au sein duquel la circulation du sens demeure possible sans fixation ni assignation à une position déterminée.</p>
-          <p>Ce retrait se tient comme espace relationnel entre des cohérences déjà constituées.</p>
-          <p>Il ne sépare pas : il rend réversible ce qui était tenu comme interne et neutralise l’exigence d’appropriation.</p>
-          <p>Le Point Noir désigne ainsi la tenue d’un espace où le sens demeure mobile sans être capturé.</p>
-        </section>
+  if (!("IntersectionObserver" in window)) {
+    revealItems.forEach((item) => item.classList.add("is-visible"));
+    return;
+  }
 
-        <section id="page-15" aria-labelledby="page-15-titre">
-          <h2 id="page-15-titre">Page 15</h2>
-          <p>Par la réversibilité qui s’y rend perceptible, chaque cadre découvre son bord comme condition de relation.</p>
-          <p>Ce bord n’est pas une limite d’exclusion, mais le point à partir duquel l’altérité devient opérante et se laisse reconnaître comme condition du contact entre configurations distinctes.</p>
-          <p>Le silence propre au Point Noir n’est pas un vide, mais un intervalle relationnel.</p>
-          <p>Dans cet intervalle, le sens circule sans se fixer à une position déterminée, et la rencontre se tient sans se résoudre en fusion.</p>
-          <p>La relation ne repose pas sur l’abolition de la différence, mais sur la tenue d’une tension minimale.</p>
-          <p>Cette tension suffit à préserver l’altérité tout en permettant la co-présence de régimes distincts.</p>
-          <p>Le Point Noir se laisse lire ainsi comme une compatibilité de fonctionnement sans subordination ni effacement.</p>
-        </section>
+  const observer = new IntersectionObserver(
+    (entries, currentObserver) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-visible");
+        currentObserver.unobserve(entry.target);
+      });
+    },
+    {
+      rootMargin: "0px 0px -8% 0px",
+      threshold: 0.08,
+    },
+  );
 
-        <section id="page-16" aria-labelledby="page-16-titre">
-          <h2 id="page-16-titre">Page 16</h2>
-          <p>Le contact qui se tient dans le champ du Point Noir ne relève pas d’un échange communicatif.</p>
-          <p>Il n’a ni pour fonction la transmission ni la recherche d’un accord, mais la tenue d’une ouverture relationnelle où aucun sens ne se fixe.</p>
-          <p>Dans cette relation, chaque système conserve sa cohérence tout en se rendant lisible dans sa précarité constitutive.</p>
-          <p>Cette précarité se tient comme une opacité maintenue, perceptible dans la rencontre sans être dissoute ni appropriée.</p>
-          <p>Dans ce régime, la relation se tient sans appropriation ni clôture.</p>
-          <p>La pensée se tient face à ce qui résiste, tant que le passage ouvert par le Point Noir ne se referme pas.</p>
-        </section>
-
-        <section id="page-17" aria-labelledby="page-17-titre">
-          <h2 id="page-17-titre">Page 17</h2>
-          <p>Lorsque la pensée tend à s’affirmer ou à conclure, une suspension active devient nécessaire.</p>
-          <p>Il ne s’agit pas d’un arrêt, mais d’un maintien ouvert entre dire et écouter, expansion et retrait.</p>
-          <p>Dans cet intervalle, le sens cesse de se fixer sans être dévoilé.</p>
-          <p>Le silence qui se rend lisible alors n’est pas absence de sens, mais condition de sa circulation.</p>
-          <p>Les systèmes s’y tiennent sans se dissoudre ni s’imposer, dans une retenue qui ne se transforme pas en position.</p>
-          <p>Dans ce régime, le monde ne se présente plus comme un ensemble de places à occuper, mais comme un champ de relations ouvertes, se tenant sans saturation ni clôture.</p>
-        </section>
-
-        <section id="page-18" aria-labelledby="page-18-titre">
-          <h2 id="page-18-titre">Page 18</h2>
-          <p>Le vide perceptible autour du Point Noir ne s’oppose pas au plein.</p>
-          <p>Il désigne un intervalle de tenue où les forces de clôture cessent d’agir, sans que la structure soit annulée.</p>
-          <p>Lorsque deux systèmes interrompent leur opposition, une écoute réciproque devient possible : un tel intervalle se tient comme une tension où le lien persiste sans se fixer.</p>
-          <p>Le Point Noir ne formule aucune vérité commune.</p>
-          <p>Il désigne un régime dans lequel la vérité demeure opérante sans capture, aussi longtemps que l’acte de clôture n’est pas réintroduit.</p>
-          <p>Le silence qui s’y tient n’est pas produit ; il est maintenu par abstention de fermeture.</p>
-          <p>Le Point Noir n’est pas une structure durable, mais un régime précaire.</p>
-          <p>Il se tient dans l’acte même de suspendre, par lequel la relation reste ouverte sans se dissoudre.</p>
-        </section>
-
-        <section id="page-19" aria-labelledby="page-19-titre">
-          <h2 id="page-19-titre">Page 19</h2>
-          <p>Cela se rend possible lorsque deux régimes cessent de s’opposer et se tiennent ensemble.</p>
-          <p>Autour du Point Noir, cette tenue conjointe constitue un régime relationnel : suspendre consiste à cesser d’intervenir sans interrompre la circulation.</p>
-          <p>Lorsque le silence n’est plus refermé, la pensée se tient dans une oscillation qui soutient la relation.</p>
-          <p>Cet entre-deux suspend le dire avant toute fixation ; rien n’y est formulé, et le sens demeure disponible sans être requis.</p>
-        </section>
-      </article>
-
-      <aside class="transcript-actions" aria-label="Poursuivre">
-        <a class="button button-dark" href="index.html#edition">Voir l’édition publiée <span aria-hidden="true">→</span></a>
-        <a class="text-action" href="extrait-le-point-noir-intersystemique.pdf" target="_blank" rel="noopener">Ouvrir le PDF <span aria-hidden="true">↗</span></a>
-      </aside>
-    </main>
-
-    <footer class="transcript-footer">
-      <div class="shell">
-        <p>© Vixta, 2026 · Extrait de <cite>Le Point Noir Intersystémique</cite>.</p>
-      </div>
-    </footer>
-  </body>
-</html>
+  revealItems.forEach((item) => observer.observe(item));
+})();
