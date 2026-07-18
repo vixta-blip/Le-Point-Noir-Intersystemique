@@ -1,11 +1,14 @@
-SITE COMPLET — LE POINT NOIR INTERSYSTÉMIQUE
+SITE COMPLET ET AUTONOME — LE POINT NOIR INTERSYSTÉMIQUE
 
 1. Décompressez entièrement l’archive sur votre ordinateur.
 2. N’envoyez pas le fichier ZIP directement dans GitHub.
 3. Dans le dépôt Le-Point-Noir-Intersystemique, ouvrez Add file > Upload files.
 4. Faites glisser ensemble tous les fichiers ET le dossier assets de ce paquet.
-5. Vérifiez avant validation que index.html reste à la racine et que les dossiers
-   assets/v2 et assets/v3 apparaissent bien comme des dossiers.
+5. Vérifiez avant validation que index.html, _config.yml et le dossier assets
+   restent à la racine. Les dossiers assets/v2 et assets/v3 doivent apparaître
+   comme des dossiers.
 6. Validez avec Commit changes.
 
 Le fichier index.html ne doit pas être placé dans un sous-dossier supplémentaire.
+Le paquet contient déjà les protections nécessaires à GitHub Pages ; aucune
+correction séparée n'est requise.
