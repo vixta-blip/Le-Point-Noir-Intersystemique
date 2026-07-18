@@ -117,6 +117,57 @@
 
   const reducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
 
+  /* Progressive copy appears only when an expandable answer is requested. */
+
+  const progressiveTargets = [
+    ...document.querySelectorAll("[data-progressive-copy], .reading-note > p, .method-card > div"),
+  ];
+
+  const prepareProgressiveCopy = (container) => {
+    if (!container || container.dataset.progressiveReady === "true" || reducedMotion) return;
+    const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT);
+    const textNodes = [];
+    while (walker.nextNode()) {
+      if (walker.currentNode.nodeValue.trim()) textNodes.push(walker.currentNode);
+    }
+    let wordIndex = 0;
+    textNodes.forEach((node) => {
+      const fragment = document.createDocumentFragment();
+      node.nodeValue.split(/(\s+)/).forEach((part) => {
+        if (!part) return;
+        if (/^\s+$/.test(part)) {
+          fragment.append(document.createTextNode(part));
+          return;
+        }
+        const span = document.createElement("span");
+        span.className = "progressive-word";
+        span.style.setProperty("--word-delay", `${Math.min(wordIndex * 18, 1250)}ms`);
+        span.textContent = part;
+        fragment.append(span);
+        wordIndex += 1;
+      });
+      node.replaceWith(fragment);
+    });
+    container.dataset.progressiveReady = "true";
+  };
+
+  const playProgressiveCopy = (container) => {
+    if (!container || reducedMotion) return;
+    prepareProgressiveCopy(container);
+    container.classList.remove("is-writing");
+    void container.offsetWidth;
+    container.classList.add("is-writing");
+  };
+
+  progressiveTargets.forEach((target) => {
+    prepareProgressiveCopy(target);
+    const details = target.closest("details");
+    details?.addEventListener("toggle", () => {
+      if (details.open) playProgressiveCopy(target);
+    });
+    if (details?.open) window.setTimeout(() => playProgressiveCopy(target), 160);
+  });
+
   /* Short interface cues. Nothing plays before the visitor's first gesture. */
 
   const AudioEngine = window.AudioContext || window.webkitAudioContext;
@@ -362,6 +413,19 @@
       return;
     }
 
+    if (kind === "question-shift") {
+      scheduleNoise({ duration: 0.18, level: 0.042 });
+      scheduleTone({ frequency: 246.94, endFrequency: 349.23, duration: 0.2, level: 0.095, type: "sine", filterFrequency: 1800 });
+      scheduleTone({ frequency: 392, endFrequency: 493.88, offset: 0.075, duration: 0.2, level: 0.072, type: "sine" });
+      return;
+    }
+
+    if (kind === "coherence-shift") {
+      scheduleNoise({ duration: 0.13, level: 0.035 });
+      scheduleTone({ frequency: 329.63, endFrequency: 392, duration: 0.13, level: 0.085, type: "triangle", filterFrequency: 1700 });
+      return;
+    }
+
     if (kind === "study-close") {
       scheduleTone({ frequency: 440, endFrequency: 329.63, duration: 0.13, level: 0.13, type: "sine" });
       scheduleNoise({ offset: 0.025, duration: 0.09, level: 0.045 });
@@ -382,6 +446,8 @@
     "term-c": 92,
     "study-open": 180,
     "study-close": 180,
+    "question-shift": 420,
+    "coherence-shift": 260,
   };
 
   const playInterfaceSound = (kind, options = {}) => {
@@ -407,6 +473,7 @@
 
   const activationSoundFor = (control) => {
     if (!control || control.matches("[data-book-select]")) return null;
+    if (control.matches("[data-hero-question-prev], [data-hero-question-next], [data-coherence-prev], [data-coherence-next]")) return null;
     if (control.matches("[data-term-hotspot], [data-term-select], [data-study-open], [data-study-close]")) {
       return null;
     }
@@ -470,6 +537,146 @@
     if (!control || control.matches("[data-book-select], [data-term-hotspot], [data-term-select]")) return;
     playInterfaceSound("hover");
   });
+
+  /* Editorial questions: a slow rotation, always directly navigable. */
+
+  const siteData = window.PNI_SITE_DATA || {};
+  const heroQuestions = Array.isArray(siteData.questions) ? siteData.questions : [];
+  const heroQuestion = document.querySelector("[data-hero-question]");
+  const heroQuestionText = document.querySelector("[data-hero-question-text]");
+  const heroQuestionLead = document.querySelector("[data-hero-question-lead]");
+  const heroQuestionLink = document.querySelector("[data-hero-question-link]");
+  const heroAnswerLink = document.querySelector("[data-hero-answer-link]");
+  const heroQuestionPosition = document.querySelector("[data-hero-question-position]");
+  const heroQuestionPrevious = document.querySelector("[data-hero-question-prev]");
+  const heroQuestionPause = document.querySelector("[data-hero-question-pause]");
+  const heroQuestionNext = document.querySelector("[data-hero-question-next]");
+  let heroQuestionIndex = 0;
+  let heroQuestionTimer = null;
+  let heroRotationPaused = reducedMotion;
+
+  const renderHeroQuestion = (index, { withSound = false } = {}) => {
+    if (!heroQuestions.length || !heroQuestion) return;
+    heroQuestionIndex = (index + heroQuestions.length) % heroQuestions.length;
+    const item = heroQuestions[heroQuestionIndex];
+    heroQuestion.classList.remove("is-changing");
+    heroQuestion.classList.toggle("is-long", item.question.length > 58);
+    heroQuestion.classList.toggle("is-very-long", item.question.length > 72);
+    void heroQuestion.offsetWidth;
+    if (!reducedMotion) heroQuestion.classList.add("is-changing");
+    if (heroQuestionText) heroQuestionText.textContent = item.question;
+    if (heroQuestionLead) heroQuestionLead.textContent = item.lead;
+    if (heroQuestionLink) {
+      heroQuestionLink.href = item.href;
+      heroQuestionLink.setAttribute("aria-label", `${item.question} Lire la réponse développée.`);
+    }
+    if (heroAnswerLink) heroAnswerLink.href = item.href;
+    if (heroQuestionPosition) heroQuestionPosition.textContent = `${heroQuestionIndex + 1} / ${heroQuestions.length}`;
+    if (withSound) playInterfaceSound("question-shift", { force: true });
+  };
+
+  const restartHeroQuestionTimer = () => {
+    if (heroQuestionTimer !== null) window.clearInterval(heroQuestionTimer);
+    if (heroQuestions.length < 2 || heroRotationPaused) return;
+    heroQuestionTimer = window.setInterval(() => {
+      if (!document.hidden) renderHeroQuestion(heroQuestionIndex + 1, { withSound: true });
+    }, 300000);
+  };
+
+  heroQuestionPrevious?.addEventListener("click", () => {
+    renderHeroQuestion(heroQuestionIndex - 1, { withSound: true });
+    restartHeroQuestionTimer();
+  });
+  heroQuestionNext?.addEventListener("click", () => {
+    renderHeroQuestion(heroQuestionIndex + 1, { withSound: true });
+    restartHeroQuestionTimer();
+  });
+  heroQuestionPause?.addEventListener("click", () => {
+    heroRotationPaused = !heroRotationPaused;
+    heroQuestionPause.setAttribute("aria-pressed", String(heroRotationPaused));
+    heroQuestionPause.setAttribute("aria-label", heroRotationPaused
+      ? "Reprendre le changement automatique"
+      : "Suspendre le changement automatique");
+    heroQuestionPause.textContent = heroRotationPaused ? "▶" : "Ⅱ";
+    restartHeroQuestionTimer();
+  });
+  if (heroQuestionPause && heroRotationPaused) {
+    heroQuestionPause.setAttribute("aria-pressed", "true");
+    heroQuestionPause.setAttribute("aria-label", "Reprendre le changement automatique");
+    heroQuestionPause.textContent = "▶";
+  }
+  renderHeroQuestion(0);
+  restartHeroQuestionTimer();
+
+  /* Concrete configurations: two coherent descriptions of one situation. */
+
+  const coherenceCases = Array.isArray(siteData.coherenceCases) ? siteData.coherenceCases : [];
+  const coherenceCase = document.querySelector("[data-coherence-case]");
+  const coherenceFields = {
+    label: document.querySelector("[data-coherence-label]"),
+    position: document.querySelector("[data-coherence-position]"),
+    situation: document.querySelector("[data-coherence-situation]"),
+    leftTitle: document.querySelector("[data-coherence-left-title]"),
+    leftText: document.querySelector("[data-coherence-left-text]"),
+    rightTitle: document.querySelector("[data-coherence-right-title]"),
+    rightText: document.querySelector("[data-coherence-right-text]"),
+    relation: document.querySelector("[data-coherence-relation]"),
+  };
+  const coherencePrevious = document.querySelector("[data-coherence-prev]");
+  const coherencePause = document.querySelector("[data-coherence-pause]");
+  const coherenceNext = document.querySelector("[data-coherence-next]");
+  let coherenceIndex = 0;
+  let coherenceTimer = null;
+  let coherenceRotationPaused = reducedMotion;
+
+  const renderCoherenceCase = (index, { withSound = false } = {}) => {
+    if (!coherenceCases.length || !coherenceCase) return;
+    coherenceIndex = (index + coherenceCases.length) % coherenceCases.length;
+    const item = coherenceCases[coherenceIndex];
+    coherenceCase.classList.remove("is-changing");
+    void coherenceCase.offsetWidth;
+    if (!reducedMotion) coherenceCase.classList.add("is-changing");
+    Object.entries(coherenceFields).forEach(([key, element]) => {
+      if (!element) return;
+      element.textContent = key === "position"
+        ? `${coherenceIndex + 1} / ${coherenceCases.length}`
+        : item[key];
+    });
+    if (withSound) playInterfaceSound("coherence-shift");
+  };
+
+  const restartCoherenceTimer = () => {
+    if (coherenceTimer !== null) window.clearInterval(coherenceTimer);
+    if (coherenceCases.length < 2 || coherenceRotationPaused) return;
+    coherenceTimer = window.setInterval(() => {
+      if (!document.hidden) renderCoherenceCase(coherenceIndex + 1, { withSound: true });
+    }, 90000);
+  };
+
+  coherencePrevious?.addEventListener("click", () => {
+    renderCoherenceCase(coherenceIndex - 1, { withSound: true });
+    restartCoherenceTimer();
+  });
+  coherenceNext?.addEventListener("click", () => {
+    renderCoherenceCase(coherenceIndex + 1, { withSound: true });
+    restartCoherenceTimer();
+  });
+  coherencePause?.addEventListener("click", () => {
+    coherenceRotationPaused = !coherenceRotationPaused;
+    coherencePause.setAttribute("aria-pressed", String(coherenceRotationPaused));
+    coherencePause.setAttribute("aria-label", coherenceRotationPaused
+      ? "Reprendre le changement automatique"
+      : "Suspendre le changement automatique");
+    coherencePause.textContent = coherenceRotationPaused ? "▶" : "Ⅱ";
+    restartCoherenceTimer();
+  });
+  if (coherencePause && coherenceRotationPaused) {
+    coherencePause.setAttribute("aria-pressed", "true");
+    coherencePause.setAttribute("aria-label", "Reprendre le changement automatique");
+    coherencePause.textContent = "▶";
+  }
+  renderCoherenceCase(0);
+  restartCoherenceTimer();
 
   /* Collection shelf: one source of truth for this volume and those to come. */
 
@@ -647,6 +854,8 @@
   const termConnectorStart = document.querySelector("[data-term-connector-start]");
   const termConnectorEnd = document.querySelector("[data-term-connector-end]");
   const studyOpenButton = document.querySelector("[data-study-open]");
+  const studyOpenLabel = document.querySelector("[data-study-open-label]");
+  const viewerHelp = document.querySelector("#excerpt-help");
   const studyDialog = document.querySelector("[data-study-dialog]");
   const studyCloseButton = document.querySelector("[data-study-close]");
   const studyPreviousButton = document.querySelector("[data-study-prev]");
@@ -655,9 +864,15 @@
   const studyImage = document.querySelector("[data-study-image]");
   const studyHotspots = document.querySelector("[data-study-hotspots]");
   const studyPageScroll = document.querySelector(".study-page-scroll");
+  const threadDialog = document.querySelector("[data-thread-dialog]");
+  const threadCloseButton = document.querySelector("[data-thread-close]");
+  const threadTermSelect = document.querySelector("[data-thread-term-select]");
+  const threadBody = document.querySelector("[data-thread-body]");
   const selectionByPage = new Map();
   let currentPageIndex = 0;
   let connectorFrame = null;
+  let threadReturnToStudy = false;
+  let lastThreadTrigger = null;
 
   const escapeMarkup = (value = "") => String(value)
     .replaceAll("&", "&amp;")
@@ -667,9 +882,15 @@
     .replaceAll("'", "&#039;");
 
   const categoryLabel = (category) => {
-    if (category === "A") return "Catégorie A · opérateur de condition";
-    if (category === "B") return "Catégorie B · opérateur relationnel";
+    if (category === "A") return "Catégorie A · terme opératif stabilisé";
+    if (category === "B") return "Catégorie B · terme opératif subordonné";
     return "Catégorie C · terme non opératif";
+  };
+
+  const categoryExplanation = (category) => {
+    if (category === "A") return "A réunit les termes opératifs stabilisés : ce sont les repères structurants dont le déplacement modifierait la cohérence du mouvement.";
+    if (category === "B") return "B réunit les termes opératifs subordonnés : leur usage reste précis, mais il s’ajuste au cadre porté par les termes de la catégorie A.";
+    return "C réunit les termes non opératifs : ils appartiennent au langage commun, restent ouverts et peuvent apparaître sans porter l’architecture du texte.";
   };
 
   const pageDataFor = (page) => excerptStudy.pages?.[String(page)] || null;
@@ -706,7 +927,7 @@
       })
       .join("");
     const constraints = category === "C"
-      ? `<p class="operative-category-note">Ce mot est signalé pour éviter de lui attribuer une propriété que le dictionnaire ne lui donne pas. Son occurrence reste à lire dans la phrase et dans cette page.</p>`
+      ? `<p class="operative-category-note">«&nbsp;${escapeMarkup(termName)}&nbsp;» relève ici de la catégorie C : son sens demeure ouvert dans le langage commun et ne reçoit pas la fonction structurante d’une entrée opérative.</p>`
       : `
         <details class="operative-limits"${limitsWereOpen ? " open" : ""}>
           <summary>
@@ -723,7 +944,7 @@
               <ul>${renderConstraintList(termData.projections || [])}</ul>
             </div>
           </div>
-          <p class="operative-category-note">Chaque terme apparaît dans un régime précis. Il ne traverse pas les régimes sans déplacement explicite. Si le régime change, le terme se transforme ou disparaît. L’entrée est stabilisée pour l’édition en cours.</p>
+          <p class="operative-category-note">Chaque terme apparaît dans un régime précis. Il ne traverse pas les régimes sans déplacement explicite. Si le régime change, le terme se transforme ou disparaît.</p>
         </details>`;
 
     panel.dataset.category = category.toLowerCase();
@@ -761,12 +982,155 @@
           <p>${escapeMarkup(pageData.overview)}</p>
         </section>
         ${constraints}
-        <div class="operative-legend" aria-label="Légende des catégories">
-          <span><i></i>A · conditions</span>
-          <span><i></i>B · relations</span>
-          <span><i></i>C · hors champ opératif</span>
+        <div class="operative-legend" aria-label="Sections A, B et C">
+          <span><i></i><b>A</b> · termes opératifs stabilisés</span>
+          <span><i></i><b>B</b> · termes opératifs subordonnés</span>
+          <span><i></i><b>C</b> · termes non opératifs</span>
         </div>
+        <p class="operative-category-explanation">${escapeMarkup(categoryExplanation(category))}</p>
+        <button class="term-thread-open" type="button" data-term-thread-open data-term="${escapeMarkup(termName)}">
+          <span>Suivre «&nbsp;${escapeMarkup(termName)}&nbsp;» dans les sept pages</span>
+          <span aria-hidden="true">↗</span>
+        </button>
       </div>`;
+  };
+
+  const allExcerptTerms = () => Object.keys(excerptStudy.terms || {}).sort((left, right) => {
+    const leftData = termDataFor(left) || {};
+    const rightData = termDataFor(right) || {};
+    const categoryOrder = { A: 0, B: 1, C: 2 };
+    const categoryDifference = (categoryOrder[leftData.category] ?? 3) - (categoryOrder[rightData.category] ?? 3);
+    if (categoryDifference) return categoryDifference;
+    const entryDifference = Number(leftData.entry || 999) - Number(rightData.entry || 999);
+    return entryDifference || left.localeCompare(right, "fr");
+  });
+
+  const pageOccurrencesForTerm = (termName) => excerptPages
+    .map((pageNumber) => {
+      const pageData = pageDataFor(pageNumber);
+      const hotspots = (pageData?.hotspots || []).filter((hotspot) => hotspot.term === termName);
+      if (!hotspots.length) return null;
+      const paragraphIndexes = [...new Set(hotspots.map((hotspot) => hotspot.paragraph))];
+      const occurrences = paragraphIndexes.map((paragraphIndex) => {
+        const relatedTerms = [...new Set(
+          (pageData.hotspots || [])
+            .filter((hotspot) => hotspot.paragraph === paragraphIndex && hotspot.term !== termName)
+            .map((hotspot) => hotspot.term),
+        )];
+        return {
+          paragraph: pageData.paragraphs?.[paragraphIndex] || "",
+          relatedTerms,
+        };
+      });
+      return {
+        pageNumber,
+        overview: pageData.overview || "",
+        count: hotspots.length,
+        occurrences,
+      };
+    })
+    .filter(Boolean);
+
+  const renderTermThread = (termName) => {
+    if (!threadBody || !threadTermSelect) return;
+    const termData = termDataFor(termName);
+    if (!termData) return;
+    const terms = allExcerptTerms();
+    if (!threadTermSelect.options.length) {
+      threadTermSelect.innerHTML = terms
+        .map((term) => {
+          const data = termDataFor(term) || {};
+          return `<option value="${escapeMarkup(term)}">${escapeMarkup(data.category || "C")} · ${escapeMarkup(term)}</option>`;
+        })
+        .join("");
+    }
+    threadTermSelect.value = termName;
+    const pages = pageOccurrencesForTerm(termName);
+    const occurrenceCount = pages.reduce((total, page) => total + page.count, 0);
+    const category = termData.category || "C";
+    const pageMap = excerptPages.map((pageNumber) => {
+      const present = pages.some((page) => page.pageNumber === pageNumber);
+      return present
+        ? `<button type="button" data-thread-open-page="${pageNumber}" aria-label="Ouvrir la page ${pageNumber}"><strong>${pageNumber}</strong><span>présent</span></button>`
+        : `<span aria-label="Terme absent de la page ${pageNumber}"><strong>${pageNumber}</strong><span>—</span></span>`;
+    }).join("");
+    const pageCards = pages.map((page) => {
+      const passages = page.occurrences.map((occurrence) => {
+        const related = occurrence.relatedTerms.length
+          ? occurrence.relatedTerms.map((relatedTerm) => {
+            const relatedData = termDataFor(relatedTerm) || {};
+            return `<span data-category="${escapeMarkup((relatedData.category || "C").toLowerCase())}">${escapeMarkup(relatedData.category || "C")} · ${escapeMarkup(relatedTerm)}</span>`;
+          }).join("")
+          : `<em>Aucun autre terme repéré dans ce paragraphe.</em>`;
+        return `
+          <div class="thread-passage">
+            <blockquote>«&nbsp;${escapeMarkup(occurrence.paragraph)}&nbsp;»</blockquote>
+            <div class="thread-related">
+              <p>Termes présents dans le même paragraphe</p>
+              <div>${related}</div>
+            </div>
+          </div>`;
+      }).join("");
+      return `
+        <article class="thread-page-card">
+          <header>
+            <span>P. ${page.pageNumber}</span>
+            <p>${page.count} occurrence${page.count > 1 ? "s" : ""}</p>
+            <button type="button" data-thread-open-page="${page.pageNumber}">Ouvrir cette page →</button>
+          </header>
+          <div class="thread-page-context">
+            <p>Contexte de la page</p>
+            <strong>${escapeMarkup(page.overview)}</strong>
+          </div>
+          ${passages}
+        </article>`;
+    }).join("");
+
+    threadBody.dataset.category = category.toLowerCase();
+    threadBody.innerHTML = `
+      <section class="thread-summary">
+        <div>
+          <p class="thread-category">${escapeMarkup(categoryLabel(category))}</p>
+          <h3>${escapeMarkup(termName)}</h3>
+          <p class="thread-definition">${escapeMarkup(termData.definition)}</p>
+        </div>
+        <dl>
+          <div><dt>Pages</dt><dd>${pages.length} / ${excerptPages.length}</dd></div>
+          <div><dt>Occurrences</dt><dd>${occurrenceCount}</dd></div>
+          <div><dt>Section</dt><dd>${escapeMarkup(category)}</dd></div>
+        </dl>
+      </section>
+      <p class="thread-function"><strong>Condition conservée.</strong> ${escapeMarkup(termData.function)}</p>
+      <div class="thread-page-map" aria-label="Présence du terme dans les sept pages">${pageMap}</div>
+      <div class="thread-pages">${pageCards}</div>`;
+  };
+
+  const openTermThread = (termName, trigger) => {
+    if (!threadDialog || !termDataFor(termName)) return;
+    lastThreadTrigger = trigger || null;
+    threadReturnToStudy = Boolean(studyDialog?.open);
+    if (threadReturnToStudy) closeStudyDialog({ restoreFocus: false, withSound: false });
+    renderTermThread(termName);
+    if (typeof threadDialog.showModal === "function") threadDialog.showModal();
+    else threadDialog.setAttribute("open", "");
+    document.body.classList.add("thread-dialog-open");
+    playInterfaceSound("open", { force: true });
+    window.requestAnimationFrame(() => threadCloseButton?.focus({ preventScroll: true }));
+  };
+
+  const closeTermThread = ({ restoreFocus = true, withSound = true } = {}) => {
+    if (!threadDialog) return;
+    if (typeof threadDialog.close === "function" && threadDialog.open) threadDialog.close();
+    else threadDialog.removeAttribute("open");
+    document.body.classList.remove("thread-dialog-open");
+    if (withSound) playInterfaceSound("close", { force: true });
+    const shouldReturnToStudy = threadReturnToStudy;
+    threadReturnToStudy = false;
+    if (shouldReturnToStudy) {
+      window.setTimeout(() => openStudyDialog({ withSound: false }), 0);
+    } else if (restoreFocus) {
+      lastThreadTrigger?.focus?.({ preventScroll: true });
+    }
   };
 
   const renderHotspots = (container, pageNumber) => {
@@ -813,6 +1177,7 @@
       !excerptWorkbench
       || !termConnector
       || !termConnectorPath
+      || !excerptWorkbench.classList.contains("is-study-active")
       || window.matchMedia?.("(max-width: 940px)").matches
     ) {
       termConnector?.classList.remove("is-visible");
@@ -917,6 +1282,11 @@
       if (!select || !panel.contains(select)) return;
       selectExcerptTerm(select.value, { withSound: true });
     });
+    panel.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-term-thread-open]");
+      if (!button || !panel.contains(button)) return;
+      openTermThread(button.dataset.term, button);
+    });
   });
   attachHotspotEvents(desktopHotspots);
   attachHotspotEvents(studyHotspots);
@@ -988,12 +1358,36 @@
     window.setTimeout(requestConnectorDraw, 0);
   };
 
-  const openStudyDialog = () => {
+  const studyDesktopQuery = window.matchMedia?.("(min-width: 941px)");
+
+  const setDesktopStudyMode = (active) => {
+    if (!excerptWorkbench || !studyOpenButton) return;
+    excerptWorkbench.classList.toggle("is-study-active", active);
+    studyOpenButton.setAttribute("aria-pressed", String(active));
+    desktopPanel?.setAttribute("aria-hidden", String(!active));
+    if (studyOpenLabel) studyOpenLabel.textContent = active
+      ? "Refermer la lecture opérative"
+      : "Activer la lecture opérative";
+    if (viewerHelp) viewerHelp.textContent = active
+      ? "Survolez un terme coloré ou choisissez-le dans le panneau. Les flèches gauche et droite changent de page."
+      : "Les flèches gauche et droite changent de page. La lecture opérative reste désactivée tant que vous ne l’ouvrez pas.";
+    if (active) {
+      playInterfaceSound("study-open", { force: true });
+      window.setTimeout(requestConnectorDraw, 0);
+    } else {
+      termConnector?.classList.remove("is-visible");
+      playInterfaceSound("study-close", { force: true });
+    }
+  };
+
+  const openStudyDialog = ({ withSound = true } = {}) => {
     if (!studyDialog) return;
     if (typeof studyDialog.showModal === "function") studyDialog.showModal();
     else studyDialog.setAttribute("open", "");
     document.body.classList.add("study-dialog-open");
-    playInterfaceSound("study-open", { force: true });
+    studyOpenButton?.setAttribute("aria-pressed", "true");
+    if (studyOpenLabel) studyOpenLabel.textContent = "Lecture opérative ouverte";
+    if (withSound) playInterfaceSound("study-open", { force: true });
     window.requestAnimationFrame(() => {
       if (studyPageScroll) {
         studyPageScroll.scrollTop = 0;
@@ -1011,11 +1405,21 @@
     if (typeof studyDialog.close === "function" && studyDialog.open) studyDialog.close();
     else studyDialog.removeAttribute("open");
     document.body.classList.remove("study-dialog-open");
+    studyOpenButton?.setAttribute("aria-pressed", "false");
+    if (studyOpenLabel) studyOpenLabel.textContent = studyDesktopQuery?.matches
+      ? "Activer la lecture opérative"
+      : "Ouvrir la lecture opérative";
     if (withSound) playInterfaceSound("study-close", { force: true });
     if (restoreFocus) studyOpenButton?.focus({ preventScroll: true });
   };
 
-  studyOpenButton?.addEventListener("click", openStudyDialog);
+  studyOpenButton?.addEventListener("click", () => {
+    if (studyDesktopQuery?.matches) {
+      setDesktopStudyMode(!excerptWorkbench?.classList.contains("is-study-active"));
+    } else {
+      openStudyDialog();
+    }
+  });
   studyCloseButton?.addEventListener("click", () => closeStudyDialog());
   studyPreviousButton?.addEventListener("click", () => showExcerptPage(currentPageIndex - 1));
   studyNextButton?.addEventListener("click", () => showExcerptPage(currentPageIndex + 1));
@@ -1028,6 +1432,44 @@
   });
   studyDialog?.addEventListener("close", () => {
     document.body.classList.remove("study-dialog-open");
+  });
+
+  const handleStudyViewportChange = () => {
+    if (studyDialog?.open) closeStudyDialog({ restoreFocus: false, withSound: false });
+    setDesktopStudyMode(false);
+    if (studyOpenLabel && !studyDesktopQuery?.matches) studyOpenLabel.textContent = "Ouvrir la lecture opérative";
+  };
+  studyDesktopQuery?.addEventListener?.("change", handleStudyViewportChange);
+  setDesktopStudyMode(false);
+  if (studyOpenLabel && !studyDesktopQuery?.matches) studyOpenLabel.textContent = "Ouvrir la lecture opérative";
+
+  threadCloseButton?.addEventListener("click", () => closeTermThread());
+  threadTermSelect?.addEventListener("change", () => {
+    renderTermThread(threadTermSelect.value);
+    playInterfaceSound(`term-${(termDataFor(threadTermSelect.value)?.category || "C").toLowerCase()}`);
+  });
+  threadBody?.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-thread-open-page]");
+    if (!button || !threadBody.contains(button)) return;
+    const pageNumber = Number(button.dataset.threadOpenPage);
+    const pageIndex = excerptPages.indexOf(pageNumber);
+    if (pageIndex < 0) return;
+    const returnsToStudy = threadReturnToStudy;
+    showExcerptPage(pageIndex);
+    closeTermThread({ restoreFocus: false });
+    if (!returnsToStudy) {
+      window.setTimeout(() => excerptWorkbench?.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" }), 0);
+    }
+  });
+  threadDialog?.addEventListener("cancel", (event) => {
+    event.preventDefault();
+    closeTermThread();
+  });
+  threadDialog?.addEventListener("click", (event) => {
+    if (event.target === threadDialog) closeTermThread();
+  });
+  threadDialog?.addEventListener("close", () => {
+    document.body.classList.remove("thread-dialog-open");
   });
 
   previousButton?.addEventListener("click", () => showExcerptPage(currentPageIndex - 1));

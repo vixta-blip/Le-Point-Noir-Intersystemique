@@ -55,7 +55,7 @@
     <link rel="icon" href="assets/v2/favicon.svg" type="image/svg+xml" />
     <link rel="preload" href="assets/Inter-SemiBold.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="assets/SourceSerif-Regular.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="stylesheet" href="styles.css?v=20260718-9" />
+    <link rel="stylesheet" href="styles.css?v=20260718-10" />
     <link rel="stylesheet" href="photo-theme.css?v=20260718-2" />
     <link rel="stylesheet" href="photo-perspective-template.css?v=20260718-1" />
     <link rel="stylesheet" href="photo-perspective-refined.css?v=20260718-3" />
@@ -128,7 +128,7 @@
         >
           <a href="#reperes">Avant de lire</a>
           <a href="#extrait">Extrait</a>
-          <a href="#idee">La question</a>
+          <a href="questions/">Questions</a>
           <a href="#mots">Les mots</a>
           <a href="#construction">Documents associés</a>
           <a href="#contact">Contact</a>
@@ -156,11 +156,23 @@
               <strong>Le Point Noir Intersystémique</strong>
               <span>Les configurations du dialogue</span>
             </p>
-            <h1 id="titre-principal">
-              Le dialogue doit-il nécessairement produire un
-              <em>accord&nbsp;?</em>
-            </h1>
-            <p class="hero-lead">
+            <div class="hero-question" data-hero-question>
+              <p class="hero-question-index">
+                QUESTION <span data-hero-question-position>1 / 7</span>
+              </p>
+              <h1 id="titre-principal">
+                <a href="questions/#accord" data-hero-question-link>
+                  <span data-hero-question-text>Le dialogue doit‑il nécessairement produire un accord&nbsp;?</span>
+                  <i aria-hidden="true">↗</i>
+                </a>
+              </h1>
+              <div class="hero-question-controls" role="group" aria-label="Parcourir les questions du livre">
+                <button type="button" data-hero-question-prev aria-label="Question précédente">←</button>
+                <button type="button" data-hero-question-pause aria-label="Suspendre le changement automatique" aria-pressed="false">Ⅱ</button>
+                <button type="button" data-hero-question-next aria-label="Question suivante">→</button>
+              </div>
+            </div>
+            <p class="hero-lead" data-hero-question-lead>
               Deux façons de penser se rencontrent sans parvenir à se traduire
               entièrement. Aucune ne l’emporte, aucune ne disparaît. Le livre
               suit ce qui demeure entre elles.
@@ -171,9 +183,9 @@
                 Lire sept pages
                 <span aria-hidden="true">↓</span>
               </a>
-              <a class="button button-ghost" href="#idee">
-                Découvrir la question
-                <span aria-hidden="true">↓</span>
+              <a class="button button-ghost" href="questions/#accord" data-hero-answer-link>
+                Lire la réponse développée
+                <span aria-hidden="true">↗</span>
               </a>
             </div>
 
@@ -289,7 +301,7 @@
           <div class="excerpt-intro reveal">
             <div>
               <p class="eyebrow eyebrow-plum">PAGES 13 À 19</p>
-              <h2 id="extrait-titre">Sept pages, terme par terme.</h2>
+              <h2 id="extrait-titre">Lire sept pages du livre.</h2>
             </div>
             <div class="excerpt-intro-copy">
               <blockquote>
@@ -298,8 +310,9 @@
                 <cite>Le Point Noir Intersystémique, p. 13</cite>
               </blockquote>
               <p>
-                Sept pages continues sont reproduites ici. Les termes repérés donnent
-                accès, au même endroit, aux contraintes d’usage fixées par le dictionnaire opératif.
+                Sept pages continues sont reproduites ici. La lecture reste simple par
+                défaut&nbsp;; un mode opératif peut être ouvert à la demande pour examiner
+                les termes présents dans chaque page.
               </p>
               <div class="excerpt-actions">
                 <a
@@ -322,14 +335,6 @@
                 </a>
               </div>
             </div>
-          </div>
-
-          <div class="operative-notice reveal" role="note">
-            <span aria-hidden="true">↳</span>
-            <p>
-              Le panneau ne donne pas une clé d’interprétation du texte. Il met en regard
-              l’occurrence, l’entrée stabilisée et ses limites, sans remplacer la lecture de la page.
-            </p>
           </div>
 
           <div class="excerpt-workbench reveal" data-excerpt-workbench>
@@ -384,15 +389,15 @@
                 <button type="button" data-excerpt-page="19" aria-label="Page 19">19</button>
               </div>
               <p class="viewer-help" id="excerpt-help">
-                Survolez un terme coloré ou choisissez-le dans le panneau. Les flèches gauche et droite changent de page.
+                Les flèches gauche et droite changent de page. La lecture opérative reste désactivée tant que vous ne l’ouvrez pas.
               </p>
-              <button class="study-open" type="button" data-study-open>
-                <span>Étudier les termes de cette page</span>
+              <button class="study-open" type="button" data-study-open aria-pressed="false">
+                <span data-study-open-label>Activer la lecture opérative</span>
                 <span aria-hidden="true">↗</span>
               </button>
             </div>
 
-            <aside class="operative-panel" data-operative-panel aria-label="Application du dictionnaire opératif"></aside>
+            <aside class="operative-panel" data-operative-panel aria-label="Application du dictionnaire opératif" aria-hidden="true"></aside>
           </div>
         </div>
       </section>
@@ -419,84 +424,44 @@
         <div class="shell">
           <div class="section-heading reveal">
             <div>
-              <p class="eyebrow eyebrow-blue">TROIS MOTS CENTRAUX</p>
-              <h2 id="idee-titre">Ce qui demeure entre deux pensées.</h2>
+              <p class="eyebrow eyebrow-blue">DEUX COHÉRENCES</p>
+              <h2 id="idee-titre">Une même situation, deux façons de la tenir.</h2>
             </div>
             <p>
-              Deux cohérences restent distinctes. Elles ne se convertissent pas
-              entièrement l’une dans l’autre, mais leur relation reste perceptible.
+              Une cohérence est une manière d’ordonner ce qui compte, ce qui se relie
+              et ce qui permet de conclure. Deux cohérences peuvent porter sur une même
+              situation sans devenir identiques.
             </p>
           </div>
 
-          <figure class="relation-diagram reveal" role="img" aria-label="Deux cohérences distinctes reliées sans fusion">
-            <span>Une cohérence</span>
-            <i aria-hidden="true"><b></b></i>
-            <span>Une autre cohérence</span>
-          </figure>
-
-          <div class="discovery-grid" data-accordion="discovery">
-            <details class="discovery-card reveal">
-              <summary>
-                <span>
-                  <small>UN CADRE DE COHÉRENCE</small>
-                  <strong>Système</strong>
-                </span>
-                <i aria-hidden="true">+</i>
-              </summary>
-              <div class="card-answer">
-                <p>
-                  <strong>En clair.</strong> Un cadre à partir duquel certaines
-                  distinctions, relations et conclusions deviennent compréhensibles.
-                </p>
-                <p>
-                  <strong>Dans le livre.</strong> Une cohérence qui conserve sa propre
-                  organisation lorsqu’elle rencontre une autre cohérence.
-                </p>
-                <p><strong>À distinguer.</strong> Ni machine, ni logiciel, ni institution, ni personne enfermée dans une opinion.</p>
+          <div class="coherence-case reveal" data-coherence-case aria-live="polite">
+            <div class="coherence-case-head">
+              <div>
+                <p class="coherence-case-index"><span data-coherence-label>Soin</span> · <span data-coherence-position>1 / 10</span></p>
+                <h3 data-coherence-situation>Une consultation médicale</h3>
               </div>
-            </details>
-
-            <details class="discovery-card reveal">
-              <summary>
-                <span>
-                  <small>ENTRE DEUX CADRES</small>
-                  <strong>Intersystémique</strong>
-                </span>
-                <i aria-hidden="true">+</i>
-              </summary>
-              <div class="card-answer">
-                <p>
-                  <strong>En clair.</strong> Deux manières de faire sens entrent en
-                  relation sans devenir une seule manière de penser.
-                </p>
-                <p>
-                  <strong>Dans le livre.</strong> Le terme qualifie une relation où la
-                  traduction intégrale échoue sans provoquer nécessairement une rupture.
-                </p>
-                <p><strong>À distinguer.</strong> Ni comparaison de systèmes techniques, ni recherche automatique de compromis.</p>
+              <div class="coherence-controls" role="group" aria-label="Parcourir les exemples">
+                <button type="button" data-coherence-prev aria-label="Exemple précédent">←</button>
+                <button type="button" data-coherence-pause aria-label="Suspendre le changement automatique" aria-pressed="false">Ⅱ</button>
+                <button type="button" data-coherence-next aria-label="Exemple suivant">→</button>
               </div>
-            </details>
-
-            <details class="discovery-card reveal">
-              <summary>
-                <span>
-                  <small>UNE CONDITION RELATIONNELLE</small>
-                  <strong>Point Noir</strong>
-                </span>
-                <i aria-hidden="true">+</i>
-              </summary>
-              <div class="card-answer">
-                <p>
-                  <strong>En clair.</strong> La relation demeure alors qu’aucune des
-                  deux cohérences ne prend le contrôle de ce que la rencontre doit signifier.
-                </p>
-                <p>
-                  <strong>Dans le livre.</strong> Une condition locale de suspension de
-                  l’imposition réciproque, sans dissolution des cadres ni vérité commune obligatoire.
-                </p>
-                <p><strong>À distinguer.</strong> Ni lieu, ni objet, ni entité, ni vide, ni méthode ou idéal d’harmonie.</p>
-              </div>
-            </details>
+            </div>
+            <div class="coherence-pair">
+              <article>
+                <small>PREMIÈRE COHÉRENCE</small>
+                <h4 data-coherence-left-title>Le relevé clinique</h4>
+                <p data-coherence-left-text>Les symptômes sont observés, comparés et organisés afin d’établir ce qui peut être vérifié.</p>
+              </article>
+              <i class="coherence-link" aria-hidden="true"><b></b></i>
+              <article>
+                <small>SECONDE COHÉRENCE</small>
+                <h4 data-coherence-right-title>L’expérience vécue</h4>
+                <p data-coherence-right-text>La personne décrit une douleur, une gêne ou une fatigue dont l’intensité ne se réduit pas entièrement aux mesures.</p>
+              </article>
+            </div>
+            <p class="coherence-relation" data-coherence-relation>
+              Les deux descriptions portent sur une même situation sans devenir interchangeables.
+            </p>
           </div>
         </div>
       </section>
@@ -505,10 +470,10 @@
         <div class="shell glossary-grid">
           <div class="glossary-intro reveal">
             <p class="eyebrow eyebrow-blue">LES MOTS DU LIVRE</p>
-            <h2 id="mots-titre">Cinq autres mots du livre.</h2>
+            <h2 id="mots-titre">Cinq mots, deux régimes de sens.</h2>
             <p>
-              La suspension, la relation, la tension, l’opacité et la lisibilité
-              prolongent les trois mots centraux présentés plus haut.
+              Le sens courant reste un repère, mais le livre resserre chaque terme
+              pour lui donner une fonction précise dans son propre champ.
             </p>
           </div>
 
@@ -518,10 +483,10 @@
                 <span><strong>Suspension</strong><small>L’arrêt d’une imposition, pas l’arrêt de la pensée.</small></span>
                 <i aria-hidden="true">+</i>
               </summary>
-              <div class="term-answer">
-                <p><strong>En clair.</strong> Dans la relation, un cadre cesse d’exiger que sa propre réponse ferme ce qui se joue.</p>
-                <p><strong>Dans le livre.</strong> La fonction de clôture se désactive sans être remplacée par une autre conclusion, tandis que les cohérences continuent de se tenir.</p>
-                <p><strong>À distinguer.</strong> Ni pause mentale, ni méditation, ni silence volontaire, ni renoncement ou consigne à appliquer.</p>
+              <div class="term-answer" data-progressive-copy>
+                <p><strong>Sens courant.</strong> Une suspension évoque généralement une interruption, une mise en attente ou l’arrêt provisoire d’une activité.</p>
+                <p><strong>Définition exacte.</strong> La Suspension est l’opération par laquelle l’acte d’affirmation cesse d’exercer sa fonction de clôture, sans être remplacé par une autre opération. Elle n’est ni arrêt, ni retrait volontaire, ni inhibition. Elle consiste en la désactivation fonctionnelle de la fixation, laissant les cohérences se tenir sans se refermer.</p>
+                <p><strong>Pourquoi l’écart compte ici.</strong> Le livre ne décrit ni une pause psychologique ni une consigne à appliquer. Il isole le moment où une conclusion cesse de fermer la relation, alors même que la pensée et les cohérences restent actives.</p>
               </div>
             </details>
 
@@ -530,10 +495,10 @@
                 <span><strong>Relation</strong><small>Ce qui tient entre deux cohérences sans exiger leur fusion.</small></span>
                 <i aria-hidden="true">+</i>
               </summary>
-              <div class="term-answer">
-                <p><strong>En clair.</strong> Être en relation ne signifie pas nécessairement être d’accord, se comprendre entièrement ou produire quelque chose en commun.</p>
-                <p><strong>Dans le livre.</strong> Un champ de co-présence où des cohérences distinctes restent compatibles sans appropriation ni réduction.</p>
-                <p><strong>À distinguer.</strong> Ni harmonie, ni réconciliation, ni communication réussie ou convergence finale.</p>
+              <div class="term-answer" data-progressive-copy>
+                <p><strong>Sens courant.</strong> Une relation désigne souvent un lien, un échange, une interaction ou le rapport établi entre plusieurs éléments.</p>
+                <p><strong>Définition exacte.</strong> La Relation est le champ opératoire de co-tenue dans lequel des cohérences distinctes demeurent compatibles sans se réduire ni se fusionner. Elle ne désigne ni un lien, ni un échange, ni une interaction. Elle opère comme condition de présence réciproque, rendant possible la circulation sans appropriation ni hiérarchisation.</p>
+                <p><strong>Pourquoi l’écart compte ici.</strong> L’échange peut échouer et le contenu commun manquer, tandis qu’une co-présence demeure. Le terme sert donc à décrire cette tenue avant de conclure à l’accord, à la fusion ou à la rupture.</p>
               </div>
             </details>
 
@@ -542,10 +507,10 @@
                 <span><strong>Tension</strong><small>Une différence qui reste active sans devenir automatiquement un conflit.</small></span>
                 <i aria-hidden="true">+</i>
               </summary>
-              <div class="term-answer">
-                <p><strong>En clair.</strong> Quelque chose ne coïncide pas, mais cette non-coïncidence n’oblige ni à vaincre l’autre ni à se séparer.</p>
-                <p><strong>Dans le livre.</strong> La différence se maintient dans la relation sans se résoudre, se neutraliser ou se stabiliser en forme close.</p>
-                <p><strong>À distinguer.</strong> Ni lutte, ni contradiction logique, ni hostilité ou moteur de transformation.</p>
+              <div class="term-answer" data-progressive-copy>
+                <p><strong>Sens courant.</strong> La tension renvoie volontiers à une pression, un conflit, une opposition ou un état appelé à se relâcher.</p>
+                <p><strong>Définition exacte.</strong> La Tension est la condition opératoire dynamique par laquelle des cohérences distinctes demeurent en relation sans se résoudre, sans se neutraliser et sans se stabiliser en forme close. Elle ne désigne ni un conflit ni une opposition. Elle opère comme maintien actif de la différence, condition même de la relation, de la circulation et de la compatibilité non hiérarchisée.</p>
+                <p><strong>Pourquoi l’écart compte ici.</strong> Si toute différence était déjà lue comme conflit, sa résolution deviendrait l’horizon obligé. Le terme permet au contraire de suivre une différence qui demeure active sans produire automatiquement un adversaire.</p>
               </div>
             </details>
 
@@ -554,10 +519,10 @@
                 <span><strong>Opacité</strong><small>Ce qui demeure irréductible sans devenir mystérieux.</small></span>
                 <i aria-hidden="true">+</i>
               </summary>
-              <div class="term-answer">
-                <p><strong>En clair.</strong> La traduction d’une cohérence atteint ici une limite, sans que la relation se rompe.</p>
-                <p><strong>Dans le livre.</strong> Une limite structurelle de la traduction qui n’empêche pas la relation de se maintenir.</p>
-                <p><strong>À distinguer.</strong> Ni secret, ni obscurité volontaire, ni manque d’information ou défaut qu’il faudrait dépasser.</p>
+              <div class="term-answer" data-progressive-copy>
+                <p><strong>Sens courant.</strong> L’opacité évoque ce qui manque de clarté, cache une information ou résiste provisoirement à la compréhension.</p>
+                <p><strong>Définition exacte.</strong> L’Opacité est la condition opératoire par laquelle une cohérence demeure irréductible, c’est-à-dire non traduisible intégralement, non transparentable, et non appropriable par une autre cohérence. Elle ne désigne ni une obscurité ni un manque d’information. Elle opère comme limite structurelle de la réduction, condition de la relation sans capture.</p>
+                <p><strong>Pourquoi l’écart compte ici.</strong> L’ajout d’explications ne garantit pas la disparition de toute différence. L’opacité nomme cette limite sans transformer ce qui résiste en défaut, en secret ou en contenu restant à posséder.</p>
               </div>
             </details>
 
@@ -566,10 +531,10 @@
                 <span><strong>Lisibilité</strong><small>Percevoir une cohérence sans prétendre la posséder entièrement.</small></span>
                 <i aria-hidden="true">+</i>
               </summary>
-              <div class="term-answer">
-                <p><strong>En clair.</strong> Une cohérence devient perceptible dans sa tenue sans être saisie entièrement.</p>
-                <p><strong>Dans le livre.</strong> Une apparition fonctionnelle sans capture, interprétation stabilisée ni conversion en contenu.</p>
-                <p><strong>À distinguer.</strong> Ni compréhension achevée, ni évidence, ni explication totale ou accès direct à un sens caché.</p>
+              <div class="term-answer" data-progressive-copy>
+                <p><strong>Sens courant.</strong> La lisibilité désigne le plus souvent ce qui est facile à lire, à comprendre ou à expliquer clairement.</p>
+                <p><strong>Définition exacte.</strong> La Lisibilité est l’effet opératoire par lequel une cohérence devient perceptible dans sa tenue, sans être saisie, interprétée ni convertie en contenu. Elle ne désigne ni une compréhension, ni une clarté explicative. Elle opère comme apparition fonctionnelle sans capture, rendue possible par la suspension de la fixation.</p>
+                <p><strong>Pourquoi l’écart compte ici.</strong> Une cohérence peut devenir perceptible avant d’être traduite ou comprise entièrement. Le terme distingue cette apparition de l’explication totale et maintient la limite posée par l’opacité.</p>
               </div>
             </details>
           </div>
@@ -584,18 +549,19 @@
               <h2 id="construction-titre">La thèse et le dictionnaire opératif.</h2>
             </div>
             <p>
-              À la page 81 de l’ouvrage, deux QR codes donnent accès au
-              téléchargement de la thèse stabilisée et du dictionnaire opératif.
+              La thèse et le dictionnaire opératif des termes se trouvent à la fin
+              de l’ouvrage. Dans la version physique, leurs liens de téléchargement
+              y sont directement accessibles.
             </p>
           </div>
 
           <div class="qr-notice reveal">
-            <span aria-hidden="true">81</span>
+            <span aria-hidden="true">↳</span>
             <div>
-              <strong>Les deux liens sont remis avec le livre imprimé.</strong>
+              <strong>Les deux documents accompagnent le livre physique.</strong>
               <p>
-                Ils ne sont pas publiés directement sur cette page&nbsp;: chacun se
-                consulte en scannant le QR code correspondant à la fin du premier volume.
+                Leurs liens de téléchargement sont disponibles à la fin de l’ouvrage,
+                avec les indications nécessaires pour les consulter.
               </p>
             </div>
           </div>
@@ -612,17 +578,17 @@
             <div class="analysis-body">
               <ul class="document-map" aria-label="Les trois niveaux documentaires">
                 <li>
-                  <p class="document-type">LE LIVRE · 88 PAGES</p>
+                  <p class="document-type">LE LIVRE</p>
                   <h3>Le mouvement du texte</h3>
                   <p>Un texte continu, sans chapitres, construit par reprises et déplacements.</p>
                 </li>
                 <li>
-                  <p class="document-type">LA THÈSE · 3 PAGES</p>
+                  <p class="document-type">LA THÈSE</p>
                   <h3>La proposition minimale</h3>
                   <p>Une orientation, une hypothèse, une définition, des critères de repérage et des limites.</p>
                 </li>
                 <li>
-                  <p class="document-type">LE DICTIONNAIRE · 70 PAGES</p>
+                  <p class="document-type">LE DICTIONNAIRE OPÉRATIF</p>
                   <h3>La stabilité des termes</h3>
                   <p>24 entrées précisent les usages, les incompatibilités et les projections erronées.</p>
                 </li>
@@ -678,10 +644,10 @@
                   <summary><span>Portée et limites</span><i aria-hidden="true">+</i></summary>
                   <div>
                     <p>
-                      La construction permet d’examiner la cohérence interne du
-                      livre, la stabilité de ses définitions et l’accord entre ses
-                      documents. Elle n’établit ni loi générale du réel, ni validation
-                      scientifique, ni méthode universellement applicable.
+                      Les définitions valent dans le régime décrit par le livre. Leur
+                      déplacement hors de ce champ transforme leur fonction. La proposition
+                      n’établit ni loi générale du réel, ni validation scientifique, ni
+                      méthode universellement applicable.
                     </p>
                   </div>
                 </details>
@@ -690,12 +656,12 @@
               <aside class="analysis-caveat">
                 <div>
                   <p class="analysis-index">COHÉRENCE INTERNE ET PORTÉE</p>
-                  <h3>Trois documents, trois fonctions.</h3>
+                  <h3>Une proposition, un vocabulaire, un mouvement.</h3>
                 </div>
                 <p>
-                  La thèse et le dictionnaire rendent les choix de définition et
-                  leurs limites inspectables. Cette traçabilité ne transforme pas
-                  la proposition philosophique en preuve universelle.
+                  La thèse formule la proposition minimale, le dictionnaire délimite
+                  l’usage des termes et le livre les déploie dans un texte continu.
+                  Aucun de ces documents ne reçoit la fonction d’une preuve universelle.
                 </p>
               </aside>
 
@@ -808,11 +774,30 @@
       </div>
     </dialog>
 
+    <dialog class="thread-dialog" data-thread-dialog aria-labelledby="thread-dialog-title">
+      <div class="thread-dialog-inner">
+        <header class="thread-dialog-header">
+          <div>
+            <p>CONTINUITÉ D’USAGE · PAGES 13 À 19</p>
+            <h2 id="thread-dialog-title">Suivre un terme dans l’extrait</h2>
+          </div>
+          <label>
+            Terme observé
+            <select data-thread-term-select aria-label="Choisir un terme à suivre dans les sept pages"></select>
+          </label>
+          <button class="thread-dialog-close" type="button" data-thread-close>
+            <span>Fermer</span>
+            <span aria-hidden="true">×</span>
+          </button>
+        </header>
+        <div class="thread-dialog-body" data-thread-body></div>
+      </div>
+    </dialog>
+
     <footer class="site-footer">
       <div class="shell footer-main">
         <div class="footer-author">
           <img src="assets/logo-vixta.png" width="195" height="151" alt="Vixta" />
-          <p>Le Point Noir Intersystémique</p>
         </div>
         <div class="footer-contact">
           <a href="mailto:sekaii.philo@gmail.com">sekaii.philo@gmail.com</a>
@@ -834,8 +819,9 @@
       </div>
     </footer>
 
+    <script src="site-data.js?v=20260718-2"></script>
     <script src="collection.js?v=20260718-8"></script>
     <script src="excerpt-study-data.js?v=20260718-1"></script>
-    <script src="script.js?v=20260718-10"></script>
+    <script src="script.js?v=20260718-12"></script>
   </body>
 </html>

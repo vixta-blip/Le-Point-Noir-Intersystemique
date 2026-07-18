@@ -3,8 +3,8 @@ SITE COMPLET ET AUTONOME — LE POINT NOIR INTERSYSTÉMIQUE
 1. Décompressez entièrement l’archive sur votre ordinateur.
 2. N’envoyez pas le fichier ZIP directement dans GitHub.
 3. Dans le dépôt Le-Point-Noir-Intersystemique, ouvrez Add file > Upload files.
-4. Faites glisser ensemble tous les fichiers ET le dossier assets de ce paquet.
-5. Vérifiez avant validation que index.html, _config.yml et le dossier assets
+4. Faites glisser ensemble tous les fichiers ET les dossiers assets et questions de ce paquet.
+5. Vérifiez avant validation que index.html, _config.yml et les dossiers assets et questions
    restent à la racine. Les dossiers assets/v2 et assets/v3 doivent apparaître
    comme des dossiers.
 6. Validez avec Commit changes.
