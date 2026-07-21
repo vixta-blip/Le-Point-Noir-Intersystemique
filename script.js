@@ -191,7 +191,7 @@
     if (!audioContext) {
       audioContext = new AudioEngine();
       masterGain = audioContext.createGain();
-      masterGain.gain.value = 0.3;
+      masterGain.gain.value = 0.38;
 
       if (typeof audioContext.createDynamicsCompressor === "function") {
         const limiter = audioContext.createDynamicsCompressor();
@@ -280,7 +280,7 @@
       return noiseBuffer;
     }
     const sampleRate = audioContext.sampleRate || 48000;
-    const length = Math.max(1, Math.round(sampleRate * 0.16));
+    const length = Math.max(1, Math.round(sampleRate * 0.34));
     noiseBuffer = audioContext.createBuffer(1, length, sampleRate);
     const samples = noiseBuffer.getChannelData(0);
     let seed = 173;
@@ -292,7 +292,14 @@
     return noiseBuffer;
   };
 
-  const scheduleNoise = ({ offset = 0, duration = 0.11, level = 0.075 } = {}) => {
+  const scheduleNoise = ({
+    offset = 0,
+    duration = 0.11,
+    level = 0.075,
+    startFrequency = 1450,
+    endFrequency = 760,
+    q = 0.72,
+  } = {}) => {
     if (
       !audioContext ||
       !masterGain ||
@@ -317,9 +324,9 @@
     if (typeof audioContext.createBiquadFilter === "function") {
       const filter = audioContext.createBiquadFilter();
       filter.type = "bandpass";
-      setAudioParam(filter.frequency, "setValueAtTime", 1450, startsAt);
-      setAudioParam(filter.frequency, "exponentialRampToValueAtTime", 760, startsAt + duration);
-      setAudioParam(filter.Q, "setValueAtTime", 0.72, startsAt);
+      setAudioParam(filter.frequency, "setValueAtTime", startFrequency, startsAt);
+      setAudioParam(filter.frequency, "exponentialRampToValueAtTime", endFrequency, startsAt + duration);
+      setAudioParam(filter.Q, "setValueAtTime", q, startsAt);
       source.connect(filter);
       filter.connect(envelope);
     } else {
@@ -330,7 +337,41 @@
     source.stop(startsAt + duration + 0.015);
   };
 
+  const highlighterProfiles = [
+    { angle: -0.8, start: -5, end: -3, y: -1, thickness: 1.02, duration: 164, frequency: 1180, endFrequency: 760, q: 0.58, level: 0.14 },
+    { angle: 0.5, start: -3, end: -6, y: 1, thickness: 0.94, duration: 188, frequency: 1320, endFrequency: 820, q: 0.66, level: 0.13 },
+    { angle: -1.2, start: -7, end: -2, y: 0, thickness: 1.08, duration: 146, frequency: 1050, endFrequency: 690, q: 0.54, level: 0.145 },
+    { angle: 0.9, start: -2, end: -7, y: -1, thickness: 0.9, duration: 205, frequency: 1490, endFrequency: 930, q: 0.73, level: 0.125 },
+    { angle: -0.3, start: -6, end: -5, y: 2, thickness: 1.12, duration: 173, frequency: 960, endFrequency: 640, q: 0.49, level: 0.15 },
+    { angle: 1.3, start: -4, end: -3, y: 0, thickness: 0.96, duration: 154, frequency: 1380, endFrequency: 850, q: 0.61, level: 0.135 },
+    { angle: -0.6, start: -2, end: -8, y: -2, thickness: 1.05, duration: 196, frequency: 1210, endFrequency: 720, q: 0.7, level: 0.13 },
+    { angle: 0.2, start: -8, end: -4, y: 1, thickness: 0.92, duration: 158, frequency: 1120, endFrequency: 780, q: 0.57, level: 0.14 },
+    { angle: -1.4, start: -5, end: -6, y: 2, thickness: 1.1, duration: 214, frequency: 1510, endFrequency: 880, q: 0.76, level: 0.12 },
+    { angle: 0.7, start: -7, end: -2, y: -1, thickness: 0.98, duration: 181, frequency: 1270, endFrequency: 700, q: 0.63, level: 0.14 },
+  ];
+
   const renderInterfaceSound = (kind, options = {}) => {
+    if (kind === "highlighter") {
+      const profile = highlighterProfiles[Number(options.variant) % highlighterProfiles.length]
+        || highlighterProfiles[0];
+      scheduleNoise({
+        duration: profile.duration / 1000,
+        level: profile.level,
+        startFrequency: profile.frequency,
+        endFrequency: profile.endFrequency,
+        q: profile.q,
+      });
+      scheduleNoise({
+        offset: 0.018,
+        duration: Math.max(0.08, profile.duration / 1000 - 0.035),
+        level: profile.level * 0.34,
+        startFrequency: profile.frequency * 0.58,
+        endFrequency: profile.endFrequency * 0.72,
+        q: 0.42,
+      });
+      return;
+    }
+
     if (kind === "hover") {
       scheduleTone({ frequency: 610, endFrequency: 690, duration: 0.052, level: 0.105, type: "triangle" });
       return;
@@ -448,6 +489,7 @@
     "study-close": 180,
     "question-shift": 420,
     "coherence-shift": 260,
+    highlighter: 96,
   };
 
   const playInterfaceSound = (kind, options = {}) => {
@@ -465,7 +507,6 @@
     "a[href]",
     "button:not(:disabled)",
     "summary",
-    "[data-excerpt-viewer]",
     "[role='button']",
   ].join(",");
 
@@ -473,11 +514,13 @@
 
   const activationSoundFor = (control) => {
     if (!control || control.matches("[data-book-select]")) return null;
+    if (control.matches("[data-contact-open], [data-contact-close]")) return null;
     if (control.matches("[data-hero-question-prev], [data-hero-question-next], [data-coherence-prev], [data-coherence-next]")) return null;
     if (control.matches("[data-term-hotspot], [data-term-select], [data-study-open], [data-study-close]")) {
       return null;
     }
-    if (control.matches("[data-excerpt-prev], [data-excerpt-next], [data-excerpt-page]")) {
+    if (control.matches("[data-excerpt-page]")) return null;
+    if (control.matches("[data-excerpt-prev], [data-excerpt-next]")) {
       return "page";
     }
     if (control.matches("[data-study-prev], [data-study-next]")) return "page";
@@ -526,7 +569,7 @@
   document.addEventListener("pointerover", (event) => {
     if (!audioUnlocked || event.pointerType === "touch") return;
     const control = closestInteractive(event.target);
-    if (!control || control.matches("[data-book-select], [data-term-hotspot], [data-term-select]")) return;
+    if (!control || control.matches("[data-book-select], [data-term-hotspot], [data-term-select], [data-excerpt-page]")) return;
     if (event.relatedTarget && control.contains(event.relatedTarget)) return;
     playInterfaceSound("hover");
   });
@@ -534,28 +577,23 @@
   document.addEventListener("focusin", (event) => {
     if (!audioUnlocked || inputMode !== "keyboard") return;
     const control = closestInteractive(event.target);
-    if (!control || control.matches("[data-book-select], [data-term-hotspot], [data-term-select]")) return;
+    if (!control || control.matches("[data-book-select], [data-term-hotspot], [data-term-select], [data-excerpt-page]")) return;
     playInterfaceSound("hover");
   });
 
-  /* Editorial questions: a slow rotation, always directly navigable. */
+  /* Editorial questions: one quiet automatic change per minute. */
 
   const siteData = window.PNI_SITE_DATA || {};
   const heroQuestions = Array.isArray(siteData.questions) ? siteData.questions : [];
   const heroQuestion = document.querySelector("[data-hero-question]");
   const heroQuestionText = document.querySelector("[data-hero-question-text]");
+  const heroQuestionEmphasis = document.querySelector("[data-hero-question-emphasis]");
   const heroQuestionLead = document.querySelector("[data-hero-question-lead]");
-  const heroQuestionLink = document.querySelector("[data-hero-question-link]");
-  const heroAnswerLink = document.querySelector("[data-hero-answer-link]");
-  const heroQuestionPosition = document.querySelector("[data-hero-question-position]");
-  const heroQuestionPrevious = document.querySelector("[data-hero-question-prev]");
-  const heroQuestionPause = document.querySelector("[data-hero-question-pause]");
-  const heroQuestionNext = document.querySelector("[data-hero-question-next]");
   let heroQuestionIndex = 0;
   let heroQuestionTimer = null;
   let heroRotationPaused = reducedMotion;
 
-  const renderHeroQuestion = (index, { withSound = false } = {}) => {
+  const renderHeroQuestion = (index) => {
     if (!heroQuestions.length || !heroQuestion) return;
     heroQuestionIndex = (index + heroQuestions.length) % heroQuestions.length;
     const item = heroQuestions[heroQuestionIndex];
@@ -564,47 +602,24 @@
     heroQuestion.classList.toggle("is-very-long", item.question.length > 72);
     void heroQuestion.offsetWidth;
     if (!reducedMotion) heroQuestion.classList.add("is-changing");
-    if (heroQuestionText) heroQuestionText.textContent = item.question;
+    if (heroQuestionText) heroQuestionText.textContent = item.stem || item.question;
+    if (heroQuestionEmphasis) heroQuestionEmphasis.textContent = item.emphasis || "";
     if (heroQuestionLead) heroQuestionLead.textContent = item.lead;
-    if (heroQuestionLink) {
-      heroQuestionLink.href = item.href;
-      heroQuestionLink.setAttribute("aria-label", `${item.question} Lire la réponse développée.`);
-    }
-    if (heroAnswerLink) heroAnswerLink.href = item.href;
-    if (heroQuestionPosition) heroQuestionPosition.textContent = `${heroQuestionIndex + 1} / ${heroQuestions.length}`;
-    if (withSound) playInterfaceSound("question-shift", { force: true });
+    heroQuestion.querySelector("h1")?.setAttribute("aria-label", item.question);
   };
 
   const restartHeroQuestionTimer = () => {
     if (heroQuestionTimer !== null) window.clearInterval(heroQuestionTimer);
     if (heroQuestions.length < 2 || heroRotationPaused) return;
     heroQuestionTimer = window.setInterval(() => {
-      if (!document.hidden) renderHeroQuestion(heroQuestionIndex + 1, { withSound: true });
-    }, 300000);
+      if (!document.hidden) renderHeroQuestion(heroQuestionIndex + 1);
+    }, 60000);
   };
 
-  heroQuestionPrevious?.addEventListener("click", () => {
-    renderHeroQuestion(heroQuestionIndex - 1, { withSound: true });
-    restartHeroQuestionTimer();
+  heroQuestion?.addEventListener("pointerenter", () => {
+    if (heroQuestionTimer !== null) window.clearInterval(heroQuestionTimer);
   });
-  heroQuestionNext?.addEventListener("click", () => {
-    renderHeroQuestion(heroQuestionIndex + 1, { withSound: true });
-    restartHeroQuestionTimer();
-  });
-  heroQuestionPause?.addEventListener("click", () => {
-    heroRotationPaused = !heroRotationPaused;
-    heroQuestionPause.setAttribute("aria-pressed", String(heroRotationPaused));
-    heroQuestionPause.setAttribute("aria-label", heroRotationPaused
-      ? "Reprendre le changement automatique"
-      : "Suspendre le changement automatique");
-    heroQuestionPause.textContent = heroRotationPaused ? "▶" : "Ⅱ";
-    restartHeroQuestionTimer();
-  });
-  if (heroQuestionPause && heroRotationPaused) {
-    heroQuestionPause.setAttribute("aria-pressed", "true");
-    heroQuestionPause.setAttribute("aria-label", "Reprendre le changement automatique");
-    heroQuestionPause.textContent = "▶";
-  }
+  heroQuestion?.addEventListener("pointerleave", restartHeroQuestionTimer);
   renderHeroQuestion(0);
   restartHeroQuestionTimer();
 
@@ -796,7 +811,7 @@
     if (shelfCaption) shelfCaption.textContent = featuredTitle;
   };
 
-  const previewVolume = (volume, { announce = false, withSound = false } = {}) => {
+  const previewVolume = (volume, { announce = false } = {}) => {
     const index = shelfVolumes.indexOf(volume);
     if (index < 0) return;
     clearVolumePreview();
@@ -806,30 +821,23 @@
     const title = volume.dataset.bookTitle || featuredTitle;
     if (shelfCaption) shelfCaption.textContent = title;
     if (announce && bookStatus) bookStatus.textContent = `${title}, volume sélectionné.`;
-    if (withSound) {
-      const notes = (volume.dataset.bookNotes || "")
-        .split(",")
-        .map(Number)
-        .filter(Number.isFinite);
-      playInterfaceSound("book", { notes });
-    }
   };
 
   shelfVolumes.forEach((volume) => {
     volume.addEventListener("pointerenter", (event) => {
-      previewVolume(volume, { withSound: event.pointerType !== "touch" });
+      if (event.pointerType !== "touch") previewVolume(volume);
     });
     volume.addEventListener("pointerleave", () => {
       if (!volume.contains(document.activeElement)) clearVolumePreview();
     });
     volume.addEventListener("focusin", () => {
-      previewVolume(volume, { announce: true, withSound: true });
+      previewVolume(volume, { announce: true });
     });
     volume.addEventListener("focusout", (event) => {
       if (!volume.contains(event.relatedTarget)) clearVolumePreview();
     });
     volume.querySelector("[data-book-select]")?.addEventListener("click", () => {
-      previewVolume(volume, { announce: true, withSound: true });
+      previewVolume(volume, { announce: true });
     });
   });
 
@@ -849,10 +857,6 @@
   const desktopHotspots = document.querySelector("[data-term-hotspots]");
   const operativePanels = [...document.querySelectorAll("[data-operative-panel]")];
   const desktopPanel = excerptWorkbench?.querySelector("[data-operative-panel]");
-  const termConnector = document.querySelector("[data-term-connector]");
-  const termConnectorPath = document.querySelector("[data-term-connector-path]");
-  const termConnectorStart = document.querySelector("[data-term-connector-start]");
-  const termConnectorEnd = document.querySelector("[data-term-connector-end]");
   const studyOpenButton = document.querySelector("[data-study-open]");
   const studyOpenLabel = document.querySelector("[data-study-open-label]");
   const viewerHelp = document.querySelector("#excerpt-help");
@@ -864,13 +868,14 @@
   const studyImage = document.querySelector("[data-study-image]");
   const studyHotspots = document.querySelector("[data-study-hotspots]");
   const studyPageScroll = document.querySelector(".study-page-scroll");
+  const studySheet = document.querySelector("[data-study-sheet]");
+  const studySheetToggle = document.querySelector("[data-study-sheet-toggle]");
   const threadDialog = document.querySelector("[data-thread-dialog]");
   const threadCloseButton = document.querySelector("[data-thread-close]");
   const threadTermSelect = document.querySelector("[data-thread-term-select]");
   const threadBody = document.querySelector("[data-thread-body]");
   const selectionByPage = new Map();
   let currentPageIndex = 0;
-  let connectorFrame = null;
   let threadReturnToStudy = false;
   let lastThreadTrigger = null;
 
@@ -949,7 +954,6 @@
 
     panel.dataset.category = category.toLowerCase();
     panel.innerHTML = `
-      <span class="term-connector-anchor" data-term-anchor aria-hidden="true"></span>
       <div class="operative-panel-head">
         <div>
           <p class="operative-panel-mode">Page ${pageNumber} · ${pageData.terms.length} termes repérés</p>
@@ -1171,57 +1175,6 @@
     });
   };
 
-  const drawTermConnector = () => {
-    connectorFrame = null;
-    if (
-      !excerptWorkbench
-      || !termConnector
-      || !termConnectorPath
-      || !excerptWorkbench.classList.contains("is-study-active")
-      || window.matchMedia?.("(max-width: 940px)").matches
-    ) {
-      termConnector?.classList.remove("is-visible");
-      return;
-    }
-    const pageNumber = excerptPages[currentPageIndex];
-    const selection = selectionByPage.get(pageNumber);
-    const activeButton = selection
-      ? desktopHotspots?.querySelector(`[data-hotspot-index="${selection.hotspotIndex}"]`)
-      : null;
-    const anchor = desktopPanel?.querySelector("[data-term-anchor]");
-    if (!activeButton || !anchor) {
-      termConnector.classList.remove("is-visible");
-      return;
-    }
-
-    const workbenchRect = excerptWorkbench.getBoundingClientRect();
-    const buttonRect = activeButton.getBoundingClientRect();
-    const anchorRect = anchor.getBoundingClientRect();
-    const width = Math.max(excerptWorkbench.clientWidth, 1);
-    const height = Math.max(excerptWorkbench.scrollHeight, 1);
-    const startX = buttonRect.right - workbenchRect.left;
-    const startY = buttonRect.top + buttonRect.height / 2 - workbenchRect.top;
-    const endX = anchorRect.left - workbenchRect.left;
-    const endY = anchorRect.top - workbenchRect.top;
-    const reach = Math.max(32, (endX - startX) * 0.44);
-
-    termConnector.setAttribute("viewBox", `0 0 ${width} ${height}`);
-    termConnectorPath.setAttribute(
-      "d",
-      `M ${startX.toFixed(2)} ${startY.toFixed(2)} C ${(startX + reach).toFixed(2)} ${startY.toFixed(2)}, ${(endX - reach).toFixed(2)} ${endY.toFixed(2)}, ${endX.toFixed(2)} ${endY.toFixed(2)}`,
-    );
-    termConnectorStart?.setAttribute("cx", startX.toFixed(2));
-    termConnectorStart?.setAttribute("cy", startY.toFixed(2));
-    termConnectorEnd?.setAttribute("cx", endX.toFixed(2));
-    termConnectorEnd?.setAttribute("cy", endY.toFixed(2));
-    termConnector.classList.add("is-visible");
-  };
-
-  const requestConnectorDraw = () => {
-    if (connectorFrame !== null) return;
-    connectorFrame = window.requestAnimationFrame(drawTermConnector);
-  };
-
   const selectExcerptTerm = (termName, options = {}) => {
     const pageNumber = excerptPages[currentPageIndex];
     const pageData = pageDataFor(pageNumber);
@@ -1240,10 +1193,42 @@
     });
     updateHotspotState(desktopHotspots, selection);
     updateHotspotState(studyHotspots, selection);
-    requestConnectorDraw();
-    if (options.withSound) {
-      playInterfaceSound(`term-${termData.category.toLowerCase()}`);
+    if (options.revealSheet && studySheet) {
+      studySheet.classList.remove("is-collapsed");
+      studySheetToggle?.setAttribute("aria-expanded", "true");
+      const arrow = studySheetToggle?.querySelector("span:last-child");
+      if (arrow) arrow.textContent = "↓";
     }
+  };
+
+  let lastHighlighterVariant = -1;
+  const nextHighlighterVariant = () => {
+    if (highlighterProfiles.length < 2) return 0;
+    let variant = Math.floor(Math.random() * highlighterProfiles.length);
+    if (variant === lastHighlighterVariant) variant = (variant + 1) % highlighterProfiles.length;
+    lastHighlighterVariant = variant;
+    return variant;
+  };
+
+  const sweepHighlighter = (button, { sound = true } = {}) => {
+    if (!button || reducedMotion) return;
+    const now = window.performance?.now?.() ?? Date.now();
+    const previous = Number(button.dataset.lastHighlighterAt || 0);
+    if (now - previous < 140) return;
+    button.dataset.lastHighlighterAt = String(now);
+    const variant = nextHighlighterVariant();
+    const profile = highlighterProfiles[variant];
+    button.style.setProperty("--stroke-angle", `${profile.angle}deg`);
+    button.style.setProperty("--stroke-start", `${profile.start}px`);
+    button.style.setProperty("--stroke-end", `${profile.end}px`);
+    button.style.setProperty("--stroke-y", `${profile.y}px`);
+    button.style.setProperty("--stroke-thickness", String(profile.thickness));
+    button.style.setProperty("--stroke-duration", `${profile.duration}ms`);
+    button.classList.remove("is-highlight-sweeping");
+    void button.offsetWidth;
+    button.classList.add("is-highlight-sweeping");
+    window.setTimeout(() => button.classList.remove("is-highlight-sweeping"), profile.duration + 90);
+    if (sound) playInterfaceSound("highlighter", { variant });
   };
 
   const attachHotspotEvents = (container) => {
@@ -1255,24 +1240,27 @@
       if (event.relatedTarget && button.contains(event.relatedTarget)) return;
       selectExcerptTerm(button.dataset.term, {
         hotspotIndex: Number(button.dataset.hotspotIndex),
-        withSound: true,
+        revealSheet: true,
       });
+      sweepHighlighter(button);
     });
     container.addEventListener("focusin", (event) => {
       const button = event.target.closest("[data-term-hotspot]");
       if (!button || !container.contains(button)) return;
       selectExcerptTerm(button.dataset.term, {
         hotspotIndex: Number(button.dataset.hotspotIndex),
-        withSound: inputMode === "keyboard",
+        revealSheet: true,
       });
+      if (inputMode === "keyboard") sweepHighlighter(button);
     });
     container.addEventListener("click", (event) => {
       const button = event.target.closest("[data-term-hotspot]");
       if (!button || !container.contains(button)) return;
       selectExcerptTerm(button.dataset.term, {
         hotspotIndex: Number(button.dataset.hotspotIndex),
-        withSound: true,
+        revealSheet: true,
       });
+      sweepHighlighter(button);
     });
   };
 
@@ -1280,7 +1268,7 @@
     panel.addEventListener("change", (event) => {
       const select = event.target.closest("[data-term-select]");
       if (!select || !panel.contains(select)) return;
-      selectExcerptTerm(select.value, { withSound: true });
+      selectExcerptTerm(select.value, { revealSheet: true });
     });
     panel.addEventListener("click", (event) => {
       const button = event.target.closest("[data-term-thread-open]");
@@ -1343,7 +1331,6 @@
     if (defaultTerm) {
       selectExcerptTerm(defaultTerm, {
         hotspotIndex: remembered?.hotspotIndex,
-        withSound: false,
       });
     }
 
@@ -1355,7 +1342,6 @@
 
     preloadExcerptPage(excerptPages[boundedIndex - 1]);
     preloadExcerptPage(excerptPages[boundedIndex + 1]);
-    window.setTimeout(requestConnectorDraw, 0);
   };
 
   const studyDesktopQuery = window.matchMedia?.("(min-width: 941px)");
@@ -1373,11 +1359,17 @@
       : "Les flèches gauche et droite changent de page. La lecture opérative reste désactivée tant que vous ne l’ouvrez pas.";
     if (active) {
       playInterfaceSound("study-open", { force: true });
-      window.setTimeout(requestConnectorDraw, 0);
     } else {
-      termConnector?.classList.remove("is-visible");
       playInterfaceSound("study-close", { force: true });
     }
+  };
+
+  const setStudySheetCollapsed = (collapsed) => {
+    if (!studySheet || !studySheetToggle) return;
+    studySheet.classList.toggle("is-collapsed", collapsed);
+    studySheetToggle.setAttribute("aria-expanded", String(!collapsed));
+    const arrow = studySheetToggle.querySelector("span:last-child");
+    if (arrow) arrow.textContent = collapsed ? "↑" : "↓";
   };
 
   const openStudyDialog = ({ withSound = true } = {}) => {
@@ -1385,16 +1377,14 @@
     if (typeof studyDialog.showModal === "function") studyDialog.showModal();
     else studyDialog.setAttribute("open", "");
     document.body.classList.add("study-dialog-open");
+    setStudySheetCollapsed(false);
     studyOpenButton?.setAttribute("aria-pressed", "true");
     if (studyOpenLabel) studyOpenLabel.textContent = "Lecture opérative ouverte";
     if (withSound) playInterfaceSound("study-open", { force: true });
     window.requestAnimationFrame(() => {
       if (studyPageScroll) {
         studyPageScroll.scrollTop = 0;
-        studyPageScroll.scrollLeft = Math.max(
-          0,
-          (studyPageScroll.scrollWidth - studyPageScroll.clientWidth) * 0.3,
-        );
+        studyPageScroll.scrollLeft = 0;
       }
       studyCloseButton?.focus({ preventScroll: true });
     });
@@ -1421,6 +1411,9 @@
     }
   });
   studyCloseButton?.addEventListener("click", () => closeStudyDialog());
+  studySheetToggle?.addEventListener("click", () => {
+    setStudySheetCollapsed(!studySheet?.classList.contains("is-collapsed"));
+  });
   studyPreviousButton?.addEventListener("click", () => showExcerptPage(currentPageIndex - 1));
   studyNextButton?.addEventListener("click", () => showExcerptPage(currentPageIndex + 1));
   studyDialog?.addEventListener("cancel", (event) => {
@@ -1494,10 +1487,6 @@
     }
   });
 
-  excerptImage?.addEventListener("load", requestConnectorDraw);
-  window.addEventListener("resize", requestConnectorDraw, { passive: true });
-  window.addEventListener("scroll", requestConnectorDraw, { passive: true });
-
   if (viewer) {
     viewer.tabIndex = 0;
     viewer.setAttribute("aria-describedby", "excerpt-help");
@@ -1567,6 +1556,94 @@
       }
     });
   }
+
+  const contactDialog = document.querySelector("[data-contact-dialog]");
+  const contactOpenButtons = [...document.querySelectorAll("[data-contact-open]")];
+  const contactCloseButton = document.querySelector("[data-contact-close]");
+  const contactForm = document.querySelector("[data-contact-form]");
+  const contactSubmit = document.querySelector("[data-contact-submit]");
+  const contactStatus = document.querySelector("[data-contact-status]");
+  let lastContactTrigger = null;
+
+  const setContactStatus = (message, state = "") => {
+    if (!contactStatus) return;
+    contactStatus.textContent = message;
+    contactStatus.dataset.state = state;
+  };
+
+  const openContactDialog = (trigger) => {
+    if (!contactDialog) return;
+    lastContactTrigger = trigger || null;
+    setContactStatus("");
+    if (typeof contactDialog.showModal === "function") contactDialog.showModal();
+    else contactDialog.setAttribute("open", "");
+    document.body.classList.add("contact-dialog-open");
+    playInterfaceSound("open", { force: true });
+    window.requestAnimationFrame(() => contactDialog.querySelector("input:not([type='hidden'])")?.focus({ preventScroll: true }));
+  };
+
+  const closeContactDialog = ({ restoreFocus = true, withSound = true } = {}) => {
+    if (!contactDialog) return;
+    if (typeof contactDialog.close === "function" && contactDialog.open) contactDialog.close();
+    else contactDialog.removeAttribute("open");
+    document.body.classList.remove("contact-dialog-open");
+    if (withSound) playInterfaceSound("close", { force: true });
+    if (restoreFocus) lastContactTrigger?.focus?.({ preventScroll: true });
+  };
+
+  contactOpenButtons.forEach((button) => {
+    button.addEventListener("click", () => openContactDialog(button));
+  });
+  contactCloseButton?.addEventListener("click", () => closeContactDialog());
+  contactDialog?.addEventListener("cancel", (event) => {
+    event.preventDefault();
+    closeContactDialog();
+  });
+  contactDialog?.addEventListener("click", (event) => {
+    if (event.target === contactDialog) closeContactDialog();
+  });
+  contactDialog?.addEventListener("close", () => {
+    document.body.classList.remove("contact-dialog-open");
+  });
+
+  contactForm?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    if (!contactForm.checkValidity()) {
+      contactForm.reportValidity();
+      setContactStatus("Vérifiez les champs requis avant l’envoi.", "error");
+      return;
+    }
+
+    const initialLabel = contactSubmit?.innerHTML;
+    if (contactSubmit) {
+      contactSubmit.disabled = true;
+      contactSubmit.textContent = "Envoi en cours…";
+    }
+    setContactStatus("Transmission du message…", "pending");
+
+    try {
+      const response = await fetch(contactForm.action, {
+        method: "POST",
+        body: new FormData(contactForm),
+        headers: { Accept: "application/json" },
+      });
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok || payload.success === false) throw new Error("form_delivery_failed");
+      contactForm.reset();
+      setContactStatus("Votre message a bien été transmis à Vixta.", "success");
+      playInterfaceSound("confirm", { force: true });
+    } catch {
+      setContactStatus(
+        "Le message n’a pas pu être transmis. Vous pouvez réessayer dans quelques instants ou écrire à sekaii.philo@gmail.com.",
+        "error",
+      );
+    } finally {
+      if (contactSubmit) {
+        contactSubmit.disabled = false;
+        contactSubmit.innerHTML = initialLabel || "Envoyer le message <span aria-hidden='true'>→</span>";
+      }
+    }
+  });
 
   const analysisDisclosure = document.querySelector("[data-analysis-disclosure]");
   const analysisSummary = analysisDisclosure?.querySelector(":scope > summary");

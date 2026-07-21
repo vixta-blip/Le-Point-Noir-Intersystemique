@@ -55,7 +55,7 @@
     <link rel="icon" href="assets/v2/favicon.svg" type="image/svg+xml" />
     <link rel="preload" href="assets/Inter-SemiBold.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="assets/SourceSerif-Regular.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="stylesheet" href="styles.css?v=20260718-10" />
+    <link rel="stylesheet" href="styles.css?v=20260721-1" />
     <link rel="stylesheet" href="photo-theme.css?v=20260718-2" />
     <link rel="stylesheet" href="photo-perspective-template.css?v=20260718-1" />
     <link rel="stylesheet" href="photo-perspective-refined.css?v=20260718-3" />
@@ -157,20 +157,13 @@
               <span>Les configurations du dialogue</span>
             </p>
             <div class="hero-question" data-hero-question>
-              <p class="hero-question-index">
-                QUESTION <span data-hero-question-position>1 / 7</span>
-              </p>
+              <p class="hero-question-index">QUESTION DE LECTURE</p>
               <h1 id="titre-principal">
-                <a href="questions/#accord" data-hero-question-link>
-                  <span data-hero-question-text>Le dialogue doit‑il nécessairement produire un accord&nbsp;?</span>
-                  <i aria-hidden="true">↗</i>
-                </a>
+                <span class="hero-question-line">
+                  <span data-hero-question-text>Le dialogue doit‑il nécessairement produire un</span>
+                  <em data-hero-question-emphasis>accord&nbsp;?</em>
+                </span>
               </h1>
-              <div class="hero-question-controls" role="group" aria-label="Parcourir les questions du livre">
-                <button type="button" data-hero-question-prev aria-label="Question précédente">←</button>
-                <button type="button" data-hero-question-pause aria-label="Suspendre le changement automatique" aria-pressed="false">Ⅱ</button>
-                <button type="button" data-hero-question-next aria-label="Question suivante">→</button>
-              </div>
             </div>
             <p class="hero-lead" data-hero-question-lead>
               Deux façons de penser se rencontrent sans parvenir à se traduire
@@ -182,10 +175,6 @@
               <a class="button button-primary" href="#extrait">
                 Lire sept pages
                 <span aria-hidden="true">↓</span>
-              </a>
-              <a class="button button-ghost" href="questions/#accord" data-hero-answer-link>
-                Lire la réponse développée
-                <span aria-hidden="true">↗</span>
               </a>
             </div>
 
@@ -256,11 +245,11 @@
         <div class="shell reading-notes-grid">
           <div class="reading-notes-intro reveal">
             <p class="eyebrow eyebrow-plum">AVANT D’OUVRIR LE LIVRE</p>
-            <h2 id="reperes-titre">Trois repères de lecture.</h2>
+            <h2 id="reperes-titre">Entrer dans le mouvement du texte.</h2>
           </div>
 
           <div class="reading-notes-list" data-accordion="reperes">
-            <details class="reading-note reveal" open>
+            <details class="reading-note reveal">
               <summary>
                 <span>Ce volume se lit-il indépendamment&nbsp;?</span>
                 <i aria-hidden="true">+</i>
@@ -290,6 +279,76 @@
                 Il avance d’un seul mouvement, sans chapitres. Les espaces de
                 respiration permettent de faire une pause et de reprendre sans perdre
                 le fil de la lecture.
+              </p>
+            </details>
+            <details class="reading-note reveal">
+              <summary>
+                <span>À quoi faut-il s’attendre dans les premières pages&nbsp;?</span>
+                <i aria-hidden="true">+</i>
+              </summary>
+              <p>
+                Le texte installe d’abord son propre régime de vocabulaire. Des mots
+                familiers y reçoivent progressivement une fonction plus étroite&nbsp;:
+                leur sens se précise par les reprises, les écarts et les relations qui
+                se forment d’une page à l’autre.
+              </p>
+            </details>
+            <details class="reading-note reveal">
+              <summary>
+                <span>Faut-il chercher une démonstration ou une conclusion&nbsp;?</span>
+                <i aria-hidden="true">+</i>
+              </summary>
+              <p>
+                Non. Le livre ne progresse ni comme une preuve ni comme une suite
+                d’étapes. Il décrit une même configuration par déplacements successifs,
+                sans orienter la lecture vers une synthèse finale.
+              </p>
+            </details>
+            <details class="reading-note reveal">
+              <summary>
+                <span>Que faire lorsqu’un mot semble connu mais agit autrement&nbsp;?</span>
+                <i aria-hidden="true">+</i>
+              </summary>
+              <p>
+                Il est préférable d’observer d’abord ce que le mot rend possible dans
+                la phrase et dans les pages voisines. Le dictionnaire opératif, proposé
+                à la fin du livre physique, permet ensuite de vérifier sa définition,
+                son domaine d’usage et les déplacements qui en modifieraient la fonction.
+              </p>
+            </details>
+            <details class="reading-note reveal">
+              <summary>
+                <span>Le texte propose-t-il une méthode pour mieux dialoguer&nbsp;?</span>
+                <i aria-hidden="true">+</i>
+              </summary>
+              <p>
+                Non. Il décrit une condition locale repérable lorsque deux cohérences
+                cessent de s’imposer l’une à l’autre. Cette description ne constitue ni
+                un protocole de conversation, ni une règle morale, ni une technique de
+                résolution des désaccords.
+              </p>
+            </details>
+            <details class="reading-note reveal">
+              <summary>
+                <span>Pourquoi certaines formulations reviennent-elles&nbsp;?</span>
+                <i aria-hidden="true">+</i>
+              </summary>
+              <p>
+                Une reprise ne reconduit pas toujours la même fonction. Elle replace un
+                terme dans une relation différente et permet de suivre ce qui se maintient,
+                se déplace ou cesse d’être opérant au cours du texte.
+              </p>
+            </details>
+            <details class="reading-note reveal">
+              <summary>
+                <span>Qu’engage réellement cette lecture&nbsp;?</span>
+                <i aria-hidden="true">+</i>
+              </summary>
+              <p>
+                Elle demande surtout du temps et une attention aux différences de régime.
+                Son objet n’est pas d’obtenir une réponse pratique, mais d’examiner ce qui
+                demeure d’une relation lorsque l’accord, la traduction complète et la
+                réduction d’un cadre à l’autre ne sont plus exigés.
               </p>
             </details>
           </div>
@@ -338,12 +397,6 @@
           </div>
 
           <div class="excerpt-workbench reveal" data-excerpt-workbench>
-            <svg class="term-connector" data-term-connector aria-hidden="true">
-              <path data-term-connector-path></path>
-              <circle r="3" data-term-connector-start></circle>
-              <circle r="4" data-term-connector-end></circle>
-            </svg>
-
             <div
               class="excerpt-viewer"
               data-excerpt-viewer
@@ -428,11 +481,18 @@
               <h2 id="idee-titre">Une même situation, deux façons de la tenir.</h2>
             </div>
             <p>
-              Une cohérence est une manière d’ordonner ce qui compte, ce qui se relie
-              et ce qui permet de conclure. Deux cohérences peuvent porter sur une même
-              situation sans devenir identiques.
+              Chaque cadre sélectionne ce qui compte, relie les éléments selon ses
+              propres critères et produit une description cohérente dans son domaine.
+              Porter sur la même situation ne rend pas ces descriptions équivalentes.
             </p>
           </div>
+
+          <p class="coherence-criteria reveal">
+            La différence entre deux descriptions ne suffit pas, à elle seule, à
+            repérer la configuration étudiée dans le livre. Il faut encore qu’aucune
+            cohérence ne réduise l’autre à sa propre mesure, que la traduction
+            exhaustive ne soit plus exigée et que la relation demeure malgré l’écart.
+          </p>
 
           <div class="coherence-case reveal" data-coherence-case aria-live="polite">
             <div class="coherence-case-head">
@@ -448,19 +508,24 @@
             </div>
             <div class="coherence-pair">
               <article>
-                <small>PREMIÈRE COHÉRENCE</small>
+                <small>CADRE 1 · CE QU’IL REND LISIBLE</small>
                 <h4 data-coherence-left-title>Le relevé clinique</h4>
                 <p data-coherence-left-text>Les symptômes sont observés, comparés et organisés afin d’établir ce qui peut être vérifié.</p>
               </article>
-              <i class="coherence-link" aria-hidden="true"><b></b></i>
+              <div class="coherence-gap" aria-hidden="true">
+                <span>MÊME SITUATION</span>
+                <i><b></b></i>
+                <span>SANS MESURE UNIQUE</span>
+              </div>
               <article>
-                <small>SECONDE COHÉRENCE</small>
+                <small>CADRE 2 · CE QU’IL REND LISIBLE</small>
                 <h4 data-coherence-right-title>L’expérience vécue</h4>
                 <p data-coherence-right-text>La personne décrit une douleur, une gêne ou une fatigue dont l’intensité ne se réduit pas entièrement aux mesures.</p>
               </article>
             </div>
-            <p class="coherence-relation" data-coherence-relation>
-              Les deux descriptions portent sur une même situation sans devenir interchangeables.
+            <p class="coherence-relation">
+              <strong>Ce qui demeure&nbsp;:</strong>
+              <span data-coherence-relation>Les deux descriptions portent sur une même situation sans devenir interchangeables.</span>
             </p>
           </div>
         </div>
@@ -483,10 +548,13 @@
                 <span><strong>Suspension</strong><small>L’arrêt d’une imposition, pas l’arrêt de la pensée.</small></span>
                 <i aria-hidden="true">+</i>
               </summary>
-              <div class="term-answer" data-progressive-copy>
-                <p><strong>Sens courant.</strong> Une suspension évoque généralement une interruption, une mise en attente ou l’arrêt provisoire d’une activité.</p>
-                <p><strong>Définition exacte.</strong> La Suspension est l’opération par laquelle l’acte d’affirmation cesse d’exercer sa fonction de clôture, sans être remplacé par une autre opération. Elle n’est ni arrêt, ni retrait volontaire, ni inhibition. Elle consiste en la désactivation fonctionnelle de la fixation, laissant les cohérences se tenir sans se refermer.</p>
-                <p><strong>Pourquoi l’écart compte ici.</strong> Le livre ne décrit ni une pause psychologique ni une consigne à appliquer. Il isole le moment où une conclusion cesse de fermer la relation, alors même que la pensée et les cohérences restent actives.</p>
+              <div class="term-answer">
+                <div class="term-comparison">
+                  <section><p class="term-answer-label">SENS COURANT</p><p>Une suspension évoque généralement une interruption, une mise en attente ou l’arrêt provisoire d’une activité.</p></section>
+                  <section><p class="term-answer-label">DÉFINITION OPÉRATIVE</p><p>La Suspension est l’opération par laquelle l’acte d’affirmation cesse d’exercer sa fonction de clôture, sans être remplacé par une autre opération. Elle n’est ni arrêt, ni retrait volontaire, ni inhibition. Elle consiste en la désactivation fonctionnelle de la fixation, laissant les cohérences se tenir sans se refermer.</p></section>
+                </div>
+                <section class="term-difference"><p class="term-answer-label">POURQUOI L’ÉCART COMPTE ICI</p><p>Le livre ne décrit ni une pause psychologique ni une consigne à appliquer. Il isole le moment où une conclusion cesse de fermer la relation, alors même que la pensée et les cohérences restent actives.</p></section>
+                <details class="term-vigilance"><summary>Point de vigilance pour l’étude <span aria-hidden="true">+</span></summary><p>Ramener la Suspension à une pause, à une volonté ou à une pratique en ferait un geste intentionnel. Ce déplacement fausse la lecture opérative&nbsp;: la définition vaut localement comme désactivation de la fixation, et non comme action à reproduire.</p></details>
               </div>
             </details>
 
@@ -495,10 +563,13 @@
                 <span><strong>Relation</strong><small>Ce qui tient entre deux cohérences sans exiger leur fusion.</small></span>
                 <i aria-hidden="true">+</i>
               </summary>
-              <div class="term-answer" data-progressive-copy>
-                <p><strong>Sens courant.</strong> Une relation désigne souvent un lien, un échange, une interaction ou le rapport établi entre plusieurs éléments.</p>
-                <p><strong>Définition exacte.</strong> La Relation est le champ opératoire de co-tenue dans lequel des cohérences distinctes demeurent compatibles sans se réduire ni se fusionner. Elle ne désigne ni un lien, ni un échange, ni une interaction. Elle opère comme condition de présence réciproque, rendant possible la circulation sans appropriation ni hiérarchisation.</p>
-                <p><strong>Pourquoi l’écart compte ici.</strong> L’échange peut échouer et le contenu commun manquer, tandis qu’une co-présence demeure. Le terme sert donc à décrire cette tenue avant de conclure à l’accord, à la fusion ou à la rupture.</p>
+              <div class="term-answer">
+                <div class="term-comparison">
+                  <section><p class="term-answer-label">SENS COURANT</p><p>Une relation désigne souvent un lien, un échange, une interaction ou le rapport établi entre plusieurs éléments.</p></section>
+                  <section><p class="term-answer-label">DÉFINITION OPÉRATIVE</p><p>La Relation est le champ opératoire de co-tenue dans lequel des cohérences distinctes demeurent compatibles sans se réduire ni se fusionner. Elle ne désigne ni un lien, ni un échange, ni une interaction. Elle opère comme condition de présence réciproque, rendant possible la circulation sans appropriation ni hiérarchisation.</p></section>
+                </div>
+                <section class="term-difference"><p class="term-answer-label">POURQUOI L’ÉCART COMPTE ICI</p><p>L’échange peut échouer et le contenu commun manquer, tandis qu’une co-présence demeure. Le terme décrit cette tenue avant de conclure à l’accord, à la fusion ou à la rupture.</p></section>
+                <details class="term-vigilance"><summary>Point de vigilance pour l’étude <span aria-hidden="true">+</span></summary><p>Employer «&nbsp;relation&nbsp;» au sens d’échange, d’harmonie ou de compréhension mutuelle introduirait déjà un contenu commun. Or l’entrée opérative porte sur une co-tenue sans appropriation&nbsp;; confondre les deux efface précisément ce que le terme doit permettre de repérer.</p></details>
               </div>
             </details>
 
@@ -507,10 +578,13 @@
                 <span><strong>Tension</strong><small>Une différence qui reste active sans devenir automatiquement un conflit.</small></span>
                 <i aria-hidden="true">+</i>
               </summary>
-              <div class="term-answer" data-progressive-copy>
-                <p><strong>Sens courant.</strong> La tension renvoie volontiers à une pression, un conflit, une opposition ou un état appelé à se relâcher.</p>
-                <p><strong>Définition exacte.</strong> La Tension est la condition opératoire dynamique par laquelle des cohérences distinctes demeurent en relation sans se résoudre, sans se neutraliser et sans se stabiliser en forme close. Elle ne désigne ni un conflit ni une opposition. Elle opère comme maintien actif de la différence, condition même de la relation, de la circulation et de la compatibilité non hiérarchisée.</p>
-                <p><strong>Pourquoi l’écart compte ici.</strong> Si toute différence était déjà lue comme conflit, sa résolution deviendrait l’horizon obligé. Le terme permet au contraire de suivre une différence qui demeure active sans produire automatiquement un adversaire.</p>
+              <div class="term-answer">
+                <div class="term-comparison">
+                  <section><p class="term-answer-label">SENS COURANT</p><p>La tension renvoie volontiers à une pression, un conflit, une opposition ou un état appelé à se relâcher.</p></section>
+                  <section><p class="term-answer-label">DÉFINITION OPÉRATIVE</p><p>La Tension est la condition opératoire dynamique par laquelle des cohérences distinctes demeurent en relation sans se résoudre, sans se neutraliser et sans se stabiliser en forme close. Elle ne désigne ni un conflit ni une opposition. Elle opère comme maintien actif de la différence, condition même de la relation, de la circulation et de la compatibilité non hiérarchisée.</p></section>
+                </div>
+                <section class="term-difference"><p class="term-answer-label">POURQUOI L’ÉCART COMPTE ICI</p><p>Si toute différence était déjà lue comme conflit, sa résolution deviendrait l’horizon obligé. Le terme permet au contraire de suivre une différence qui demeure active sans produire automatiquement un adversaire.</p></section>
+                <details class="term-vigilance"><summary>Point de vigilance pour l’étude <span aria-hidden="true">+</span></summary><p>Le sens courant appelle souvent une détente, une pacification ou un dépassement. Ces finalités sont incompatibles avec la fonction étudiée ici&nbsp;: la Tension maintient la différence sans l’orienter vers une résolution.</p></details>
               </div>
             </details>
 
@@ -519,10 +593,13 @@
                 <span><strong>Opacité</strong><small>Ce qui demeure irréductible sans devenir mystérieux.</small></span>
                 <i aria-hidden="true">+</i>
               </summary>
-              <div class="term-answer" data-progressive-copy>
-                <p><strong>Sens courant.</strong> L’opacité évoque ce qui manque de clarté, cache une information ou résiste provisoirement à la compréhension.</p>
-                <p><strong>Définition exacte.</strong> L’Opacité est la condition opératoire par laquelle une cohérence demeure irréductible, c’est-à-dire non traduisible intégralement, non transparentable, et non appropriable par une autre cohérence. Elle ne désigne ni une obscurité ni un manque d’information. Elle opère comme limite structurelle de la réduction, condition de la relation sans capture.</p>
-                <p><strong>Pourquoi l’écart compte ici.</strong> L’ajout d’explications ne garantit pas la disparition de toute différence. L’opacité nomme cette limite sans transformer ce qui résiste en défaut, en secret ou en contenu restant à posséder.</p>
+              <div class="term-answer">
+                <div class="term-comparison">
+                  <section><p class="term-answer-label">SENS COURANT</p><p>L’opacité évoque ce qui manque de clarté, cache une information ou résiste provisoirement à la compréhension.</p></section>
+                  <section><p class="term-answer-label">DÉFINITION OPÉRATIVE</p><p>L’Opacité est la condition opératoire par laquelle une cohérence demeure irréductible, c’est-à-dire non traduisible intégralement, non transparentable et non appropriable par une autre cohérence. Elle ne désigne ni une obscurité ni un manque d’information. Elle opère comme limite structurelle de la réduction, condition de la relation sans capture.</p></section>
+                </div>
+                <section class="term-difference"><p class="term-answer-label">POURQUOI L’ÉCART COMPTE ICI</p><p>L’ajout d’explications ne garantit pas la disparition de toute différence. L’Opacité nomme cette limite sans transformer ce qui résiste en défaut, en secret ou en contenu restant à posséder.</p></section>
+                <details class="term-vigilance"><summary>Point de vigilance pour l’étude <span aria-hidden="true">+</span></summary><p>Lire l’Opacité comme un manque d’information déclencherait aussitôt une recherche d’explication totale. Dans le dictionnaire, elle désigne au contraire l’irréductibilité qui demeure lorsque la traduction atteint sa limite sans rompre la relation.</p></details>
               </div>
             </details>
 
@@ -531,10 +608,13 @@
                 <span><strong>Lisibilité</strong><small>Percevoir une cohérence sans prétendre la posséder entièrement.</small></span>
                 <i aria-hidden="true">+</i>
               </summary>
-              <div class="term-answer" data-progressive-copy>
-                <p><strong>Sens courant.</strong> La lisibilité désigne le plus souvent ce qui est facile à lire, à comprendre ou à expliquer clairement.</p>
-                <p><strong>Définition exacte.</strong> La Lisibilité est l’effet opératoire par lequel une cohérence devient perceptible dans sa tenue, sans être saisie, interprétée ni convertie en contenu. Elle ne désigne ni une compréhension, ni une clarté explicative. Elle opère comme apparition fonctionnelle sans capture, rendue possible par la suspension de la fixation.</p>
-                <p><strong>Pourquoi l’écart compte ici.</strong> Une cohérence peut devenir perceptible avant d’être traduite ou comprise entièrement. Le terme distingue cette apparition de l’explication totale et maintient la limite posée par l’opacité.</p>
+              <div class="term-answer">
+                <div class="term-comparison">
+                  <section><p class="term-answer-label">SENS COURANT</p><p>La lisibilité désigne le plus souvent ce qui est facile à lire, à comprendre ou à expliquer clairement.</p></section>
+                  <section><p class="term-answer-label">DÉFINITION OPÉRATIVE</p><p>La Lisibilité est l’effet opératoire par lequel une cohérence devient perceptible dans sa tenue, sans être saisie, interprétée ni convertie en contenu. Elle ne désigne ni une compréhension, ni une clarté explicative. Elle opère comme apparition fonctionnelle sans capture, rendue possible par la suspension de la fixation.</p></section>
+                </div>
+                <section class="term-difference"><p class="term-answer-label">POURQUOI L’ÉCART COMPTE ICI</p><p>Une cohérence peut devenir perceptible avant d’être traduite ou comprise entièrement. Le terme distingue cette apparition de l’explication totale et maintient la limite posée par l’Opacité.</p></section>
+                <details class="term-vigilance"><summary>Point de vigilance pour l’étude <span aria-hidden="true">+</span></summary><p>Assimiler la Lisibilité à une compréhension correcte transformerait un effet de non-capture en résultat cognitif. L’étude doit donc distinguer ce qui devient perceptible de ce qui serait expliqué, interprété ou possédé comme sens.</p></details>
               </div>
             </details>
           </div>
@@ -711,17 +791,18 @@
           </div>
 
           <div class="contact-links">
-            <a
-              class="contact-card reveal"
-              href="mailto:sekaii.philo@gmail.com?subject=Le%20Point%20Noir%20Intersyst%C3%A9mique"
+            <button
+              class="contact-card contact-card-button reveal"
+              type="button"
+              data-contact-open
             >
               <span class="contact-icon" aria-hidden="true">@</span>
               <span>
                 <small>ÉCRIRE À VIXTA</small>
                 <strong>sekaii.philo@gmail.com</strong>
-                <em>Ouvrir votre messagerie ↗</em>
+                <em>Écrire depuis le site ↗</em>
               </span>
-            </a>
+            </button>
             <a
               class="contact-card reveal"
               href="https://www.instagram.com/sekaii.insta?utm_source=site_vixta&utm_medium=referral&utm_campaign=point_noir_intersystemique"
@@ -757,7 +838,7 @@
           </button>
         </header>
         <div class="study-dialog-body">
-          <div class="study-page-scroll" tabindex="0" aria-label="Page agrandie, faites défiler horizontalement si nécessaire">
+          <div class="study-page-scroll" tabindex="0" aria-label="Page agrandie, faites défiler la page pour lire et sélectionner un terme">
             <div class="study-page" data-study-page-surface>
               <img
                 src="assets/extrait-page-13.webp"
@@ -769,7 +850,13 @@
               <div class="term-hotspots term-hotspots--study" data-study-hotspots aria-label="Termes repérés sur la page agrandie"></div>
             </div>
           </div>
-          <aside class="operative-panel operative-panel--dialog" data-operative-panel aria-label="Application du dictionnaire opératif"></aside>
+          <div class="study-sheet" data-study-sheet>
+            <button class="study-sheet-toggle" type="button" data-study-sheet-toggle aria-expanded="true">
+              <span>Fiche du terme sélectionné</span>
+              <span aria-hidden="true">↓</span>
+            </button>
+            <aside class="operative-panel operative-panel--dialog" data-operative-panel aria-label="Application du dictionnaire opératif"></aside>
+          </div>
         </div>
       </div>
     </dialog>
@@ -794,13 +881,67 @@
       </div>
     </dialog>
 
+    <dialog class="contact-dialog" data-contact-dialog aria-labelledby="contact-dialog-title">
+      <div class="contact-dialog-inner">
+        <header class="contact-dialog-header">
+          <div>
+            <p>ÉCRIRE À VIXTA</p>
+            <h2 id="contact-dialog-title">Envoyer un message depuis le site.</h2>
+          </div>
+          <button class="contact-dialog-close" type="button" data-contact-close aria-label="Fermer le formulaire">
+            <span>Fermer</span><span aria-hidden="true">×</span>
+          </button>
+        </header>
+        <form
+          class="contact-form"
+          action="https://formsubmit.co/ajax/sekaii.philo@gmail.com"
+          method="POST"
+          data-contact-form
+        >
+          <input type="hidden" name="_subject" value="Message reçu depuis le site du Point Noir Intersystémique" />
+          <input type="hidden" name="_template" value="table" />
+          <input type="hidden" name="_captcha" value="false" />
+          <label>
+            <span>Nom ou pseudonyme</span>
+            <input type="text" name="name" autocomplete="name" maxlength="100" />
+          </label>
+          <label>
+            <span>Adresse e-mail <i>requise</i></span>
+            <input type="email" name="email" autocomplete="email" required maxlength="160" />
+          </label>
+          <label class="contact-form-wide">
+            <span>Objet <i>requis</i></span>
+            <input type="text" name="subject" required maxlength="160" placeholder="À propos du livre, d’une lecture ou d’une proposition" />
+          </label>
+          <label class="contact-form-wide">
+            <span>Message <i>requis</i></span>
+            <textarea name="message" required minlength="10" maxlength="5000" rows="8"></textarea>
+          </label>
+          <label class="contact-honeypot" aria-hidden="true">
+            Ne pas remplir ce champ
+            <input type="text" name="_honey" tabindex="-1" autocomplete="off" />
+          </label>
+          <div class="contact-form-footer contact-form-wide">
+            <p>
+              Les informations saisies sont transmises à l’auteur par le service
+              d’acheminement du formulaire. Elles ne sont pas publiées sur le site.
+            </p>
+            <button class="button button-primary" type="submit" data-contact-submit>
+              Envoyer le message <span aria-hidden="true">→</span>
+            </button>
+          </div>
+          <p class="contact-form-status contact-form-wide" role="status" aria-live="polite" data-contact-status></p>
+        </form>
+      </div>
+    </dialog>
+
     <footer class="site-footer">
       <div class="shell footer-main">
         <div class="footer-author">
           <img src="assets/logo-vixta.png" width="195" height="151" alt="Vixta" />
         </div>
         <div class="footer-contact">
-          <a href="mailto:sekaii.philo@gmail.com">sekaii.philo@gmail.com</a>
+          <button type="button" data-contact-open>Écrire à Vixta</button>
           <a href="https://www.instagram.com/sekaii.insta" target="_blank" rel="noopener noreferrer">Instagram</a>
         </div>
         <div class="footer-links">
@@ -819,9 +960,9 @@
       </div>
     </footer>
 
-    <script src="site-data.js?v=20260718-2"></script>
+    <script src="site-data.js?v=20260721-1"></script>
     <script src="collection.js?v=20260718-8"></script>
     <script src="excerpt-study-data.js?v=20260718-1"></script>
-    <script src="script.js?v=20260718-12"></script>
+    <script src="script.js?v=20260721-1"></script>
   </body>
 </html>

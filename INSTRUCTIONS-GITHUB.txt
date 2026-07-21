@@ -8,6 +8,10 @@ SITE COMPLET ET AUTONOME — LE POINT NOIR INTERSYSTÉMIQUE
    restent à la racine. Les dossiers assets/v2 et assets/v3 doivent apparaître
    comme des dossiers.
 6. Validez avec Commit changes.
+7. Après la mise en ligne, ouvrez le formulaire « Écrire à Vixta », envoyez un
+   message d’essai, puis cliquez une seule fois sur le lien d’activation reçu à
+   l’adresse sekaii.philo@gmail.com. Cette activation est demandée par le relais
+   FormSubmit avant la remise normale des messages.
 
 Le fichier index.html ne doit pas être placé dans un sous-dossier supplémentaire.
 Le paquet contient déjà les protections nécessaires à GitHub Pages ; aucune

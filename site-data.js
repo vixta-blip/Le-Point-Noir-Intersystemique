@@ -3,43 +3,57 @@ window.PNI_SITE_DATA = {
     {
       id: "accord",
       question: "Le dialogue doit‑il nécessairement produire un accord ?",
-      lead: "Deux façons de penser se rencontrent sans parvenir à se traduire entièrement. Aucune ne l’emporte, aucune ne disparaît. Le livre suit ce qui demeure entre elles.",
+      stem: "Le dialogue doit‑il nécessairement produire un",
+      emphasis: "accord ?",
+      lead: "Deux façons de penser se rencontrent sans parvenir à se traduire entièrement. Aucune ne devient la mesure suffisante de l’autre. Le livre suit ce qui demeure entre elles.",
       href: "questions/#accord"
     },
     {
       id: "comprendre",
       question: "Comprendre l’autre exige‑t‑il de le traduire dans son propre langage ?",
-      lead: "Une pensée devient parfois lisible sans être convertie dans le cadre qui l’observe. La relation peut alors se préciser sans devenir possession.",
+      stem: "Comprendre l’autre exige‑t‑il de le traduire dans son propre",
+      emphasis: "langage ?",
+      lead: "Une cohérence peut devenir perceptible sans être convertie dans le cadre qui l’observe. La relation demeure alors possible sans traduction exhaustive.",
       href: "questions/#comprendre"
     },
     {
       id: "silence",
       question: "Le silence interrompt‑il la relation ?",
-      lead: "Lorsque la parole ne force plus une conclusion, le silence ne marque pas forcément une rupture. Il peut maintenir l’intervalle dans lequel la relation reste possible.",
+      stem: "Le silence interrompt‑il la",
+      emphasis: "relation ?",
+      lead: "Lorsque l’acte de dire est suspendu sans être supprimé, le silence ne désigne ni une absence ni un état intérieur. Il laisse la circulation possible sans fixer le sens.",
       href: "questions/#silence"
     },
     {
       id: "difference",
       question: "Une différence peut‑elle demeurer active sans devenir un conflit ?",
+      stem: "Une différence peut‑elle demeurer active sans devenir un",
+      emphasis: "conflit ?",
       lead: "Deux cohérences peuvent ne pas coïncider sans se constituer en adversaires. Leur écart demeure, mais change de régime.",
       href: "questions/#difference"
     },
     {
       id: "verite",
       question: "Une vérité peut‑elle rester opérante sans devenir commune ?",
-      lead: "Une proposition peut conserver sa tenue sans devoir s’imposer comme mesure de l’autre. La vérité se déplace alors du verdict vers la condition de relation.",
+      stem: "Une vérité peut‑elle rester opérante sans devenir",
+      emphasis: "commune ?",
+      lead: "Une proposition peut conserver sa tenue sans devoir s’imposer comme mesure de l’autre. Aucune vérité commune n’est produite par la relation.",
       href: "questions/#verite"
     },
     {
       id: "conclusion",
       question: "Peut‑on suspendre une conclusion sans arrêter la pensée ?",
-      lead: "Ne pas conclure immédiatement n’équivaut ni à renoncer ni à hésiter indéfiniment. La pensée peut rester précise dans un mouvement qui ne se ferme pas.",
+      stem: "Peut‑on suspendre une conclusion sans arrêter la",
+      emphasis: "pensée ?",
+      lead: "La Suspension n’est ni un arrêt, ni un retrait volontaire, ni une inhibition. Elle désigne localement la désactivation de la fixation tandis que les cohérences demeurent actives.",
       href: "questions/#conclusion"
     },
     {
       id: "limite",
       question: "La limite sépare‑t‑elle toujours ce qu’elle distingue ?",
-      lead: "Une limite peut empêcher la fusion tout en rendant la relation possible. Elle distingue les cohérences et maintient l’espace dans lequel elles se rencontrent.",
+      stem: "La limite sépare‑t‑elle toujours ce qu’elle",
+      emphasis: "distingue ?",
+      lead: "Un bord peut rendre une cohérence relationnelle sans la faire cesser d’être distincte. La différence demeure sans s’ériger nécessairement en séparation.",
       href: "questions/#limite"
     }
   ],
