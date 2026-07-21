@@ -337,37 +337,89 @@
     source.stop(startsAt + duration + 0.015);
   };
 
+  const scheduleMarkerFoley = (profile = {}) => {
+    if (
+      !audioContext
+      || !masterGain
+      || audioContext.state !== "running"
+      || typeof audioContext.createBufferSource !== "function"
+    ) return;
+
+    const duration = Math.max(0.14, Math.min(Number(profile.duration || 190) / 1000, 0.34));
+    const sampleRate = audioContext.sampleRate || 48000;
+    const length = Math.max(1, Math.round(sampleRate * duration));
+    const buffer = audioContext.createBuffer(1, length, sampleRate);
+    const samples = buffer.getChannelData(0);
+    const pressure = Number(profile.pressure || 1);
+    const roughness = Number(profile.roughness || 0.6);
+    const squeakLevel = Number(profile.squeak || 0.025);
+    const basePitch = Number(profile.pitch || 1450);
+    let seed = Number(profile.seed || 173) + 1;
+    let paperMemory = 0;
+
+    for (let index = 0; index < length; index += 1) {
+      const time = index / sampleRate;
+      const progress = index / Math.max(1, length - 1);
+      seed = (seed * 16807) % 2147483647;
+      const white = (seed / 2147483647) * 2 - 1;
+      paperMemory = white * (0.72 + roughness * 0.12) + paperMemory * (0.28 - roughness * 0.12);
+      const handPressure = 0.82
+        + Math.sin(progress * Math.PI * (5.5 + roughness)) * 0.08
+        + Math.sin(progress * Math.PI * 19 + profile.seed) * 0.035;
+      const attack = Math.min(1, progress / 0.055);
+      const release = Math.min(1, (1 - progress) / 0.075);
+      const envelope = Math.max(0, attack * release) * handPressure * pressure;
+      const pitch = basePitch + Math.sin(progress * Math.PI * 3.2) * 120;
+      const nibSqueak = Math.sin(2 * Math.PI * pitch * time) * squeakLevel;
+      const contact = progress < 0.035
+        ? white * (1 - progress / 0.035) * 0.22
+        : progress > 0.965
+          ? white * ((progress - 0.965) / 0.035) * 0.12
+          : 0;
+      samples[index] = (paperMemory * 0.72 + nibSqueak) * envelope + contact;
+    }
+
+    const startsAt = audioContext.currentTime + 0.008;
+    const source = audioContext.createBufferSource();
+    const highpass = audioContext.createBiquadFilter();
+    const lowpass = audioContext.createBiquadFilter();
+    const envelope = audioContext.createGain();
+    source.buffer = buffer;
+    highpass.type = "highpass";
+    highpass.frequency.setValueAtTime(420 + roughness * 120, startsAt);
+    highpass.Q.setValueAtTime(0.45, startsAt);
+    lowpass.type = "lowpass";
+    lowpass.frequency.setValueAtTime(5200 + pressure * 650, startsAt);
+    lowpass.Q.setValueAtTime(0.38, startsAt);
+    envelope.gain.setValueAtTime(Math.max(0.12, Math.min(Number(profile.level || 0.2), 0.28)), startsAt);
+    source.connect(highpass);
+    highpass.connect(lowpass);
+    lowpass.connect(envelope);
+    envelope.connect(masterGain);
+    source.start(startsAt);
+    source.stop(startsAt + duration + 0.01);
+  };
+
   const highlighterProfiles = [
-    { angle: -0.8, start: -5, end: -3, y: -1, thickness: 1.02, duration: 164, frequency: 1180, endFrequency: 760, q: 0.58, level: 0.14 },
-    { angle: 0.5, start: -3, end: -6, y: 1, thickness: 0.94, duration: 188, frequency: 1320, endFrequency: 820, q: 0.66, level: 0.13 },
-    { angle: -1.2, start: -7, end: -2, y: 0, thickness: 1.08, duration: 146, frequency: 1050, endFrequency: 690, q: 0.54, level: 0.145 },
-    { angle: 0.9, start: -2, end: -7, y: -1, thickness: 0.9, duration: 205, frequency: 1490, endFrequency: 930, q: 0.73, level: 0.125 },
-    { angle: -0.3, start: -6, end: -5, y: 2, thickness: 1.12, duration: 173, frequency: 960, endFrequency: 640, q: 0.49, level: 0.15 },
-    { angle: 1.3, start: -4, end: -3, y: 0, thickness: 0.96, duration: 154, frequency: 1380, endFrequency: 850, q: 0.61, level: 0.135 },
-    { angle: -0.6, start: -2, end: -8, y: -2, thickness: 1.05, duration: 196, frequency: 1210, endFrequency: 720, q: 0.7, level: 0.13 },
-    { angle: 0.2, start: -8, end: -4, y: 1, thickness: 0.92, duration: 158, frequency: 1120, endFrequency: 780, q: 0.57, level: 0.14 },
-    { angle: -1.4, start: -5, end: -6, y: 2, thickness: 1.1, duration: 214, frequency: 1510, endFrequency: 880, q: 0.76, level: 0.12 },
-    { angle: 0.7, start: -7, end: -2, y: -1, thickness: 0.98, duration: 181, frequency: 1270, endFrequency: 700, q: 0.63, level: 0.14 },
+    { seed: 19, angle: -0.8, start: -6, end: -4, y: -1, thickness: 1.03, duration: 186, speed: 0.98, pressure: 1.02, roughness: 0.63, pitch: 1370, squeak: 0.026, level: 0.22 },
+    { seed: 37, angle: 0.5, start: -4, end: -7, y: 1, thickness: 0.95, duration: 204, speed: 1.07, pressure: 0.94, roughness: 0.55, pitch: 1540, squeak: 0.02, level: 0.205 },
+    { seed: 53, angle: -1.15, start: -8, end: -3, y: 0, thickness: 1.09, duration: 172, speed: 0.9, pressure: 1.08, roughness: 0.72, pitch: 1260, squeak: 0.031, level: 0.225 },
+    { seed: 71, angle: 0.9, start: -3, end: -8, y: -1, thickness: 0.91, duration: 218, speed: 1.12, pressure: 0.91, roughness: 0.49, pitch: 1660, squeak: 0.018, level: 0.2 },
+    { seed: 89, angle: -0.3, start: -7, end: -6, y: 2, thickness: 1.13, duration: 192, speed: 1.01, pressure: 1.1, roughness: 0.77, pitch: 1190, squeak: 0.034, level: 0.23 },
+    { seed: 107, angle: 1.25, start: -5, end: -4, y: 0, thickness: 0.97, duration: 178, speed: 0.94, pressure: 0.98, roughness: 0.6, pitch: 1480, squeak: 0.024, level: 0.215 },
+    { seed: 131, angle: -0.6, start: -3, end: -9, y: -2, thickness: 1.06, duration: 210, speed: 1.1, pressure: 1.03, roughness: 0.68, pitch: 1320, squeak: 0.029, level: 0.215 },
+    { seed: 149, angle: 0.2, start: -9, end: -5, y: 1, thickness: 0.93, duration: 181, speed: 0.96, pressure: 0.95, roughness: 0.57, pitch: 1435, squeak: 0.022, level: 0.21 },
+    { seed: 167, angle: -1.35, start: -6, end: -7, y: 2, thickness: 1.11, duration: 226, speed: 1.15, pressure: 1.06, roughness: 0.74, pitch: 1570, squeak: 0.028, level: 0.22 },
+    { seed: 191, angle: 0.7, start: -8, end: -3, y: -1, thickness: 0.99, duration: 196, speed: 1.03, pressure: 1, roughness: 0.65, pitch: 1290, squeak: 0.027, level: 0.22 },
   ];
 
   const renderInterfaceSound = (kind, options = {}) => {
     if (kind === "highlighter") {
       const profile = highlighterProfiles[Number(options.variant) % highlighterProfiles.length]
         || highlighterProfiles[0];
-      scheduleNoise({
-        duration: profile.duration / 1000,
-        level: profile.level,
-        startFrequency: profile.frequency,
-        endFrequency: profile.endFrequency,
-        q: profile.q,
-      });
-      scheduleNoise({
-        offset: 0.018,
-        duration: Math.max(0.08, profile.duration / 1000 - 0.035),
-        level: profile.level * 0.34,
-        startFrequency: profile.frequency * 0.58,
-        endFrequency: profile.endFrequency * 0.72,
-        q: 0.42,
+      scheduleMarkerFoley({
+        ...profile,
+        duration: Number(options.duration) || profile.duration,
       });
       return;
     }
@@ -514,7 +566,7 @@
 
   const activationSoundFor = (control) => {
     if (!control || control.matches("[data-book-select]")) return null;
-    if (control.matches("[data-contact-open], [data-contact-close]")) return null;
+    if (control.matches("[data-contact-open], [data-contact-close], [data-copy-email]")) return null;
     if (control.matches("[data-hero-question-prev], [data-hero-question-next], [data-coherence-prev], [data-coherence-next]")) return null;
     if (control.matches("[data-term-hotspot], [data-term-select], [data-study-open], [data-study-close]")) {
       return null;
@@ -586,6 +638,7 @@
   const siteData = window.PNI_SITE_DATA || {};
   const heroQuestions = Array.isArray(siteData.questions) ? siteData.questions : [];
   const heroQuestion = document.querySelector("[data-hero-question]");
+  const heroQuestionLink = document.querySelector("[data-hero-question-link]");
   const heroQuestionText = document.querySelector("[data-hero-question-text]");
   const heroQuestionEmphasis = document.querySelector("[data-hero-question-emphasis]");
   const heroQuestionLead = document.querySelector("[data-hero-question-lead]");
@@ -605,7 +658,10 @@
     if (heroQuestionText) heroQuestionText.textContent = item.stem || item.question;
     if (heroQuestionEmphasis) heroQuestionEmphasis.textContent = item.emphasis || "";
     if (heroQuestionLead) heroQuestionLead.textContent = item.lead;
-    heroQuestion.querySelector("h1")?.setAttribute("aria-label", item.question);
+    if (heroQuestionLink) {
+      heroQuestionLink.href = item.href || `questions/#${item.id}`;
+      heroQuestionLink.setAttribute("aria-label", `Lire la réponse développée : ${item.question}`);
+    }
   };
 
   const restartHeroQuestionTimer = () => {
@@ -638,11 +694,8 @@
     relation: document.querySelector("[data-coherence-relation]"),
   };
   const coherencePrevious = document.querySelector("[data-coherence-prev]");
-  const coherencePause = document.querySelector("[data-coherence-pause]");
   const coherenceNext = document.querySelector("[data-coherence-next]");
   let coherenceIndex = 0;
-  let coherenceTimer = null;
-  let coherenceRotationPaused = reducedMotion;
 
   const renderCoherenceCase = (index, { withSound = false } = {}) => {
     if (!coherenceCases.length || !coherenceCase) return;
@@ -660,38 +713,13 @@
     if (withSound) playInterfaceSound("coherence-shift");
   };
 
-  const restartCoherenceTimer = () => {
-    if (coherenceTimer !== null) window.clearInterval(coherenceTimer);
-    if (coherenceCases.length < 2 || coherenceRotationPaused) return;
-    coherenceTimer = window.setInterval(() => {
-      if (!document.hidden) renderCoherenceCase(coherenceIndex + 1, { withSound: true });
-    }, 90000);
-  };
-
   coherencePrevious?.addEventListener("click", () => {
     renderCoherenceCase(coherenceIndex - 1, { withSound: true });
-    restartCoherenceTimer();
   });
   coherenceNext?.addEventListener("click", () => {
     renderCoherenceCase(coherenceIndex + 1, { withSound: true });
-    restartCoherenceTimer();
   });
-  coherencePause?.addEventListener("click", () => {
-    coherenceRotationPaused = !coherenceRotationPaused;
-    coherencePause.setAttribute("aria-pressed", String(coherenceRotationPaused));
-    coherencePause.setAttribute("aria-label", coherenceRotationPaused
-      ? "Reprendre le changement automatique"
-      : "Suspendre le changement automatique");
-    coherencePause.textContent = coherenceRotationPaused ? "▶" : "Ⅱ";
-    restartCoherenceTimer();
-  });
-  if (coherencePause && coherenceRotationPaused) {
-    coherencePause.setAttribute("aria-pressed", "true");
-    coherencePause.setAttribute("aria-label", "Reprendre le changement automatique");
-    coherencePause.textContent = "▶";
-  }
   renderCoherenceCase(0);
-  restartCoherenceTimer();
 
   /* Collection shelf: one source of truth for this volume and those to come. */
 
@@ -825,13 +853,26 @@
 
   shelfVolumes.forEach((volume) => {
     volume.addEventListener("pointerenter", (event) => {
-      if (event.pointerType !== "touch") previewVolume(volume);
+      if (event.pointerType === "touch") return;
+      previewVolume(volume);
+      const notes = (volume.dataset.bookNotes || "")
+        .split(",")
+        .map(Number)
+        .filter(Number.isFinite);
+      playInterfaceSound("book", { notes });
     });
     volume.addEventListener("pointerleave", () => {
       if (!volume.contains(document.activeElement)) clearVolumePreview();
     });
     volume.addEventListener("focusin", () => {
       previewVolume(volume, { announce: true });
+      if (inputMode === "keyboard") {
+        const notes = (volume.dataset.bookNotes || "")
+          .split(",")
+          .map(Number)
+          .filter(Number.isFinite);
+        playInterfaceSound("book", { notes });
+      }
     });
     volume.addEventListener("focusout", (event) => {
       if (!volume.contains(event.relatedTarget)) clearVolumePreview();
@@ -844,6 +885,7 @@
   /* Pages 13–19: page image, operative entries and local occurrences. */
 
   const excerptStudy = window.PNI_EXCERPT_STUDY || { terms: {}, pages: {} };
+  const excerptContexts = window.PNI_EXCERPT_CONTEXTS || { pages: {} };
   const viewer = document.querySelector("[data-excerpt-viewer]");
   const excerptImage = document.querySelector("[data-excerpt-image]");
   const excerptLabel = document.querySelector("[data-excerpt-label]");
@@ -860,6 +902,7 @@
   const studyOpenButton = document.querySelector("[data-study-open]");
   const studyOpenLabel = document.querySelector("[data-study-open-label]");
   const viewerHelp = document.querySelector("#excerpt-help");
+  const operativeCue = document.querySelector("[data-operative-cue]");
   const studyDialog = document.querySelector("[data-study-dialog]");
   const studyCloseButton = document.querySelector("[data-study-close]");
   const studyPreviousButton = document.querySelector("[data-study-prev]");
@@ -870,6 +913,7 @@
   const studyPageScroll = document.querySelector(".study-page-scroll");
   const studySheet = document.querySelector("[data-study-sheet]");
   const studySheetToggle = document.querySelector("[data-study-sheet-toggle]");
+  const studySheetLabel = studySheetToggle?.querySelector("span:first-child");
   const threadDialog = document.querySelector("[data-thread-dialog]");
   const threadCloseButton = document.querySelector("[data-thread-close]");
   const threadTermSelect = document.querySelector("[data-thread-term-select]");
@@ -900,6 +944,16 @@
 
   const pageDataFor = (page) => excerptStudy.pages?.[String(page)] || null;
   const termDataFor = (term) => excerptStudy.terms?.[term] || null;
+  const paragraphContextFor = (page, paragraphIndex) => (
+    excerptContexts.pages?.[String(page)]?.paragraphs?.[String(paragraphIndex)]
+    || excerptContexts.pages?.[page]?.paragraphs?.[paragraphIndex]
+    || null
+  );
+  const hotspotContextFor = (page, hotspotIndex) => (
+    excerptContexts.pages?.[String(page)]?.hotspots?.[String(hotspotIndex)]
+    || excerptContexts.pages?.[page]?.hotspots?.[hotspotIndex]
+    || null
+  );
 
   const renderConstraintList = (items) => items
     .map((item) => `<li>${escapeMarkup(item)}</li>`)
@@ -916,6 +970,17 @@
     const paragraph = hotspot
       ? pageData.paragraphs?.[hotspot.paragraph] || ""
       : "";
+    const paragraphContext = hotspot
+      ? paragraphContextFor(pageNumber, hotspot.paragraph)
+      : null;
+    const resolvedHotspotIndex = hotspot ? pageData.hotspots.indexOf(hotspot) : -1;
+    const hotspotContext = resolvedHotspotIndex >= 0
+      ? hotspotContextFor(pageNumber, resolvedHotspotIndex)
+      : null;
+    const occurrenceRole = hotspotContext?.role
+      || paragraphContext?.roles?.[termName]
+      || termData.function
+      || "Cette occurrence conserve le sens local défini par la page et par le régime auquel le terme appartient.";
     const limitsWereOpen = panel.querySelector(".operative-limits")?.open || false;
     const category = termData.category || "C";
     const source = category === "C"
@@ -977,6 +1042,14 @@
           <p class="operative-section-label">Occurrence dans la page</p>
           <blockquote>«&nbsp;${escapeMarkup(paragraph)}&nbsp;»</blockquote>
         </section>
+        <section class="operative-context">
+          <p class="operative-section-label">Fonction dans cette occurrence</p>
+          <p>${escapeMarkup(occurrenceRole)}</p>
+        </section>
+        <section class="operative-paragraph-scope">
+          <p class="operative-section-label">Mouvement du paragraphe</p>
+          <p>${escapeMarkup(paragraphContext?.scope || pageData.overview)}</p>
+        </section>
         <section class="operative-reading">
           <p class="operative-section-label">Contrainte d’usage locale</p>
           <p>${escapeMarkup(termData.function)}</p>
@@ -1012,24 +1085,43 @@
   const pageOccurrencesForTerm = (termName) => excerptPages
     .map((pageNumber) => {
       const pageData = pageDataFor(pageNumber);
-      const hotspots = (pageData?.hotspots || []).filter((hotspot) => hotspot.term === termName);
-      if (!hotspots.length) return null;
-      const paragraphIndexes = [...new Set(hotspots.map((hotspot) => hotspot.paragraph))];
-      const occurrences = paragraphIndexes.map((paragraphIndex) => {
+      const indexedHotspots = (pageData?.hotspots || [])
+        .map((hotspot, hotspotIndex) => ({ hotspot, hotspotIndex }))
+        .filter(({ hotspot }) => hotspot.term === termName);
+      if (!indexedHotspots.length) return null;
+
+      const occurrenceGroups = new Map();
+      indexedHotspots.forEach(({ hotspot, hotspotIndex }) => {
+        const specificContext = hotspotContextFor(pageNumber, hotspotIndex);
+        const occurrenceId = specificContext?.occurrenceId || `hotspot-${hotspotIndex}`;
+        if (!occurrenceGroups.has(occurrenceId)) {
+          occurrenceGroups.set(occurrenceId, { hotspot, hotspotIndex, specificContext });
+        }
+      });
+
+      const occurrences = [...occurrenceGroups.values()].map(({ hotspot, specificContext }) => {
+        const paragraphIndex = hotspot.paragraph;
+        const paragraphContext = paragraphContextFor(pageNumber, paragraphIndex);
         const relatedTerms = [...new Set(
           (pageData.hotspots || [])
-            .filter((hotspot) => hotspot.paragraph === paragraphIndex && hotspot.term !== termName)
-            .map((hotspot) => hotspot.term),
+            .filter((candidate) => candidate.paragraph === paragraphIndex && candidate.term !== termName)
+            .map((candidate) => candidate.term),
         )];
         return {
           paragraph: pageData.paragraphs?.[paragraphIndex] || "",
+          scope: paragraphContext?.scope || "",
+          role: specificContext?.role
+            || paragraphContext?.roles?.[termName]
+            || termDataFor(termName)?.function
+            || "",
           relatedTerms,
         };
       });
+
       return {
         pageNumber,
         overview: pageData.overview || "",
-        count: hotspots.length,
+        count: occurrences.length,
         occurrences,
       };
     })
@@ -1069,6 +1161,11 @@
         return `
           <div class="thread-passage">
             <blockquote>«&nbsp;${escapeMarkup(occurrence.paragraph)}&nbsp;»</blockquote>
+            <div class="thread-occurrence-reading">
+              <p>Fonction dans cette occurrence</p>
+              <strong>${escapeMarkup(occurrence.role)}</strong>
+              <span>${escapeMarkup(occurrence.scope)}</span>
+            </div>
             <div class="thread-related">
               <p>Termes présents dans le même paragraphe</p>
               <div>${related}</div>
@@ -1191,6 +1288,7 @@
     operativePanels.forEach((panel) => {
       renderOperativePanel(panel, pageNumber, termName, selection.hotspotIndex);
     });
+    if (studySheetLabel) studySheetLabel.textContent = `Fiche · ${termName}`;
     updateHotspotState(desktopHotspots, selection);
     updateHotspotState(studyHotspots, selection);
     if (options.revealSheet && studySheet) {
@@ -1218,17 +1316,20 @@
     button.dataset.lastHighlighterAt = String(now);
     const variant = nextHighlighterVariant();
     const profile = highlighterProfiles[variant];
+    const visualWidth = button.getBoundingClientRect?.().width || 64;
+    const duration = Math.round(
+      Math.max(150, Math.min(285, (112 + visualWidth * 1.35) * (profile.speed || 1))),
+    );
     button.style.setProperty("--stroke-angle", `${profile.angle}deg`);
     button.style.setProperty("--stroke-start", `${profile.start}px`);
     button.style.setProperty("--stroke-end", `${profile.end}px`);
     button.style.setProperty("--stroke-y", `${profile.y}px`);
     button.style.setProperty("--stroke-thickness", String(profile.thickness));
-    button.style.setProperty("--stroke-duration", `${profile.duration}ms`);
+    button.style.setProperty("--stroke-duration", `${duration}ms`);
     button.classList.remove("is-highlight-sweeping");
     void button.offsetWidth;
     button.classList.add("is-highlight-sweeping");
-    window.setTimeout(() => button.classList.remove("is-highlight-sweeping"), profile.duration + 90);
-    if (sound) playInterfaceSound("highlighter", { variant });
+    if (sound) playInterfaceSound("highlighter", { variant, duration });
   };
 
   const attachHotspotEvents = (container) => {
@@ -1244,6 +1345,13 @@
       });
       sweepHighlighter(button);
     });
+    container.addEventListener("pointerout", (event) => {
+      if (event.pointerType === "touch") return;
+      const button = event.target.closest("[data-term-hotspot]");
+      if (!button || !container.contains(button)) return;
+      if (event.relatedTarget && button.contains(event.relatedTarget)) return;
+      button.classList.remove("is-highlight-sweeping");
+    });
     container.addEventListener("focusin", (event) => {
       const button = event.target.closest("[data-term-hotspot]");
       if (!button || !container.contains(button)) return;
@@ -1251,7 +1359,6 @@
         hotspotIndex: Number(button.dataset.hotspotIndex),
         revealSheet: true,
       });
-      if (inputMode === "keyboard") sweepHighlighter(button);
     });
     container.addEventListener("click", (event) => {
       const button = event.target.closest("[data-term-hotspot]");
@@ -1260,7 +1367,6 @@
         hotspotIndex: Number(button.dataset.hotspotIndex),
         revealSheet: true,
       });
-      sweepHighlighter(button);
     });
   };
 
@@ -1354,8 +1460,9 @@
     if (studyOpenLabel) studyOpenLabel.textContent = active
       ? "Refermer la lecture opérative"
       : "Activer la lecture opérative";
+    if (operativeCue) operativeCue.hidden = !active;
     if (viewerHelp) viewerHelp.textContent = active
-      ? "Survolez un terme coloré ou choisissez-le dans le panneau. Les flèches gauche et droite changent de page."
+      ? "Les traits fins signalent les termes étudiés. Les flèches gauche et droite changent de page."
       : "Les flèches gauche et droite changent de page. La lecture opérative reste désactivée tant que vous ne l’ouvrez pas.";
     if (active) {
       playInterfaceSound("study-open", { force: true });
@@ -1377,7 +1484,7 @@
     if (typeof studyDialog.showModal === "function") studyDialog.showModal();
     else studyDialog.setAttribute("open", "");
     document.body.classList.add("study-dialog-open");
-    setStudySheetCollapsed(false);
+    setStudySheetCollapsed(true);
     studyOpenButton?.setAttribute("aria-pressed", "true");
     if (studyOpenLabel) studyOpenLabel.textContent = "Lecture opérative ouverte";
     if (withSound) playInterfaceSound("study-open", { force: true });
@@ -1511,6 +1618,30 @@
     document.execCommand("copy");
     field.remove();
   };
+
+  const emailAddress = document.querySelector("[data-email-address]")?.textContent?.trim()
+    || "sekaii.philo@gmail.com";
+  const emailCopyButtons = [...document.querySelectorAll("[data-copy-email]")];
+  const emailCopyStatus = document.querySelector("[data-email-copy-status]");
+  let emailCopyStatusTimer = null;
+
+  emailCopyButtons.forEach((button) => {
+    button.addEventListener("click", async () => {
+      try {
+        await copyText(emailAddress);
+        if (emailCopyStatus) emailCopyStatus.textContent = `Adresse copiée : ${emailAddress}`;
+        playInterfaceSound("confirm", { force: true });
+      } catch {
+        if (emailCopyStatus) {
+          emailCopyStatus.textContent = `Copie impossible. Sélectionnez directement : ${emailAddress}`;
+        }
+      }
+      window.clearTimeout(emailCopyStatusTimer);
+      emailCopyStatusTimer = window.setTimeout(() => {
+        if (emailCopyStatus) emailCopyStatus.textContent = "";
+      }, 5000);
+    });
+  });
 
   const status = document.querySelector("[data-action-status]");
   let statusTimer = null;

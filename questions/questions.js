@@ -1,6 +1,7 @@
 (() => {
   const articles = [...document.querySelectorAll("[data-question-article]")];
   const links = [...document.querySelectorAll("[data-question-link]")];
+  const progress = document.querySelector("[data-question-progress]");
   if (!articles.length) return;
 
   const known = new Set(articles.map((article) => article.id));
@@ -29,4 +30,28 @@
   if (window.location.hash) {
     window.setTimeout(scrollToActiveQuestion, 80);
   }
+
+  const updateReadingProgress = () => {
+    if (!progress) return;
+    const active = document.querySelector("[data-question-article].is-active");
+    if (!active) return;
+    const start = active.getBoundingClientRect().top + window.scrollY;
+    const distance = Math.max(1, active.offsetHeight - window.innerHeight * 0.62);
+    const ratio = Math.max(0, Math.min(1, (window.scrollY - start + window.innerHeight * 0.28) / distance));
+    progress.style.transform = `scaleX(${ratio})`;
+  };
+
+  let progressFrame = null;
+  const requestProgressUpdate = () => {
+    if (progressFrame !== null) return;
+    progressFrame = window.requestAnimationFrame(() => {
+      progressFrame = null;
+      updateReadingProgress();
+    });
+  };
+
+  window.addEventListener("scroll", requestProgressUpdate, { passive: true });
+  window.addEventListener("resize", requestProgressUpdate);
+  window.addEventListener("hashchange", () => window.setTimeout(updateReadingProgress, 30));
+  updateReadingProgress();
 })();
