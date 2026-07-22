@@ -55,7 +55,7 @@
     <link rel="icon" href="assets/v2/favicon.svg" type="image/svg+xml" />
     <link rel="preload" href="assets/Inter-SemiBold.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="assets/SourceSerif-Regular.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="stylesheet" href="styles.css?v=20260722-1" />
+    <link rel="stylesheet" href="styles.css?v=20260722-2" />
     <link rel="stylesheet" href="photo-theme.css?v=20260718-2" />
     <link rel="stylesheet" href="photo-perspective-template.css?v=20260718-1" />
     <link rel="stylesheet" href="photo-perspective-refined.css?v=20260718-3" />
@@ -507,7 +507,7 @@
             exhaustive ne soit plus exigée et que la relation demeure malgré l’écart.
           </p>
 
-          <div class="coherence-case reveal" data-coherence-case aria-live="polite">
+          <div class="coherence-case reveal" id="coherence-examples" data-coherence-case aria-live="polite">
             <div class="coherence-case-head">
               <div>
                 <p class="coherence-case-index"><span data-coherence-label>Soin</span> · <span data-coherence-position>1 / 10</span></p>
@@ -540,6 +540,100 @@
               <span data-coherence-relation>Les deux descriptions portent sur une même situation sans devenir interchangeables.</span>
             </p>
           </div>
+        </div>
+      </section>
+
+      <section class="neighbors section" id="voisinages" aria-labelledby="voisinages-titre">
+        <div class="shell neighbors-shell">
+          <div class="neighbors-intro reveal">
+            <p class="eyebrow eyebrow-blue">VOISINAGES DE LECTURE</p>
+            <h2 id="voisinages-titre">Depuis une lecture déjà connue.</h2>
+            <p>
+              Certains ouvrages ont déjà traversé des zones proches de celles qui
+              apparaissent ici&nbsp;: la relation et l’opacité, l’écart et l’altérité,
+              la coexistence et la pluralité.
+            </p>
+            <p class="neighbors-instruction">
+              Sélectionnez une lecture pour rejoindre la partie du
+              <em>Point Noir Intersystémique</em> qui lui est voisine.
+            </p>
+          </div>
+
+          <div class="neighbors-list" data-accordion="neighbors">
+            <details class="neighbor-item reveal">
+              <summary>
+                <span class="neighbor-heading">
+                  <small>ÉDOUARD GLISSANT</small>
+                  <strong>Poétique de la Relation</strong>
+                </span>
+                <span class="neighbor-themes">Relation · opacité · non-réduction</span>
+                <i aria-hidden="true">+</i>
+              </summary>
+              <div class="neighbor-answer">
+                <p>
+                  Le <em>Point Noir Intersystémique</em> rencontre cette zone lorsqu’une
+                  cohérence demeure irréductible à une traduction exhaustive sans que
+                  la relation soit rompue.
+                </p>
+                <a
+                  class="neighbor-link"
+                  href="#extrait"
+                  data-glossary-term-link
+                  data-term="Opacité"
+                >
+                  <span>Voir l’opacité dans l’extrait</span>
+                  <span aria-hidden="true">→</span>
+                </a>
+              </div>
+            </details>
+
+            <details class="neighbor-item reveal">
+              <summary>
+                <span class="neighbor-heading">
+                  <small>FRANÇOIS JULLIEN</small>
+                  <strong>L’écart et l’entre</strong>
+                </span>
+                <span class="neighbor-themes">Écart · entre · altérité</span>
+                <i aria-hidden="true">+</i>
+              </summary>
+              <div class="neighbor-answer">
+                <p>
+                  Le livre rencontre cette zone lorsque deux cohérences demeurent
+                  distinctes sans que l’une devienne la mesure suffisante de l’autre.
+                </p>
+                <a class="neighbor-link" href="#coherence-examples">
+                  <span>Observer les deux cohérences</span>
+                  <span aria-hidden="true">↑</span>
+                </a>
+              </div>
+            </details>
+
+            <details class="neighbor-item reveal">
+              <summary>
+                <span class="neighbor-heading">
+                  <small>JEAN-LUC NANCY</small>
+                  <strong>Être singulier pluriel</strong>
+                </span>
+                <span class="neighbor-themes">Pluralité · coexistence</span>
+                <i aria-hidden="true">+</i>
+              </summary>
+              <div class="neighbor-answer">
+                <p>
+                  Le livre rencontre cette zone dans la coexistence de cohérences qui
+                  demeurent différenciées sans fusion, exclusion ni production d’une
+                  vérité commune.
+                </p>
+                <a class="neighbor-link" href="questions/#difference">
+                  <span>Lire la question sur la différence</span>
+                  <span aria-hidden="true">→</span>
+                </a>
+              </div>
+            </details>
+          </div>
+
+          <p class="neighbors-note reveal">
+            Ces rapprochements indiquent des voisinages de question, non des filiations.
+          </p>
         </div>
       </section>
 
@@ -998,6 +1092,6 @@
     <script src="collection.js?v=20260718-8"></script>
     <script src="excerpt-study-data.js?v=20260718-1"></script>
     <script src="excerpt-occurrence-contexts.js?v=20260721-1"></script>
-    <script src="script.js?v=20260722-1"></script>
+    <script src="script.js?v=20260722-2"></script>
   </body>
 </html>

@@ -105,7 +105,9 @@
 
   document.querySelectorAll("[data-accordion]").forEach((accordion) => {
     const items = [...accordion.querySelectorAll(":scope > details")];
-    const preserveMobilePosition = accordion.dataset.accordion === "glossary";
+    const preserveMobilePosition = ["glossary", "neighbors"].includes(
+      accordion.dataset.accordion,
+    );
     items.forEach((details) => {
       details.addEventListener("toggle", () => {
         if (!details.open) return;
