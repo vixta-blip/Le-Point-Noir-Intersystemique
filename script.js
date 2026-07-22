@@ -359,72 +359,90 @@
       || typeof audioContext.createBufferSource !== "function"
     ) return;
 
-    const duration = Math.max(0.14, Math.min(Number(profile.duration || 190) / 1000, 0.34));
+    const duration = Math.max(0.19, Math.min(Number(profile.duration || 270) / 1000, 0.44));
     const sampleRate = audioContext.sampleRate || 48000;
     const length = Math.max(1, Math.round(sampleRate * duration));
     const buffer = audioContext.createBuffer(1, length, sampleRate);
     const samples = buffer.getChannelData(0);
     const pressure = Number(profile.pressure || 1);
     const roughness = Number(profile.roughness || 0.6);
-    const squeakLevel = Number(profile.squeak || 0.025);
-    const basePitch = Number(profile.pitch || 1450);
+    const feltLevel = Number(profile.felt || 0.009);
+    const basePitch = Number(profile.pitch || 760);
     let seed = Number(profile.seed || 173) + 1;
-    let paperMemory = 0;
+    let paperBody = 0;
+    let paperFiber = 0;
 
     for (let index = 0; index < length; index += 1) {
       const time = index / sampleRate;
       const progress = index / Math.max(1, length - 1);
       seed = (seed * 16807) % 2147483647;
       const white = (seed / 2147483647) * 2 - 1;
-      paperMemory = white * (0.72 + roughness * 0.12) + paperMemory * (0.28 - roughness * 0.12);
-      const handPressure = 0.82
-        + Math.sin(progress * Math.PI * (5.5 + roughness)) * 0.08
-        + Math.sin(progress * Math.PI * 19 + profile.seed) * 0.035;
-      const attack = Math.min(1, progress / 0.055);
-      const release = Math.min(1, (1 - progress) / 0.075);
-      const envelope = Math.max(0, attack * release) * handPressure * pressure;
-      const pitch = basePitch + Math.sin(progress * Math.PI * 3.2) * 120;
-      const nibSqueak = Math.sin(2 * Math.PI * pitch * time) * squeakLevel;
-      const contact = progress < 0.035
-        ? white * (1 - progress / 0.035) * 0.22
-        : progress > 0.965
-          ? white * ((progress - 0.965) / 0.035) * 0.12
-          : 0;
-      samples[index] = (paperMemory * 0.72 + nibSqueak) * envelope + contact;
+      paperBody = paperBody * 0.925 + white * 0.075;
+      paperFiber = paperFiber * (0.69 - roughness * 0.08)
+        + white * (0.31 + roughness * 0.08);
+
+      const pressureWave = 0.86
+        + Math.sin(progress * Math.PI * 2.35 + Number(profile.seed || 0) * 0.05) * 0.075
+        + Math.sin(progress * Math.PI * 8.4) * 0.025;
+      const attack = Math.min(1, progress / 0.09);
+      const release = Math.min(1, (1 - progress) / 0.13);
+      const contactEnvelope = Math.sin(Math.min(1, progress) * Math.PI) ** 0.16;
+      const envelope = Math.max(0, attack * release * contactEnvelope) * pressureWave * pressure;
+      const pitch = basePitch + Math.sin(progress * Math.PI * 2.1) * 54;
+      const feltResonance = Math.sin(2 * Math.PI * pitch * time) * feltLevel;
+      const paperGrain = paperBody * 0.82 + paperFiber * (0.27 + roughness * 0.13);
+      const landing = progress < 0.018
+        ? paperBody * (1 - progress / 0.018) * 0.035
+        : 0;
+      const lift = progress > 0.985
+        ? paperBody * ((progress - 0.985) / 0.015) * 0.018
+        : 0;
+      samples[index] = (paperGrain + feltResonance) * envelope + landing + lift;
     }
 
     const startsAt = audioContext.currentTime + 0.008;
     const source = audioContext.createBufferSource();
     const highpass = audioContext.createBiquadFilter();
     const lowpass = audioContext.createBiquadFilter();
+    const paperWarmth = audioContext.createBiquadFilter();
     const envelope = audioContext.createGain();
     source.buffer = buffer;
     highpass.type = "highpass";
-    highpass.frequency.setValueAtTime(420 + roughness * 120, startsAt);
-    highpass.Q.setValueAtTime(0.45, startsAt);
+    highpass.frequency.setValueAtTime(105 + roughness * 30, startsAt);
+    highpass.Q.setValueAtTime(0.36, startsAt);
     lowpass.type = "lowpass";
-    lowpass.frequency.setValueAtTime(5200 + pressure * 650, startsAt);
-    lowpass.Q.setValueAtTime(0.38, startsAt);
-    envelope.gain.setValueAtTime(Math.max(0.12, Math.min(Number(profile.level || 0.2), 0.28)), startsAt);
+    lowpass.frequency.setValueAtTime(2850 + pressure * 380, startsAt);
+    lowpass.frequency.linearRampToValueAtTime(2500 + pressure * 320, startsAt + duration);
+    lowpass.Q.setValueAtTime(0.32, startsAt);
+    paperWarmth.type = "peaking";
+    paperWarmth.frequency.setValueAtTime(690 + roughness * 110, startsAt);
+    paperWarmth.Q.setValueAtTime(0.62, startsAt);
+    paperWarmth.gain.setValueAtTime(2.4, startsAt);
+    const level = Math.max(0.13, Math.min(Number(profile.level || 0.18), 0.23));
+    envelope.gain.setValueAtTime(0.0001, startsAt);
+    envelope.gain.linearRampToValueAtTime(level, startsAt + Math.min(0.026, duration * 0.12));
+    envelope.gain.setValueAtTime(level * 0.94, startsAt + Math.max(0.03, duration - 0.055));
+    envelope.gain.linearRampToValueAtTime(0.0001, startsAt + duration + 0.018);
     source.connect(highpass);
     highpass.connect(lowpass);
-    lowpass.connect(envelope);
+    lowpass.connect(paperWarmth);
+    paperWarmth.connect(envelope);
     envelope.connect(masterGain);
     source.start(startsAt);
-    source.stop(startsAt + duration + 0.01);
+    source.stop(startsAt + duration + 0.025);
   };
 
   const highlighterProfiles = [
-    { seed: 19, angle: -0.8, start: -6, end: -4, y: -1, thickness: 1.03, duration: 186, speed: 0.98, pressure: 1.02, roughness: 0.63, pitch: 1370, squeak: 0.026, level: 0.22 },
-    { seed: 37, angle: 0.5, start: -4, end: -7, y: 1, thickness: 0.95, duration: 204, speed: 1.07, pressure: 0.94, roughness: 0.55, pitch: 1540, squeak: 0.02, level: 0.205 },
-    { seed: 53, angle: -1.15, start: -8, end: -3, y: 0, thickness: 1.09, duration: 172, speed: 0.9, pressure: 1.08, roughness: 0.72, pitch: 1260, squeak: 0.031, level: 0.225 },
-    { seed: 71, angle: 0.9, start: -3, end: -8, y: -1, thickness: 0.91, duration: 218, speed: 1.12, pressure: 0.91, roughness: 0.49, pitch: 1660, squeak: 0.018, level: 0.2 },
-    { seed: 89, angle: -0.3, start: -7, end: -6, y: 2, thickness: 1.13, duration: 192, speed: 1.01, pressure: 1.1, roughness: 0.77, pitch: 1190, squeak: 0.034, level: 0.23 },
-    { seed: 107, angle: 1.25, start: -5, end: -4, y: 0, thickness: 0.97, duration: 178, speed: 0.94, pressure: 0.98, roughness: 0.6, pitch: 1480, squeak: 0.024, level: 0.215 },
-    { seed: 131, angle: -0.6, start: -3, end: -9, y: -2, thickness: 1.06, duration: 210, speed: 1.1, pressure: 1.03, roughness: 0.68, pitch: 1320, squeak: 0.029, level: 0.215 },
-    { seed: 149, angle: 0.2, start: -9, end: -5, y: 1, thickness: 0.93, duration: 181, speed: 0.96, pressure: 0.95, roughness: 0.57, pitch: 1435, squeak: 0.022, level: 0.21 },
-    { seed: 167, angle: -1.35, start: -6, end: -7, y: 2, thickness: 1.11, duration: 226, speed: 1.15, pressure: 1.06, roughness: 0.74, pitch: 1570, squeak: 0.028, level: 0.22 },
-    { seed: 191, angle: 0.7, start: -8, end: -3, y: -1, thickness: 0.99, duration: 196, speed: 1.03, pressure: 1, roughness: 0.65, pitch: 1290, squeak: 0.027, level: 0.22 },
+    { seed: 19, angle: -0.7, start: -7, end: -5, y: -1, thickness: 1.04, speed: 0.98, pressure: 1.01, roughness: 0.58, pitch: 710, felt: 0.009, level: 0.185, opacity: 0.54, grain: 3, nib: 8 },
+    { seed: 37, angle: 0.45, start: -5, end: -8, y: 1, thickness: 0.96, speed: 1.06, pressure: 0.95, roughness: 0.49, pitch: 790, felt: 0.007, level: 0.175, opacity: 0.49, grain: 6, nib: 7 },
+    { seed: 53, angle: -1.05, start: -9, end: -4, y: 0, thickness: 1.1, speed: 0.92, pressure: 1.07, roughness: 0.67, pitch: 660, felt: 0.011, level: 0.19, opacity: 0.57, grain: 1, nib: 9 },
+    { seed: 71, angle: 0.8, start: -4, end: -9, y: -1, thickness: 0.93, speed: 1.11, pressure: 0.92, roughness: 0.44, pitch: 835, felt: 0.006, level: 0.17, opacity: 0.47, grain: 8, nib: 7 },
+    { seed: 89, angle: -0.25, start: -8, end: -7, y: 2, thickness: 1.12, speed: 1.01, pressure: 1.08, roughness: 0.7, pitch: 640, felt: 0.012, level: 0.195, opacity: 0.58, grain: 4, nib: 10 },
+    { seed: 107, angle: 1.1, start: -6, end: -5, y: 0, thickness: 0.98, speed: 0.95, pressure: 0.98, roughness: 0.54, pitch: 765, felt: 0.008, level: 0.18, opacity: 0.51, grain: 7, nib: 8 },
+    { seed: 131, angle: -0.55, start: -4, end: -10, y: -2, thickness: 1.07, speed: 1.09, pressure: 1.03, roughness: 0.62, pitch: 685, felt: 0.01, level: 0.185, opacity: 0.55, grain: 2, nib: 9 },
+    { seed: 149, angle: 0.18, start: -10, end: -6, y: 1, thickness: 0.95, speed: 0.97, pressure: 0.96, roughness: 0.51, pitch: 740, felt: 0.007, level: 0.176, opacity: 0.5, grain: 9, nib: 7 },
+    { seed: 167, angle: -1.2, start: -7, end: -8, y: 2, thickness: 1.11, speed: 1.14, pressure: 1.05, roughness: 0.68, pitch: 815, felt: 0.01, level: 0.19, opacity: 0.56, grain: 5, nib: 10 },
+    { seed: 191, angle: 0.62, start: -9, end: -4, y: -1, thickness: 1, speed: 1.03, pressure: 1, roughness: 0.57, pitch: 675, felt: 0.009, level: 0.182, opacity: 0.53, grain: 0, nib: 8 },
   ];
 
   const renderInterfaceSound = (kind, options = {}) => {
@@ -555,7 +573,7 @@
     "study-close": 180,
     "question-shift": 420,
     "coherence-shift": 260,
-    highlighter: 96,
+    highlighter: 170,
   };
 
   const playInterfaceSound = (kind, options = {}) => {
@@ -1334,7 +1352,7 @@
     const profile = highlighterProfiles[variant];
     const visualWidth = button.getBoundingClientRect?.().width || 64;
     const duration = Math.round(
-      Math.max(150, Math.min(285, (112 + visualWidth * 1.35) * (profile.speed || 1))),
+      Math.max(215, Math.min(420, (165 + visualWidth * 1.55) * (profile.speed || 1))),
     );
     button.style.setProperty("--stroke-angle", `${profile.angle}deg`);
     button.style.setProperty("--stroke-start", `${profile.start}px`);
@@ -1342,6 +1360,13 @@
     button.style.setProperty("--stroke-y", `${profile.y}px`);
     button.style.setProperty("--stroke-thickness", String(profile.thickness));
     button.style.setProperty("--stroke-duration", `${duration}ms`);
+    button.style.setProperty("--stroke-opacity", String(profile.opacity || 0.53));
+    button.style.setProperty("--stroke-grain-shift", `${profile.grain || 0}px`);
+    button.style.setProperty("--stroke-nib-width", `${profile.nib || 8}px`);
+    button.style.setProperty(
+      "--stroke-distance",
+      `${Math.max(24, visualWidth - profile.start - profile.end - (profile.nib || 8))}px`,
+    );
     button.classList.remove("is-highlight-sweeping");
     void button.offsetWidth;
     button.classList.add("is-highlight-sweeping");

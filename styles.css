@@ -5447,7 +5447,7 @@ body.contact-dialog-open { overflow: hidden; }
 .term-hotspot,
 .term-hotspot[data-category="b"],
 .term-hotspot[data-category="c"] {
-  --marker-stroke: rgba(129, 66, 95, 0.42);
+  --marker-stroke: rgba(166, 101, 139, 0.48);
   background: transparent;
   border-radius: 0;
   box-shadow: inset 0 -1px rgba(129, 66, 95, 0.66);
@@ -5458,12 +5458,12 @@ body.contact-dialog-open { overflow: hidden; }
 }
 
 .term-hotspot[data-category="b"] {
-  --marker-stroke: rgba(49, 100, 122, 0.4);
+  --marker-stroke: rgba(72, 125, 143, 0.46);
   box-shadow: inset 0 -1px rgba(49, 100, 122, 0.68);
 }
 
 .term-hotspot[data-category="c"] {
-  --marker-stroke: rgba(155, 108, 55, 0.37);
+  --marker-stroke: rgba(178, 134, 76, 0.44);
   box-shadow: inset 0 -1px rgba(155, 108, 55, 0.62);
 }
 
@@ -5496,43 +5496,97 @@ body.contact-dialog-open { overflow: hidden; }
   box-shadow: inset 0 -2px color-mix(in srgb, var(--marker-stroke) 96%, transparent);
 }
 
-.term-hotspot.is-highlight-sweeping::before { opacity: 0; }
+.term-hotspot.is-highlight-sweeping::before {
+  top: calc(-14% + var(--stroke-y, 0px));
+  right: auto;
+  bottom: calc(-16% - var(--stroke-y, 0px));
+  left: var(--stroke-start, -6px);
+  width: var(--stroke-nib-width, 8px);
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      color-mix(in srgb, var(--marker-stroke) 42%, transparent) 34%,
+      color-mix(in srgb, var(--marker-stroke) 78%, transparent) 66%,
+      transparent 100%
+    );
+  border: 0;
+  opacity: 0;
+  filter: saturate(0.76) blur(0.35px);
+  transform-origin: center;
+  animation: humanHighlighterNib var(--stroke-duration, 270ms) cubic-bezier(0.2, 0.7, 0.26, 1) both;
+}
 
 .term-hotspot::after {
-  top: calc(-18% + var(--stroke-y, 0px));
-  right: var(--stroke-end, -5px);
-  bottom: calc(-20% - var(--stroke-y, 0px));
-  left: var(--stroke-start, -5px);
+  top: calc(-23% + var(--stroke-y, 0px));
+  right: var(--stroke-end, -6px);
+  bottom: calc(-25% - var(--stroke-y, 0px));
+  left: var(--stroke-start, -6px);
   opacity: 0;
   background:
-    linear-gradient(180deg, transparent 0 8%, var(--marker-stroke) 17% 82%, transparent 94% 100%);
-  border-radius: 0;
-  clip-path: polygon(0 22%, 4% 8%, 13% 14%, 25% 4%, 38% 12%, 51% 3%, 66% 11%, 79% 5%, 93% 13%, 100% 4%, 99% 84%, 87% 94%, 74% 86%, 59% 96%, 44% 87%, 30% 95%, 15% 86%, 2% 94%);
-  filter: saturate(1.08);
+    linear-gradient(
+      180deg,
+      transparent 0 7%,
+      color-mix(in srgb, var(--marker-stroke) 54%, transparent) 13%,
+      var(--marker-stroke) 23%,
+      color-mix(in srgb, var(--marker-stroke) 94%, transparent) 72%,
+      color-mix(in srgb, var(--marker-stroke) 62%, transparent) 87%,
+      transparent 96% 100%
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.08) 0 1px,
+      transparent 1px 4px,
+      rgba(44, 34, 39, 0.025) 4px 5px,
+      transparent 5px 9px
+    ),
+    radial-gradient(ellipse at 18% 54%, rgba(255, 255, 255, 0.12), transparent 34%);
+  background-position: 0 0, var(--stroke-grain-shift, 0px) 0, 0 0;
+  background-size: 100% 100%, 11px 100%, 100% 100%;
+  background-blend-mode: normal, soft-light, multiply;
+  border-radius: 12% 5% 9% 7% / 18% 13% 21% 15%;
+  box-shadow:
+    inset 0 1px color-mix(in srgb, var(--marker-stroke) 30%, transparent),
+    inset 0 -1px color-mix(in srgb, var(--marker-stroke) 22%, transparent);
+  clip-path: polygon(0 20%, 5% 10%, 17% 13%, 31% 7%, 46% 12%, 61% 8%, 76% 14%, 90% 9%, 100% 15%, 99% 84%, 88% 91%, 73% 87%, 58% 94%, 43% 88%, 28% 93%, 13% 87%, 1% 92%);
+  filter: saturate(0.78) contrast(0.95) blur(0.12px);
   transform: rotate(var(--stroke-angle, 0deg)) scaleX(0) scaleY(var(--stroke-thickness, 1));
   transition: opacity 160ms ease;
 }
 
 .term-hotspot.is-highlight-sweeping::after {
-  opacity: 0.62;
-  animation: humanHighlighterStroke var(--stroke-duration, 190ms) cubic-bezier(0.12, 0.7, 0.23, 1) both;
+  opacity: var(--stroke-opacity, 0.53);
+  animation: humanHighlighterStroke var(--stroke-duration, 270ms) cubic-bezier(0.18, 0.72, 0.24, 1) both;
 }
 
 @keyframes humanHighlighterStroke {
   0% {
-    opacity: 0.18;
-    transform: rotate(var(--stroke-angle, 0deg)) scaleX(0) scaleY(calc(var(--stroke-thickness, 1) * 0.92));
+    opacity: 0.08;
+    transform: rotate(var(--stroke-angle, 0deg)) scaleX(0) scaleY(calc(var(--stroke-thickness, 1) * 0.9));
   }
-  14% { opacity: 0.78; }
-  44% {
-    transform: rotate(calc(var(--stroke-angle, 0deg) + 0.12deg)) scaleX(0.46) scaleY(var(--stroke-thickness, 1));
+  12% { opacity: 0.46; }
+  36% {
+    transform: rotate(calc(var(--stroke-angle, 0deg) + 0.08deg)) scaleX(0.33) scaleY(calc(var(--stroke-thickness, 1) * 0.98));
   }
-  72% {
-    transform: rotate(calc(var(--stroke-angle, 0deg) - 0.08deg)) scaleX(0.76) scaleY(calc(var(--stroke-thickness, 1) * 1.04));
+  68% {
+    transform: rotate(calc(var(--stroke-angle, 0deg) - 0.06deg)) scaleX(0.7) scaleY(calc(var(--stroke-thickness, 1) * 1.025));
   }
   100% {
-    opacity: 0.61;
+    opacity: var(--stroke-opacity, 0.53);
     transform: rotate(var(--stroke-angle, 0deg)) scaleX(1) scaleY(var(--stroke-thickness, 1));
+  }
+}
+
+@keyframes humanHighlighterNib {
+  0% {
+    opacity: 0;
+    transform: translateX(0) rotate(var(--stroke-angle, 0deg)) scaleY(0.88);
+  }
+  9% { opacity: 0.32; }
+  78% { opacity: 0.22; }
+  100% {
+    opacity: 0;
+    transform: translateX(var(--stroke-distance, 64px)) rotate(var(--stroke-angle, 0deg)) scaleY(1.02);
   }
 }
 
@@ -5702,6 +5756,7 @@ body.contact-dialog-open { overflow: hidden; }
 @media (prefers-reduced-motion: reduce) {
   .hero h1 a[data-hero-question-link]:hover .hero-question-line,
   .hero h1 a[data-hero-question-link]:focus-visible .hero-question-line,
+  .term-hotspot.is-highlight-sweeping::before,
   .term-hotspot.is-highlight-sweeping::after,
   .operative-cue {
     animation: none;
