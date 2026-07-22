@@ -351,111 +351,20 @@
     source.stop(startsAt + duration + 0.015);
   };
 
-  const scheduleMarkerFoley = (profile = {}) => {
-    if (
-      !audioContext
-      || !masterGain
-      || audioContext.state !== "running"
-      || typeof audioContext.createBufferSource !== "function"
-    ) return;
-
-    const duration = Math.max(0.19, Math.min(Number(profile.duration || 270) / 1000, 0.44));
-    const sampleRate = audioContext.sampleRate || 48000;
-    const length = Math.max(1, Math.round(sampleRate * duration));
-    const buffer = audioContext.createBuffer(1, length, sampleRate);
-    const samples = buffer.getChannelData(0);
-    const pressure = Number(profile.pressure || 1);
-    const roughness = Number(profile.roughness || 0.6);
-    const feltLevel = Number(profile.felt || 0.009);
-    const basePitch = Number(profile.pitch || 760);
-    let seed = Number(profile.seed || 173) + 1;
-    let paperBody = 0;
-    let paperFiber = 0;
-
-    for (let index = 0; index < length; index += 1) {
-      const time = index / sampleRate;
-      const progress = index / Math.max(1, length - 1);
-      seed = (seed * 16807) % 2147483647;
-      const white = (seed / 2147483647) * 2 - 1;
-      paperBody = paperBody * 0.925 + white * 0.075;
-      paperFiber = paperFiber * (0.69 - roughness * 0.08)
-        + white * (0.31 + roughness * 0.08);
-
-      const pressureWave = 0.86
-        + Math.sin(progress * Math.PI * 2.35 + Number(profile.seed || 0) * 0.05) * 0.075
-        + Math.sin(progress * Math.PI * 8.4) * 0.025;
-      const attack = Math.min(1, progress / 0.09);
-      const release = Math.min(1, (1 - progress) / 0.13);
-      const contactEnvelope = Math.sin(Math.min(1, progress) * Math.PI) ** 0.16;
-      const envelope = Math.max(0, attack * release * contactEnvelope) * pressureWave * pressure;
-      const pitch = basePitch + Math.sin(progress * Math.PI * 2.1) * 54;
-      const feltResonance = Math.sin(2 * Math.PI * pitch * time) * feltLevel;
-      const paperGrain = paperBody * 0.82 + paperFiber * (0.27 + roughness * 0.13);
-      const landing = progress < 0.018
-        ? paperBody * (1 - progress / 0.018) * 0.035
-        : 0;
-      const lift = progress > 0.985
-        ? paperBody * ((progress - 0.985) / 0.015) * 0.018
-        : 0;
-      samples[index] = (paperGrain + feltResonance) * envelope + landing + lift;
-    }
-
-    const startsAt = audioContext.currentTime + 0.008;
-    const source = audioContext.createBufferSource();
-    const highpass = audioContext.createBiquadFilter();
-    const lowpass = audioContext.createBiquadFilter();
-    const paperWarmth = audioContext.createBiquadFilter();
-    const envelope = audioContext.createGain();
-    source.buffer = buffer;
-    highpass.type = "highpass";
-    highpass.frequency.setValueAtTime(105 + roughness * 30, startsAt);
-    highpass.Q.setValueAtTime(0.36, startsAt);
-    lowpass.type = "lowpass";
-    lowpass.frequency.setValueAtTime(2850 + pressure * 380, startsAt);
-    lowpass.frequency.linearRampToValueAtTime(2500 + pressure * 320, startsAt + duration);
-    lowpass.Q.setValueAtTime(0.32, startsAt);
-    paperWarmth.type = "peaking";
-    paperWarmth.frequency.setValueAtTime(690 + roughness * 110, startsAt);
-    paperWarmth.Q.setValueAtTime(0.62, startsAt);
-    paperWarmth.gain.setValueAtTime(2.4, startsAt);
-    const level = Math.max(0.13, Math.min(Number(profile.level || 0.18), 0.23));
-    envelope.gain.setValueAtTime(0.0001, startsAt);
-    envelope.gain.linearRampToValueAtTime(level, startsAt + Math.min(0.026, duration * 0.12));
-    envelope.gain.setValueAtTime(level * 0.94, startsAt + Math.max(0.03, duration - 0.055));
-    envelope.gain.linearRampToValueAtTime(0.0001, startsAt + duration + 0.018);
-    source.connect(highpass);
-    highpass.connect(lowpass);
-    lowpass.connect(paperWarmth);
-    paperWarmth.connect(envelope);
-    envelope.connect(masterGain);
-    source.start(startsAt);
-    source.stop(startsAt + duration + 0.025);
-  };
-
   const highlighterProfiles = [
-    { seed: 19, angle: -0.7, start: -7, end: -5, y: -1, thickness: 1.04, speed: 0.98, pressure: 1.01, roughness: 0.58, pitch: 710, felt: 0.009, level: 0.185, opacity: 0.54, grain: 3, nib: 8 },
-    { seed: 37, angle: 0.45, start: -5, end: -8, y: 1, thickness: 0.96, speed: 1.06, pressure: 0.95, roughness: 0.49, pitch: 790, felt: 0.007, level: 0.175, opacity: 0.49, grain: 6, nib: 7 },
-    { seed: 53, angle: -1.05, start: -9, end: -4, y: 0, thickness: 1.1, speed: 0.92, pressure: 1.07, roughness: 0.67, pitch: 660, felt: 0.011, level: 0.19, opacity: 0.57, grain: 1, nib: 9 },
-    { seed: 71, angle: 0.8, start: -4, end: -9, y: -1, thickness: 0.93, speed: 1.11, pressure: 0.92, roughness: 0.44, pitch: 835, felt: 0.006, level: 0.17, opacity: 0.47, grain: 8, nib: 7 },
-    { seed: 89, angle: -0.25, start: -8, end: -7, y: 2, thickness: 1.12, speed: 1.01, pressure: 1.08, roughness: 0.7, pitch: 640, felt: 0.012, level: 0.195, opacity: 0.58, grain: 4, nib: 10 },
-    { seed: 107, angle: 1.1, start: -6, end: -5, y: 0, thickness: 0.98, speed: 0.95, pressure: 0.98, roughness: 0.54, pitch: 765, felt: 0.008, level: 0.18, opacity: 0.51, grain: 7, nib: 8 },
-    { seed: 131, angle: -0.55, start: -4, end: -10, y: -2, thickness: 1.07, speed: 1.09, pressure: 1.03, roughness: 0.62, pitch: 685, felt: 0.01, level: 0.185, opacity: 0.55, grain: 2, nib: 9 },
-    { seed: 149, angle: 0.18, start: -10, end: -6, y: 1, thickness: 0.95, speed: 0.97, pressure: 0.96, roughness: 0.51, pitch: 740, felt: 0.007, level: 0.176, opacity: 0.5, grain: 9, nib: 7 },
-    { seed: 167, angle: -1.2, start: -7, end: -8, y: 2, thickness: 1.11, speed: 1.14, pressure: 1.05, roughness: 0.68, pitch: 815, felt: 0.01, level: 0.19, opacity: 0.56, grain: 5, nib: 10 },
-    { seed: 191, angle: 0.62, start: -9, end: -4, y: -1, thickness: 1, speed: 1.03, pressure: 1, roughness: 0.57, pitch: 675, felt: 0.009, level: 0.182, opacity: 0.53, grain: 0, nib: 8 },
+    { angle: -0.7, start: -7, end: -5, y: -1, thickness: 1.04, speed: 0.98, opacity: 0.54, grain: 3, nib: 8 },
+    { angle: 0.45, start: -5, end: -8, y: 1, thickness: 0.96, speed: 1.06, opacity: 0.49, grain: 6, nib: 7 },
+    { angle: -1.05, start: -9, end: -4, y: 0, thickness: 1.1, speed: 0.92, opacity: 0.57, grain: 1, nib: 9 },
+    { angle: 0.8, start: -4, end: -9, y: -1, thickness: 0.93, speed: 1.11, opacity: 0.47, grain: 8, nib: 7 },
+    { angle: -0.25, start: -8, end: -7, y: 2, thickness: 1.12, speed: 1.01, opacity: 0.58, grain: 4, nib: 10 },
+    { angle: 1.1, start: -6, end: -5, y: 0, thickness: 0.98, speed: 0.95, opacity: 0.51, grain: 7, nib: 8 },
+    { angle: -0.55, start: -4, end: -10, y: -2, thickness: 1.07, speed: 1.09, opacity: 0.55, grain: 2, nib: 9 },
+    { angle: 0.18, start: -10, end: -6, y: 1, thickness: 0.95, speed: 0.97, opacity: 0.5, grain: 9, nib: 7 },
+    { angle: -1.2, start: -7, end: -8, y: 2, thickness: 1.11, speed: 1.14, opacity: 0.56, grain: 5, nib: 10 },
+    { angle: 0.62, start: -9, end: -4, y: -1, thickness: 1, speed: 1.03, opacity: 0.53, grain: 0, nib: 8 },
   ];
 
   const renderInterfaceSound = (kind, options = {}) => {
-    if (kind === "highlighter") {
-      const profile = highlighterProfiles[Number(options.variant) % highlighterProfiles.length]
-        || highlighterProfiles[0];
-      scheduleMarkerFoley({
-        ...profile,
-        duration: Number(options.duration) || profile.duration,
-      });
-      return;
-    }
-
     if (kind === "hover") {
       scheduleTone({ frequency: 610, endFrequency: 690, duration: 0.052, level: 0.105, type: "triangle" });
       return;
@@ -573,7 +482,6 @@
     "study-close": 180,
     "question-shift": 420,
     "coherence-shift": 260,
-    highlighter: 170,
   };
 
   const playInterfaceSound = (kind, options = {}) => {
@@ -1342,7 +1250,7 @@
     return variant;
   };
 
-  const sweepHighlighter = (button, { sound = true } = {}) => {
+  const sweepHighlighter = (button) => {
     if (!button || reducedMotion) return;
     const now = window.performance?.now?.() ?? Date.now();
     const previous = Number(button.dataset.lastHighlighterAt || 0);
@@ -1370,7 +1278,6 @@
     button.classList.remove("is-highlight-sweeping");
     void button.offsetWidth;
     button.classList.add("is-highlight-sweeping");
-    if (sound) playInterfaceSound("highlighter", { variant, duration });
   };
 
   const attachHotspotEvents = (container) => {

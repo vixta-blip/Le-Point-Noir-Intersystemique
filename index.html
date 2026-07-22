@@ -95,7 +95,7 @@
   <body>
     <a class="skip-link" href="#contenu">Aller au contenu</a>
 
-    <header class="site-header" data-header>
+    <header class="site-header" data-header aria-label="En-tête du site">
       <div class="reading-progress" aria-hidden="true">
         <span data-reading-progress></span>
       </div>
@@ -191,7 +191,6 @@
               <div class="shelf-light" aria-hidden="true"></div>
               <ul
                 class="book-shelf-row"
-                aria-label="Livres publiés"
                 data-book-row
               >
                 <li
@@ -239,7 +238,7 @@
             <p class="visually-hidden" aria-live="polite" data-book-status></p>
           </div>
 
-          <ul class="hero-facts" aria-label="Caractéristiques du livre">
+          <ul class="hero-facts">
             <li><strong>88 pages</strong><span>texte continu</span></li>
             <li><strong>Relié</strong><span>papier crème</span></li>
             <li><strong>Volume I</strong><span>lecture autonome</span></li>
@@ -403,7 +402,7 @@
           </div>
 
           <div class="excerpt-workbench reveal" data-excerpt-workbench>
-            <div
+            <section
               class="excerpt-viewer"
               data-excerpt-viewer
               aria-label="Feuilleteur de l’extrait, pages 13 à 19"
@@ -418,7 +417,7 @@
                   alt="Page 13 du livre Le Point Noir Intersystémique"
                   data-excerpt-image
                 />
-                <div class="term-hotspots" data-term-hotspots aria-label="Termes repérés sur la page"></div>
+                <div class="term-hotspots" data-term-hotspots role="group" aria-label="Termes repérés sur la page"></div>
                 <span class="excerpt-label" data-excerpt-label>EXTRAIT · P. 13</span>
               </div>
 
@@ -461,9 +460,9 @@
                 <span data-study-open-label>Activer la lecture opérative</span>
                 <span aria-hidden="true">↗</span>
               </button>
-            </div>
+            </section>
 
-            <aside class="operative-panel" data-operative-panel aria-label="Application du dictionnaire opératif" aria-hidden="true"></aside>
+            <aside class="operative-panel" data-operative-panel aria-label="Fiche opérative de l’extrait" aria-hidden="true"></aside>
           </div>
         </div>
       </section>
@@ -767,7 +766,7 @@
             </summary>
 
             <div class="analysis-body">
-              <ul class="document-map" aria-label="Les trois niveaux documentaires">
+              <ul class="document-map">
                 <li>
                   <p class="document-type">LE LIVRE</p>
                   <h3>Le mouvement du texte</h3>
@@ -844,7 +843,7 @@
                 </details>
               </div>
 
-              <aside class="analysis-caveat">
+              <aside class="analysis-caveat" aria-label="Portée de la proposition">
                 <div>
                   <p class="analysis-index">COHÉRENCE INTERNE ET PORTÉE</p>
                   <h3>Une proposition, un vocabulaire, un mouvement.</h3>
@@ -948,7 +947,7 @@
 
     <dialog class="study-dialog" data-study-dialog aria-labelledby="study-dialog-title">
       <div class="study-dialog-inner">
-        <header class="study-dialog-header">
+        <div class="study-dialog-header">
           <div>
             <p>LECTURE OPÉRATIVE</p>
             <h2 id="study-dialog-title">Page <span data-study-page-number>13</span></h2>
@@ -962,9 +961,9 @@
             <span>Fermer</span>
             <span aria-hidden="true">×</span>
           </button>
-        </header>
+        </div>
         <div class="study-dialog-body">
-          <div class="study-page-scroll" tabindex="0" aria-label="Page agrandie, faites défiler la page pour lire et sélectionner un terme">
+          <section class="study-page-scroll" tabindex="0" aria-label="Page agrandie, faites défiler la page pour lire et sélectionner un terme">
             <div class="study-page" data-study-page-surface>
               <img
                 src="assets/extrait-page-13.webp"
@@ -973,15 +972,15 @@
                 alt="Page 13 du livre Le Point Noir Intersystémique, mode d’étude"
                 data-study-image
               />
-              <div class="term-hotspots term-hotspots--study" data-study-hotspots aria-label="Termes repérés sur la page agrandie"></div>
+              <div class="term-hotspots term-hotspots--study" data-study-hotspots role="group" aria-label="Termes repérés sur la page agrandie"></div>
             </div>
-          </div>
+          </section>
           <div class="study-sheet" data-study-sheet>
             <button class="study-sheet-toggle" type="button" data-study-sheet-toggle aria-expanded="true">
               <span>Fiche du terme sélectionné</span>
               <span aria-hidden="true">↓</span>
             </button>
-            <aside class="operative-panel operative-panel--dialog" data-operative-panel aria-label="Application du dictionnaire opératif"></aside>
+            <aside class="operative-panel operative-panel--dialog" data-operative-panel aria-label="Fiche opérative de la page agrandie"></aside>
           </div>
         </div>
       </div>
@@ -989,7 +988,7 @@
 
     <dialog class="thread-dialog" data-thread-dialog aria-labelledby="thread-dialog-title">
       <div class="thread-dialog-inner">
-        <header class="thread-dialog-header">
+        <div class="thread-dialog-header">
           <div>
             <p>CONTINUITÉ D’USAGE · PAGES 13 À 19</p>
             <h2 id="thread-dialog-title">Suivre un terme dans l’extrait</h2>
@@ -1002,14 +1001,14 @@
             <span>Fermer</span>
             <span aria-hidden="true">×</span>
           </button>
-        </header>
+        </div>
         <div class="thread-dialog-body" data-thread-body></div>
       </div>
     </dialog>
 
     <dialog class="contact-dialog" data-contact-dialog aria-labelledby="contact-dialog-title">
       <div class="contact-dialog-inner">
-        <header class="contact-dialog-header">
+        <div class="contact-dialog-header">
           <div>
             <p>ÉCRIRE À VIXTA</p>
             <h2 id="contact-dialog-title">Envoyer un message depuis le site.</h2>
@@ -1017,7 +1016,7 @@
           <button class="contact-dialog-close" type="button" data-contact-close aria-label="Fermer le formulaire">
             <span>Fermer</span><span aria-hidden="true">×</span>
           </button>
-        </header>
+        </div>
         <form
           class="contact-form"
           action="https://formsubmit.co/ajax/sekaii.philo@gmail.com"
@@ -1049,8 +1048,8 @@
           </label>
           <div class="contact-form-footer contact-form-wide">
             <p>
-              Les informations saisies sont transmises à l’auteur par le service
-              d’acheminement du formulaire. Elles ne sont pas publiées sur le site.
+              Les informations saisies sont transmises à l’auteur par FormSubmit.
+              Elles ne sont pas publiées sur le site.
             </p>
             <button class="button button-primary" type="submit" data-contact-submit>
               Envoyer le message <span aria-hidden="true">→</span>
@@ -1092,6 +1091,6 @@
     <script src="collection.js?v=20260718-8"></script>
     <script src="excerpt-study-data.js?v=20260718-1"></script>
     <script src="excerpt-occurrence-contexts.js?v=20260721-1"></script>
-    <script src="script.js?v=20260722-3"></script>
+    <script src="script.js?v=20260722-4"></script>
   </body>
 </html>
