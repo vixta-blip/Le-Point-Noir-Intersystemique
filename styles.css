@@ -1993,71 +1993,6 @@ body.study-dialog-open {
   line-height: 1.65;
 }
 
-.glossary-list {
-  overflow: hidden;
-  background: rgba(255, 255, 255, 0.68);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-medium);
-}
-
-.term-card + .term-card {
-  border-top: 1px solid var(--line);
-}
-
-.term-card summary {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 30px;
-  align-items: center;
-  gap: 1.5rem;
-  min-height: 98px;
-  padding: 1.25rem 1.35rem;
-  cursor: pointer;
-  list-style: none;
-}
-
-.term-card summary > span {
-  display: grid;
-  gap: 0.22rem;
-}
-
-.term-card summary strong {
-  font-size: 1rem;
-  font-weight: 700;
-}
-
-.term-card summary small {
-  color: var(--slate);
-  font-family: "SourceSerifPN", Georgia, serif;
-  font-size: 0.92rem;
-}
-
-.term-answer {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1rem;
-  padding: 0 1.35rem 1.35rem;
-  animation: detailReveal 220ms ease both;
-}
-
-.term-answer p {
-  margin: 0;
-  padding: 1rem;
-  color: var(--slate);
-  background: var(--paper-raised);
-  border: 1px solid rgba(23, 28, 34, 0.08);
-  border-radius: var(--radius-small);
-  font-family: "SourceSerifPN", Georgia, serif;
-  font-size: 0.92rem;
-  line-height: 1.58;
-}
-
-.term-answer strong {
-  color: var(--ink);
-  font-family: "InterPN", Arial, sans-serif;
-  font-size: 0.7rem;
-  letter-spacing: 0.03em;
-}
-
 /* Documents associés */
 
 .analysis {
@@ -2741,9 +2676,6 @@ body.study-dialog-open {
     min-height: 570px;
   }
 
-  .term-answer {
-    grid-template-columns: 1fr;
-  }
 }
 
 @media (max-width: 940px) {
@@ -3186,19 +3118,6 @@ body.study-dialog-open {
     grid-template-columns: 1fr;
   }
 
-  .glossary-list {
-    border-radius: 16px;
-  }
-
-  .term-card summary {
-    min-height: 86px;
-    padding: 1rem;
-  }
-
-  .term-answer {
-    padding: 0 1rem 1rem;
-  }
-
   .qr-notice {
     grid-template-columns: 58px minmax(0, 1fr);
     padding: 1rem;
@@ -3609,14 +3528,6 @@ body.study-dialog-open {
   background: rgba(129, 66, 95, 0.07);
   border-radius: 14px;
   text-align: center;
-}
-
-.term-answer {
-  grid-template-columns: 1fr;
-}
-
-.term-answer p {
-  font-size: 0.98rem;
 }
 
 .progressive-word {
@@ -4447,32 +4358,82 @@ body.thread-dialog-open {
 }
 
 .term-card summary {
-  min-height: 104px;
-  padding: 1.25rem 0;
+  display: grid;
+  grid-template-columns: 2px minmax(0, 1fr) 30px;
+  align-items: center;
+  gap: clamp(1rem, 2.5vw, 1.75rem);
+  min-height: 94px;
+  padding: 1.15rem 0;
+  cursor: pointer;
+  list-style: none;
+  transition:
+    color 180ms ease,
+    padding-left 280ms cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 180ms ease;
+}
+
+.term-card summary::before {
+  width: 2px;
+  height: 0;
+  justify-self: start;
+  background: linear-gradient(180deg, var(--plum), var(--blue));
+  border-radius: 999px;
+  content: "";
+  transition: height 320ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.term-card summary > span {
+  display: grid;
+  grid-template-columns: minmax(145px, 0.34fr) minmax(0, 1fr);
+  align-items: baseline;
+  gap: clamp(1rem, 3vw, 2.4rem);
+}
+
+.term-card summary:hover,
+.term-card summary:focus-visible,
+.term-card[open] summary {
+  padding-left: 0.65rem;
+  background: linear-gradient(90deg, rgba(129, 66, 95, 0.055), transparent 78%);
+}
+
+.term-card summary:hover::before,
+.term-card summary:focus-visible::before,
+.term-card[open] summary::before {
+  height: 60%;
 }
 
 .term-card summary strong {
-  font-family: "SourceSerifPN", Georgia, serif;
-  font-size: clamp(1.55rem, 2.7vw, 2.25rem);
+  color: var(--ink);
+  font-family: "InterPN", Arial, sans-serif;
+  font-size: clamp(1.15rem, 1.8vw, 1.4rem);
   font-weight: 600;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.025em;
+  transition: color 180ms ease;
 }
 
 .term-card summary small {
-  max-width: 690px;
+  max-width: 700px;
   color: var(--slate);
-  font-size: 0.96rem;
+  font-family: "SourceSerifPN", Georgia, serif;
+  font-size: 0.98rem;
+  font-style: normal;
   line-height: 1.5;
+}
+
+.term-card summary:hover strong,
+.term-card summary:focus-visible strong,
+.term-card[open] summary strong {
+  color: var(--plum-dark);
 }
 
 .term-answer {
   display: block;
   padding: 0 0 clamp(1.6rem, 4vw, 2.7rem);
-  animation: glossaryUnfold 620ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: glossaryUnfold 460ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 @keyframes glossaryUnfold {
-  from { opacity: 0; clip-path: inset(0 0 100% 0); transform: translateY(-12px); }
+  from { opacity: 0; clip-path: inset(0 0 100% 0); transform: translateY(-8px); }
   to { opacity: 1; clip-path: inset(0 0 0 0); transform: translateY(0); }
 }
 
@@ -4517,9 +4478,43 @@ body.thread-dialog-open {
   border-left: 3px solid var(--plum);
 }
 
+.term-excerpt-link {
+  display: inline-flex;
+  width: min(100%, 850px);
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.2rem;
+  margin: 0.25rem 0 0.65rem;
+  padding: 0.8rem 0;
+  color: var(--plum-dark);
+  border-bottom: 1px solid var(--line);
+  font-family: "InterPN", Arial, sans-serif;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.035em;
+  line-height: 1.4;
+  text-decoration: none;
+  transition: color 180ms ease;
+}
+
+.term-excerpt-link span:last-child {
+  color: var(--plum);
+  font-size: 1rem;
+  transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.term-excerpt-link:hover,
+.term-excerpt-link:focus-visible {
+  color: var(--ink);
+}
+
+.term-excerpt-link:hover span:last-child,
+.term-excerpt-link:focus-visible span:last-child {
+  transform: translateX(4px);
+}
+
 .term-vigilance {
-  margin-top: 0.45rem;
-  border-top: 1px solid var(--line);
+  margin-top: 0.2rem;
   border-bottom: 1px solid var(--line);
 }
 
@@ -4862,7 +4857,21 @@ body.contact-dialog-open { overflow: hidden; }
   .coherence-gap > i::before { top: 0; }
   .coherence-gap > i::after { right: auto; bottom: 0; }
 
-  .term-card summary { padding-inline: 0; }
+  .term-card summary,
+  .term-card summary:hover,
+  .term-card summary:focus-visible,
+  .term-card[open] summary {
+    min-height: 90px;
+    gap: 0.85rem;
+    padding: 1rem 0;
+  }
+
+  .term-card summary > span {
+    grid-template-columns: 1fr;
+    gap: 0.22rem;
+  }
+
+  .term-card summary small { font-size: 0.93rem; }
 
   .term-comparison {
     grid-template-columns: 1fr;
@@ -4876,6 +4885,11 @@ body.contact-dialog-open { overflow: hidden; }
   }
 
   .term-difference { padding-left: 0.9rem; }
+
+  .term-excerpt-link {
+    width: 100%;
+    font-size: 0.72rem;
+  }
 
   .contact-dialog {
     width: 100vw;
@@ -5267,62 +5281,6 @@ body.contact-dialog-open { overflow: hidden; }
   line-height: 1.35;
 }
 
-.term-card summary {
-  min-height: 82px;
-  padding: 1rem 0;
-  transition: padding-left 280ms cubic-bezier(0.16, 1, 0.3, 1), color 180ms ease;
-}
-
-.term-card summary::before {
-  align-self: stretch;
-  width: 2px;
-  height: 0;
-  justify-self: start;
-  background: linear-gradient(180deg, var(--plum), var(--blue));
-  border-radius: 999px;
-  content: "";
-  transition: height 320ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.term-card summary {
-  grid-template-columns: 2px minmax(0, 1fr) 30px;
-}
-
-.term-card summary:hover,
-.term-card summary:focus-visible,
-.term-card[open] summary {
-  padding-left: 0.65rem;
-}
-
-.term-card summary:hover::before,
-.term-card summary:focus-visible::before,
-.term-card[open] summary::before {
-  height: 60%;
-  align-self: center;
-}
-
-.term-card summary strong {
-  color: var(--ink);
-  font-family: "InterPN", Arial, sans-serif;
-  font-size: clamp(1.08rem, 1.7vw, 1.32rem);
-  font-weight: 600;
-  letter-spacing: -0.025em;
-}
-
-.term-card summary small {
-  max-width: 660px;
-  font-family: "SourceSerifPN", Georgia, serif;
-  font-size: 0.91rem;
-  font-style: italic;
-  line-height: 1.45;
-}
-
-.term-card summary:hover strong,
-.term-card summary:focus-visible strong,
-.term-card[open] summary strong {
-  color: var(--plum-dark);
-}
-
 .contact-links { gap: 0.75rem; }
 
 .contact-card-email:hover {
@@ -5419,13 +5377,6 @@ body.contact-dialog-open { overflow: hidden; }
   .reading-note summary:focus-visible,
   .reading-note[open] summary {
     padding-left: 1rem;
-  }
-
-  .term-card summary,
-  .term-card summary:hover,
-  .term-card summary:focus-visible,
-  .term-card[open] summary {
-    padding-left: 0;
   }
 
   .contact-copy-status { grid-column: auto; }

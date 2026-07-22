@@ -105,12 +105,24 @@
 
   document.querySelectorAll("[data-accordion]").forEach((accordion) => {
     const items = [...accordion.querySelectorAll(":scope > details")];
+    const preserveMobilePosition = accordion.dataset.accordion === "glossary";
     items.forEach((details) => {
       details.addEventListener("toggle", () => {
         if (!details.open) return;
+        const shouldPreservePosition =
+          preserveMobilePosition && window.matchMedia("(max-width: 940px)").matches;
+        const topBefore = shouldPreservePosition ? details.getBoundingClientRect().top : 0;
         items.forEach((other) => {
           if (other !== details) other.open = false;
         });
+        if (shouldPreservePosition) {
+          window.requestAnimationFrame(() => {
+            const shift = details.getBoundingClientRect().top - topBefore;
+            if (Math.abs(shift) > 1) {
+              window.scrollBy({ top: shift, left: 0, behavior: "auto" });
+            }
+          });
+        }
       });
     });
   });
@@ -567,6 +579,7 @@
   const activationSoundFor = (control) => {
     if (!control || control.matches("[data-book-select]")) return null;
     if (control.matches("[data-contact-open], [data-contact-close], [data-copy-email]")) return null;
+    if (control.matches("[data-glossary-term-link]")) return null;
     if (control.matches("[data-hero-question-prev], [data-hero-question-next], [data-coherence-prev], [data-coherence-next]")) return null;
     if (control.matches("[data-term-hotspot], [data-term-select], [data-study-open], [data-study-close]")) {
       return null;
@@ -907,6 +920,7 @@
   const studyCloseButton = document.querySelector("[data-study-close]");
   const studyPreviousButton = document.querySelector("[data-study-prev]");
   const studyNextButton = document.querySelector("[data-study-next]");
+  const glossaryTermLinks = [...document.querySelectorAll("[data-glossary-term-link]")];
   const studyPageNumber = document.querySelector("[data-study-page-number]");
   const studyImage = document.querySelector("[data-study-image]");
   const studyHotspots = document.querySelector("[data-study-hotspots]");
@@ -1542,6 +1556,40 @@
   studyDesktopQuery?.addEventListener?.("change", handleStudyViewportChange);
   setDesktopStudyMode(false);
   if (studyOpenLabel && !studyDesktopQuery?.matches) studyOpenLabel.textContent = "Ouvrir la lecture opérative";
+
+  const focusTermHotspot = (container, termName) => {
+    const hotspot = [...(container?.querySelectorAll("[data-term-hotspot]") || [])]
+      .find((item) => item.dataset.term === termName);
+    hotspot?.focus?.({ preventScroll: true });
+  };
+
+  glossaryTermLinks.forEach((link) => {
+    link.addEventListener("click", (event) => {
+      const termName = link.dataset.term;
+      const firstOccurrence = pageOccurrencesForTerm(termName)[0];
+      const pageIndex = excerptPages.indexOf(firstOccurrence?.pageNumber);
+      if (pageIndex < 0) return;
+
+      event.preventDefault();
+      showExcerptPage(pageIndex);
+
+      if (studyDesktopQuery?.matches) {
+        setDesktopStudyMode(true);
+        selectExcerptTerm(termName, { revealSheet: true });
+        excerptWorkbench?.scrollIntoView({
+          behavior: reducedMotion ? "auto" : "smooth",
+          block: "start",
+        });
+        window.setTimeout(
+          () => focusTermHotspot(desktopHotspots, termName),
+          reducedMotion ? 0 : 520,
+        );
+      } else {
+        openStudyDialog();
+        selectExcerptTerm(termName, { revealSheet: true });
+      }
+    });
+  });
 
   threadCloseButton?.addEventListener("click", () => closeTermThread());
   threadTermSelect?.addEventListener("change", () => {
