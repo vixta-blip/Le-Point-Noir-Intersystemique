@@ -131,12 +131,13 @@
 
   const reducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
 
-  /* Reading notes: foreground disclosures that never reflow the question grid. */
+  /* Reading notes: a compact accordion that expands in the document flow. */
 
   const readingNotesRoot = document.querySelector("[data-reading-notes]");
   if (readingNotesRoot) {
     const notes = [...readingNotesRoot.querySelectorAll("[data-reading-note]")];
     const closeTimers = new WeakMap();
+    const closeHandlers = new WeakMap();
 
     const partsFor = (note) => ({
       trigger: note.querySelector("[data-reading-note-trigger]"),
@@ -148,13 +149,21 @@
       const timer = closeTimers.get(note);
       if (timer) window.clearTimeout(timer);
       closeTimers.delete(note);
+
+      const handler = closeHandlers.get(note);
+      const { panel } = partsFor(note);
+      if (handler && panel) panel.removeEventListener("transitionend", handler);
+      closeHandlers.delete(note);
     };
 
     const finishReadingNoteClose = (note) => {
       const { panel } = partsFor(note);
       clearCloseTimer(note);
       note.classList.remove("is-closing");
-      if (!note.classList.contains("is-open") && panel) panel.hidden = true;
+      if (!note.classList.contains("is-open") && panel) {
+        panel.hidden = true;
+        panel.style.removeProperty("--reading-note-panel-height");
+      }
     };
 
     const closeReadingNote = (note, { immediate = false, restoreFocus = false } = {}) => {
@@ -169,16 +178,17 @@
 
       if (immediate || reducedMotion) {
         panel.hidden = true;
+        panel.style.removeProperty("--reading-note-panel-height");
         note.classList.remove("is-closing");
       } else {
         note.classList.add("is-closing");
         const onTransitionEnd = (event) => {
-          if (event.target !== panel || event.propertyName !== "clip-path") return;
-          panel.removeEventListener("transitionend", onTransitionEnd);
+          if (event.target !== panel || event.propertyName !== "max-height") return;
           finishReadingNoteClose(note);
         };
+        closeHandlers.set(note, onTransitionEnd);
         panel.addEventListener("transitionend", onTransitionEnd);
-        closeTimers.set(note, window.setTimeout(() => finishReadingNoteClose(note), 680));
+        closeTimers.set(note, window.setTimeout(() => finishReadingNoteClose(note), 760));
       }
 
       if (restoreFocus) trigger.focus({ preventScroll: true });
@@ -189,12 +199,13 @@
       if (!trigger || !panel || note.classList.contains("is-open")) return;
 
       notes.forEach((other) => {
-        if (other !== note) closeReadingNote(other, { immediate: true });
+        if (other !== note) closeReadingNote(other);
       });
 
       clearCloseTimer(note);
       note.classList.remove("is-closing");
       panel.hidden = false;
+      panel.style.setProperty("--reading-note-panel-height", `${panel.scrollHeight}px`);
       trigger.setAttribute("aria-expanded", "true");
       if (label) label.textContent = "Replier";
 
@@ -216,16 +227,13 @@
       });
     });
 
-    readingNotesRoot.addEventListener("pointerdown", (event) => {
-      const openNote = readingNotesRoot.querySelector("[data-reading-note].is-open");
-      if (openNote && !openNote.contains(event.target)) closeReadingNote(openNote);
-    });
-
-    document.addEventListener("pointerdown", (event) => {
-      if (readingNotesRoot.contains(event.target)) return;
-      const openNote = readingNotesRoot.querySelector("[data-reading-note].is-open");
-      if (openNote) closeReadingNote(openNote);
-    });
+    window.addEventListener("resize", () => {
+      notes.forEach((note) => {
+        if (!note.classList.contains("is-open")) return;
+        const { panel } = partsFor(note);
+        if (panel) panel.style.setProperty("--reading-note-panel-height", `${panel.scrollHeight}px`);
+      });
+    }, { passive: true });
 
     document.addEventListener("keydown", (event) => {
       if (event.key !== "Escape") return;
