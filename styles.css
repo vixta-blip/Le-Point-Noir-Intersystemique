@@ -5821,7 +5821,7 @@ body.contact-dialog-open { overflow: hidden; }
 .reading-note summary {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 1.6rem;
+  grid-template-columns: minmax(0, 1fr) 3rem;
   align-items: center;
   gap: 0.75rem;
   min-height: 112px;
@@ -5885,7 +5885,8 @@ body.contact-dialog-open { overflow: hidden; }
   content: "";
 }
 
-/* One quiet arrow replaces every circular + control. */
+/* The disclosure controls borrow the material language of the hero CTA:
+   a compact plum capsule, a clear vertical arrow and a restrained lift. */
 
 .reading-note summary i,
 .term-card summary i,
@@ -5893,17 +5894,22 @@ body.contact-dialog-open { overflow: hidden; }
 .analysis-disclosure > summary i,
 .method-card summary i {
   display: grid;
-  width: 1.6rem;
-  height: 1.6rem;
+  width: 3rem;
+  height: 2.15rem;
   place-items: center;
   justify-self: end;
-  color: var(--plum-dark);
-  background: transparent;
+  color: var(--white);
+  background: var(--plum-dark);
   border: 0;
-  border-radius: 0;
+  border-radius: 999px;
+  box-shadow: 0 10px 24px rgba(65, 47, 55, 0.16);
   font-size: 0;
   transform: none;
-  transition: color 200ms ease, transform 320ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition:
+    color 180ms ease,
+    background-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 240ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .reading-note summary i::before,
@@ -5911,10 +5917,10 @@ body.contact-dialog-open { overflow: hidden; }
 .neighbor-item summary i::before,
 .analysis-disclosure > summary i::before,
 .method-card summary i::before {
-  content: "↘";
-  font-size: 0.95rem;
+  content: "↓";
+  font-size: 0.92rem;
   font-style: normal;
-  font-weight: 400;
+  font-weight: 600;
   line-height: 1;
 }
 
@@ -5928,10 +5934,11 @@ body.contact-dialog-open { overflow: hidden; }
 .analysis-disclosure > summary:focus-visible i,
 .method-card summary:hover i,
 .method-card summary:focus-visible i {
-  color: var(--blue);
-  background: transparent;
+  color: var(--white);
+  background: #583f4b;
   border: 0;
-  transform: translate(2px, 2px);
+  box-shadow: 0 14px 30px rgba(65, 47, 55, 0.24);
+  transform: translateY(-2px);
 }
 
 .reading-note[open] summary i,
@@ -5941,10 +5948,23 @@ body.contact-dialog-open { overflow: hidden; }
 .neighbor-item[open] summary i,
 .analysis-disclosure[open] > summary i,
 .method-card[open] summary i {
-  color: var(--plum-dark);
-  background: transparent;
+  color: var(--white);
+  background: var(--plum-dark);
   border: 0;
+  box-shadow: 0 10px 24px rgba(65, 47, 55, 0.16);
   transform: rotate(180deg);
+}
+
+.reading-note[open] summary:hover i,
+.reading-note[open] summary:focus-visible i,
+.term-card[open] summary:hover i,
+.term-card[open] summary:focus-visible i,
+.neighbor-item[open] summary:hover i,
+.neighbor-item[open] summary:focus-visible i {
+  color: var(--white);
+  background: #583f4b;
+  box-shadow: 0 14px 30px rgba(65, 47, 55, 0.24);
+  transform: translateY(-2px) rotate(180deg);
 }
 
 /* Reading neighbours */
@@ -5970,7 +5990,7 @@ body.contact-dialog-open { overflow: hidden; }
 }
 
 .neighbor-item summary {
-  grid-template-columns: minmax(180px, 1fr) minmax(180px, 0.72fr) 1.6rem;
+  grid-template-columns: minmax(180px, 1fr) minmax(180px, 0.72fr) 3rem;
   min-height: 110px;
   padding: 1.25rem 0;
   transition: color 220ms ease;
@@ -6028,7 +6048,7 @@ body.contact-dialog-open { overflow: hidden; }
 }
 
 .term-card summary {
-  grid-template-columns: minmax(0, 1fr) 1.6rem;
+  grid-template-columns: minmax(0, 1fr) 3rem;
   gap: clamp(1rem, 2vw, 1.5rem);
   min-height: 102px;
   padding: 1.2rem 0;
@@ -6096,7 +6116,7 @@ body.contact-dialog-open { overflow: hidden; }
 
 .term-vigilance summary,
 .operative-limits summary {
-  justify-content: flex-start;
+  justify-content: space-between;
   gap: 0.7rem;
   min-height: 54px;
   color: var(--ink-soft);
@@ -6105,28 +6125,57 @@ body.contact-dialog-open { overflow: hidden; }
 .term-vigilance summary span,
 .operative-limits summary i {
   display: grid;
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 2.7rem;
+  height: 1.9rem;
   place-items: center;
-  order: -1;
-  color: var(--plum);
+  flex: 0 0 auto;
+  margin-left: auto;
+  color: var(--white);
+  background: var(--plum-dark);
+  border-radius: 999px;
+  box-shadow: 0 8px 20px rgba(65, 47, 55, 0.14);
   font-size: 0;
   transform: none;
-  transition: color 180ms ease, transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition:
+    color 180ms ease,
+    background-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 240ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .term-vigilance summary span::before,
 .operative-limits summary i::before {
-  content: "↘";
-  font-size: 0.76rem;
+  content: "↓";
+  font-size: 0.78rem;
   font-style: normal;
+  font-weight: 600;
   line-height: 1;
+}
+
+.term-vigilance summary:hover span,
+.term-vigilance summary:focus-visible span,
+.operative-limits summary:hover i,
+.operative-limits summary:focus-visible i {
+  color: var(--white);
+  background: #583f4b;
+  box-shadow: 0 12px 26px rgba(65, 47, 55, 0.22);
+  transform: translateY(-2px);
 }
 
 .term-vigilance[open] summary span,
 .operative-limits[open] summary i {
-  color: var(--blue);
+  color: var(--white);
+  background: var(--plum-dark);
   transform: rotate(180deg);
+}
+
+.term-vigilance[open] summary:hover span,
+.term-vigilance[open] summary:focus-visible span,
+.operative-limits[open] summary:hover i,
+.operative-limits[open] summary:focus-visible i {
+  color: var(--white);
+  background: #583f4b;
+  transform: translateY(-2px) rotate(180deg);
 }
 
 /* Associated documents */
@@ -6150,7 +6199,7 @@ body.contact-dialog-open { overflow: hidden; }
 }
 
 .analysis-disclosure > summary {
-  grid-template-columns: minmax(0, 1fr) 1.6rem;
+  grid-template-columns: minmax(0, 1fr) 3rem;
   min-height: 116px;
   padding: 1.35rem 0;
   transition: color 220ms ease;
@@ -6204,7 +6253,7 @@ body.contact-dialog-open { overflow: hidden; }
 }
 
 .method-card summary {
-  grid-template-columns: minmax(0, 1fr) 1.6rem;
+  grid-template-columns: minmax(0, 1fr) 3rem;
   min-height: 86px;
   padding: 0.75rem 0;
   font-size: 0.92rem;
@@ -6236,14 +6285,29 @@ body.contact-dialog-open { overflow: hidden; }
 .analysis-disclosure[open] > summary i,
 .method-card summary i,
 .method-card[open] summary i {
-  color: var(--rose);
+  color: var(--ink);
+  background: var(--rose);
+  box-shadow: 0 10px 24px rgba(17, 20, 24, 0.2);
 }
 
 .analysis-disclosure > summary:hover i,
 .analysis-disclosure > summary:focus-visible i,
 .method-card summary:hover i,
 .method-card summary:focus-visible i {
-  color: var(--white);
+  color: var(--ink);
+  background: #efc8f3;
+  box-shadow: 0 14px 30px rgba(17, 20, 24, 0.26);
+  transform: translateY(-2px);
+}
+
+.analysis-disclosure[open] > summary:hover i,
+.analysis-disclosure[open] > summary:focus-visible i,
+.method-card[open] summary:hover i,
+.method-card[open] summary:focus-visible i {
+  color: var(--ink);
+  background: #efc8f3;
+  box-shadow: 0 14px 30px rgba(17, 20, 24, 0.26);
+  transform: translateY(-2px) rotate(180deg);
 }
 
 @media (max-width: 760px) {
@@ -6264,7 +6328,7 @@ body.contact-dialog-open { overflow: hidden; }
   .neighbor-item summary:hover,
   .neighbor-item summary:focus-visible,
   .neighbor-item[open] summary {
-    grid-template-columns: minmax(0, 1fr) 1.6rem;
+    grid-template-columns: minmax(0, 1fr) 3rem;
     gap: 0.55rem 1rem;
     padding: 1.1rem 0;
   }
@@ -6308,7 +6372,7 @@ body.contact-dialog-open { overflow: hidden; }
 
 @media (max-width: 390px) {
   .reading-note summary {
-    grid-template-columns: minmax(0, 1fr) 1.35rem;
+    grid-template-columns: minmax(0, 1fr) 3rem;
     gap: 0.65rem;
   }
 }
