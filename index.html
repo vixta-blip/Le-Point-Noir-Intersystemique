@@ -55,8 +55,8 @@
     <link rel="icon" href="assets/v2/favicon.svg" type="image/svg+xml" />
     <link rel="preload" href="assets/Inter-SemiBold.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="assets/SourceSerif-Regular.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="stylesheet" href="styles.css?v=20260722-6" />
-    <link rel="stylesheet" href="photo-theme.css?v=20260718-2" />
+    <link rel="stylesheet" href="styles.css?v=20260722-7" />
+    <link rel="stylesheet" href="photo-theme.css?v=20260722-3" />
     <link rel="stylesheet" href="photo-perspective-template.css?v=20260718-1" />
     <link rel="stylesheet" href="photo-perspective-refined.css?v=20260718-3" />
 
@@ -253,109 +253,127 @@
             <h2 id="reperes-titre">Entrer dans le mouvement du texte.</h2>
           </div>
 
-          <div class="reading-notes-list" data-accordion="reperes">
-            <details class="reading-note reveal">
-              <summary>
-                <span>Ce volume se lit-il indépendamment&nbsp;?</span>
-                <i aria-hidden="true">+</i>
-              </summary>
-              <p>
-                Oui. Il ouvre une trilogie, mais sa question, son vocabulaire et
-                son mouvement sont complets dans ce premier volume.
-              </p>
-            </details>
-            <details class="reading-note reveal">
-              <summary>
-                <span>Faut-il avoir lu d’autres textes&nbsp;?</span>
-                <i aria-hidden="true">+</i>
-              </summary>
-              <p>
-                Non. Aucune connaissance préalable n’est nécessaire. Le vocabulaire
-                propre à l’ouvrage est défini au fil du texte et repris plus bas sur
-                cette page.
-              </p>
-            </details>
-            <details class="reading-note reveal">
-              <summary>
-                <span>Comment le texte se parcourt-il&nbsp;?</span>
-                <i aria-hidden="true">+</i>
-              </summary>
-              <p>
-                Il avance d’un seul mouvement, sans chapitres. Les espaces de
-                respiration permettent de faire une pause et de reprendre sans perdre
-                le fil de la lecture.
-              </p>
-            </details>
-            <details class="reading-note reveal">
-              <summary>
-                <span>À quoi faut-il s’attendre dans les premières pages&nbsp;?</span>
-                <i aria-hidden="true">+</i>
-              </summary>
-              <p>
-                Le texte installe d’abord son propre régime de vocabulaire. Des mots
-                familiers y reçoivent progressivement une fonction plus étroite&nbsp;:
-                leur sens se précise par les reprises, les écarts et les relations qui
-                se forment d’une page à l’autre.
-              </p>
-            </details>
-            <details class="reading-note reveal">
-              <summary>
-                <span>Faut-il chercher une démonstration ou une conclusion&nbsp;?</span>
-                <i aria-hidden="true">+</i>
-              </summary>
-              <p>
-                Non. Le livre ne progresse ni comme une preuve ni comme une suite
-                d’étapes. Il décrit une même configuration par déplacements successifs,
-                sans orienter la lecture vers une synthèse finale.
-              </p>
-            </details>
-            <details class="reading-note reveal">
-              <summary>
-                <span>Que faire lorsqu’un mot semble connu mais agit autrement&nbsp;?</span>
-                <i aria-hidden="true">+</i>
-              </summary>
-              <p>
-                Il est préférable d’observer d’abord ce que le mot rend possible dans
-                la phrase et dans les pages voisines. Le dictionnaire opératif, proposé
-                à la fin du livre physique, permet ensuite de vérifier sa définition,
-                son domaine d’usage et les déplacements qui en modifieraient la fonction.
-              </p>
-            </details>
-            <details class="reading-note reveal">
-              <summary>
-                <span>Le texte propose-t-il une méthode pour mieux dialoguer&nbsp;?</span>
-                <i aria-hidden="true">+</i>
-              </summary>
-              <p>
-                Non. Il décrit une condition locale repérable lorsque deux cohérences
-                cessent de s’imposer l’une à l’autre. Cette description ne constitue ni
-                un protocole de conversation, ni une règle morale, ni une technique de
-                résolution des désaccords.
-              </p>
-            </details>
-            <details class="reading-note reveal">
-              <summary>
-                <span>Pourquoi certaines formulations reviennent-elles&nbsp;?</span>
-                <i aria-hidden="true">+</i>
-              </summary>
-              <p>
-                Une reprise ne reconduit pas toujours la même fonction. Elle replace un
-                terme dans une relation différente et permet de suivre ce qui se maintient,
-                se déplace ou cesse d’être opérant au cours du texte.
-              </p>
-            </details>
-            <details class="reading-note reveal">
-              <summary>
-                <span>Qu’engage réellement cette lecture&nbsp;?</span>
-                <i aria-hidden="true">+</i>
-              </summary>
-              <p>
-                Elle demande surtout du temps et une attention aux différences de régime.
-                Son objet n’est pas d’obtenir une réponse pratique, mais d’examiner ce qui
-                demeure d’une relation lorsque l’accord, la traduction complète et la
-                réduction d’un cadre à l’autre ne sont plus exigés.
-              </p>
-            </details>
+          <div class="reading-notes-list" data-reading-notes>
+            <article class="reading-note reveal" data-reading-note>
+              <button class="reading-note-trigger" id="repere-question-1" type="button" aria-expanded="false" aria-controls="repere-reponse-1" data-reading-note-trigger>
+                <span class="reading-note-question">Ce volume se lit-il indépendamment&nbsp;?</span>
+                <span class="reading-note-cta" aria-hidden="true"><span data-reading-note-label>Voir la réponse</span><i>↓</i></span>
+              </button>
+              <div class="reading-note-panel" id="repere-reponse-1" role="region" aria-labelledby="repere-question-1" data-reading-note-panel hidden>
+                <p>
+                  Oui. Il ouvre une trilogie, mais sa question, son vocabulaire et
+                  son mouvement sont complets dans ce premier volume.
+                </p>
+              </div>
+            </article>
+            <article class="reading-note reveal" data-reading-note>
+              <button class="reading-note-trigger" id="repere-question-2" type="button" aria-expanded="false" aria-controls="repere-reponse-2" data-reading-note-trigger>
+                <span class="reading-note-question">Faut-il avoir lu d’autres textes&nbsp;?</span>
+                <span class="reading-note-cta" aria-hidden="true"><span data-reading-note-label>Voir la réponse</span><i>↓</i></span>
+              </button>
+              <div class="reading-note-panel" id="repere-reponse-2" role="region" aria-labelledby="repere-question-2" data-reading-note-panel hidden>
+                <p>
+                  Non. Aucune connaissance préalable n’est nécessaire. Le vocabulaire
+                  propre à l’ouvrage est défini au fil du texte et repris plus bas sur
+                  cette page.
+                </p>
+              </div>
+            </article>
+            <article class="reading-note reveal" data-reading-note>
+              <button class="reading-note-trigger" id="repere-question-3" type="button" aria-expanded="false" aria-controls="repere-reponse-3" data-reading-note-trigger>
+                <span class="reading-note-question">Comment le texte se parcourt-il&nbsp;?</span>
+                <span class="reading-note-cta" aria-hidden="true"><span data-reading-note-label>Voir la réponse</span><i>↓</i></span>
+              </button>
+              <div class="reading-note-panel" id="repere-reponse-3" role="region" aria-labelledby="repere-question-3" data-reading-note-panel hidden>
+                <p>
+                  Il avance d’un seul mouvement, sans chapitres. Les espaces de
+                  respiration permettent de faire une pause et de reprendre sans perdre
+                  le fil de la lecture.
+                </p>
+              </div>
+            </article>
+            <article class="reading-note reveal" data-reading-note>
+              <button class="reading-note-trigger" id="repere-question-4" type="button" aria-expanded="false" aria-controls="repere-reponse-4" data-reading-note-trigger>
+                <span class="reading-note-question">À quoi faut-il s’attendre dans les premières pages&nbsp;?</span>
+                <span class="reading-note-cta" aria-hidden="true"><span data-reading-note-label>Voir la réponse</span><i>↓</i></span>
+              </button>
+              <div class="reading-note-panel" id="repere-reponse-4" role="region" aria-labelledby="repere-question-4" data-reading-note-panel hidden>
+                <p>
+                  Le texte installe d’abord son propre régime de vocabulaire. Des mots
+                  familiers y reçoivent progressivement une fonction plus étroite&nbsp;:
+                  leur sens se précise par les reprises, les écarts et les relations qui
+                  se forment d’une page à l’autre.
+                </p>
+              </div>
+            </article>
+            <article class="reading-note reveal" data-reading-note>
+              <button class="reading-note-trigger" id="repere-question-5" type="button" aria-expanded="false" aria-controls="repere-reponse-5" data-reading-note-trigger>
+                <span class="reading-note-question">Faut-il chercher une démonstration ou une conclusion&nbsp;?</span>
+                <span class="reading-note-cta" aria-hidden="true"><span data-reading-note-label>Voir la réponse</span><i>↓</i></span>
+              </button>
+              <div class="reading-note-panel" id="repere-reponse-5" role="region" aria-labelledby="repere-question-5" data-reading-note-panel hidden>
+                <p>
+                  Non. Le livre ne progresse ni comme une preuve ni comme une suite
+                  d’étapes. Il décrit une même configuration par déplacements successifs,
+                  sans orienter la lecture vers une synthèse finale.
+                </p>
+              </div>
+            </article>
+            <article class="reading-note reveal" data-reading-note>
+              <button class="reading-note-trigger" id="repere-question-6" type="button" aria-expanded="false" aria-controls="repere-reponse-6" data-reading-note-trigger>
+                <span class="reading-note-question">Que faire lorsqu’un mot semble connu mais agit autrement&nbsp;?</span>
+                <span class="reading-note-cta" aria-hidden="true"><span data-reading-note-label>Voir la réponse</span><i>↓</i></span>
+              </button>
+              <div class="reading-note-panel" id="repere-reponse-6" role="region" aria-labelledby="repere-question-6" data-reading-note-panel hidden>
+                <p>
+                  Il est préférable d’observer d’abord ce que le mot rend possible dans
+                  la phrase et dans les pages voisines. Le dictionnaire opératif, proposé
+                  à la fin du livre physique, permet ensuite de vérifier sa définition,
+                  son domaine d’usage et les déplacements qui en modifieraient la fonction.
+                </p>
+              </div>
+            </article>
+            <article class="reading-note reveal" data-reading-note>
+              <button class="reading-note-trigger" id="repere-question-7" type="button" aria-expanded="false" aria-controls="repere-reponse-7" data-reading-note-trigger>
+                <span class="reading-note-question">Le texte propose-t-il une méthode pour mieux dialoguer&nbsp;?</span>
+                <span class="reading-note-cta" aria-hidden="true"><span data-reading-note-label>Voir la réponse</span><i>↓</i></span>
+              </button>
+              <div class="reading-note-panel" id="repere-reponse-7" role="region" aria-labelledby="repere-question-7" data-reading-note-panel hidden>
+                <p>
+                  Non. Il décrit une condition locale repérable lorsque deux cohérences
+                  cessent de s’imposer l’une à l’autre. Cette description ne constitue ni
+                  un protocole de conversation, ni une règle morale, ni une technique de
+                  résolution des désaccords.
+                </p>
+              </div>
+            </article>
+            <article class="reading-note reveal" data-reading-note>
+              <button class="reading-note-trigger" id="repere-question-8" type="button" aria-expanded="false" aria-controls="repere-reponse-8" data-reading-note-trigger>
+                <span class="reading-note-question">Pourquoi certaines formulations reviennent-elles&nbsp;?</span>
+                <span class="reading-note-cta" aria-hidden="true"><span data-reading-note-label>Voir la réponse</span><i>↓</i></span>
+              </button>
+              <div class="reading-note-panel" id="repere-reponse-8" role="region" aria-labelledby="repere-question-8" data-reading-note-panel hidden>
+                <p>
+                  Une reprise ne reconduit pas toujours la même fonction. Elle replace un
+                  terme dans une relation différente et permet de suivre ce qui se maintient,
+                  se déplace ou cesse d’être opérant au cours du texte.
+                </p>
+              </div>
+            </article>
+            <article class="reading-note reveal" data-reading-note>
+              <button class="reading-note-trigger" id="repere-question-9" type="button" aria-expanded="false" aria-controls="repere-reponse-9" data-reading-note-trigger>
+                <span class="reading-note-question">Qu’engage réellement cette lecture&nbsp;?</span>
+                <span class="reading-note-cta" aria-hidden="true"><span data-reading-note-label>Voir la réponse</span><i>↓</i></span>
+              </button>
+              <div class="reading-note-panel" id="repere-reponse-9" role="region" aria-labelledby="repere-question-9" data-reading-note-panel hidden>
+                <p>
+                  Elle demande surtout du temps et une attention aux différences de régime.
+                  Son objet n’est pas d’obtenir une réponse pratique, mais d’examiner ce qui
+                  demeure d’une relation lorsque l’accord, la traduction complète et la
+                  réduction d’un cadre à l’autre ne sont plus exigés.
+                </p>
+              </div>
+            </article>
           </div>
         </div>
       </section>
@@ -1091,6 +1109,6 @@
     <script src="collection.js?v=20260718-8"></script>
     <script src="excerpt-study-data.js?v=20260718-1"></script>
     <script src="excerpt-occurrence-contexts.js?v=20260721-1"></script>
-    <script src="script.js?v=20260722-4"></script>
+    <script src="script.js?v=20260722-5"></script>
   </body>
 </html>

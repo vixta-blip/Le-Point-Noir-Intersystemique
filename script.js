@@ -131,10 +131,115 @@
 
   const reducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
 
+  /* Reading notes: foreground disclosures that never reflow the question grid. */
+
+  const readingNotesRoot = document.querySelector("[data-reading-notes]");
+  if (readingNotesRoot) {
+    const notes = [...readingNotesRoot.querySelectorAll("[data-reading-note]")];
+    const closeTimers = new WeakMap();
+
+    const partsFor = (note) => ({
+      trigger: note.querySelector("[data-reading-note-trigger]"),
+      panel: note.querySelector("[data-reading-note-panel]"),
+      label: note.querySelector("[data-reading-note-label]"),
+    });
+
+    const clearCloseTimer = (note) => {
+      const timer = closeTimers.get(note);
+      if (timer) window.clearTimeout(timer);
+      closeTimers.delete(note);
+    };
+
+    const finishReadingNoteClose = (note) => {
+      const { panel } = partsFor(note);
+      clearCloseTimer(note);
+      note.classList.remove("is-closing");
+      if (!note.classList.contains("is-open") && panel) panel.hidden = true;
+    };
+
+    const closeReadingNote = (note, { immediate = false, restoreFocus = false } = {}) => {
+      if (!note?.classList.contains("is-open") && !note?.classList.contains("is-closing")) return;
+      const { trigger, panel, label } = partsFor(note);
+      if (!trigger || !panel) return;
+
+      clearCloseTimer(note);
+      note.classList.remove("is-open");
+      trigger.setAttribute("aria-expanded", "false");
+      if (label) label.textContent = "Voir la réponse";
+
+      if (immediate || reducedMotion) {
+        panel.hidden = true;
+        note.classList.remove("is-closing");
+      } else {
+        note.classList.add("is-closing");
+        const onTransitionEnd = (event) => {
+          if (event.target !== panel || event.propertyName !== "clip-path") return;
+          panel.removeEventListener("transitionend", onTransitionEnd);
+          finishReadingNoteClose(note);
+        };
+        panel.addEventListener("transitionend", onTransitionEnd);
+        closeTimers.set(note, window.setTimeout(() => finishReadingNoteClose(note), 680));
+      }
+
+      if (restoreFocus) trigger.focus({ preventScroll: true });
+    };
+
+    const openReadingNote = (note) => {
+      const { trigger, panel, label } = partsFor(note);
+      if (!trigger || !panel || note.classList.contains("is-open")) return;
+
+      notes.forEach((other) => {
+        if (other !== note) closeReadingNote(other, { immediate: true });
+      });
+
+      clearCloseTimer(note);
+      note.classList.remove("is-closing");
+      panel.hidden = false;
+      trigger.setAttribute("aria-expanded", "true");
+      if (label) label.textContent = "Replier";
+
+      if (reducedMotion) {
+        note.classList.add("is-open");
+        return;
+      }
+
+      window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(() => note.classList.add("is-open"));
+      });
+    };
+
+    notes.forEach((note) => {
+      const { trigger } = partsFor(note);
+      trigger?.addEventListener("click", () => {
+        if (note.classList.contains("is-open")) closeReadingNote(note);
+        else openReadingNote(note);
+      });
+    });
+
+    readingNotesRoot.addEventListener("pointerdown", (event) => {
+      const openNote = readingNotesRoot.querySelector("[data-reading-note].is-open");
+      if (openNote && !openNote.contains(event.target)) closeReadingNote(openNote);
+    });
+
+    document.addEventListener("pointerdown", (event) => {
+      if (readingNotesRoot.contains(event.target)) return;
+      const openNote = readingNotesRoot.querySelector("[data-reading-note].is-open");
+      if (openNote) closeReadingNote(openNote);
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key !== "Escape") return;
+      const openNote = readingNotesRoot.querySelector("[data-reading-note].is-open");
+      if (!openNote) return;
+      event.preventDefault();
+      closeReadingNote(openNote, { restoreFocus: true });
+    });
+  }
+
   /* Progressive copy appears only when an expandable answer is requested. */
 
   const progressiveTargets = [
-    ...document.querySelectorAll("[data-progressive-copy], .reading-note > p, .method-card > div"),
+    ...document.querySelectorAll("[data-progressive-copy], .method-card > div"),
   ];
 
   const prepareProgressiveCopy = (container) => {
@@ -519,6 +624,9 @@
     if (control.matches("[data-study-prev], [data-study-next]")) return "page";
     if (control.matches("[data-analysis-close]")) return "close";
     if (control.matches("[data-nav-toggle]")) {
+      return control.getAttribute("aria-expanded") === "true" ? "close" : "open";
+    }
+    if (control.matches("[data-reading-note-trigger]")) {
       return control.getAttribute("aria-expanded") === "true" ? "close" : "open";
     }
     if (control.matches("summary")) {
